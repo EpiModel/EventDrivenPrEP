@@ -23,8 +23,8 @@ if (file.exists("renv.lock")) {# Restore from a lockfile if it exists.
 
   # Github packages
   remotes::install_github(c(
-    "EpiModel/EpiModelHIV-p",
     "EpiModel/EpiModelHIV-p@EDP",
+    "EpiModel/ARTnet",
     "EpiModel/ARTnetData"
   ), upgrade = FALSE)
 
