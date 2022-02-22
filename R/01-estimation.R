@@ -8,6 +8,7 @@ library("methods")
 suppressMessages(library("EpiModelHIV"))
 suppressMessages(library("ARTnetData"))
 library("ARTnet")
+library("tidyverse")
 
 ncores <- parallel::detectCores() - 1
 
@@ -16,8 +17,9 @@ ncores <- parallel::detectCores() - 1
 epistats <- build_epistats(
   geog.lvl = "city",
   geog.cat = "Atlanta",
-  init.hiv.prev = c( 0.33, 0.137, 0.084),
-  race = TRUE
+  init.hiv.prev = c(0.33, 0.137, 0.084),
+  race = TRUE,
+  time.unit = 1
 )
 saveRDS(epistats, file = "data/input/epistats.rds")
 
@@ -25,7 +27,7 @@ netparams <- build_netparams(epistats = epistats, smooth.main.dur = TRUE)
 netstats <- build_netstats(
   epistats,
   netparams,
-  expect.mort = 0.000478213,
+  expect.mort = 0.000478213/7,
   network.size = 10000
 )
 saveRDS(netstats, file = "data/input/netstats-10k.rds")
@@ -183,7 +185,7 @@ fit_inst <- netest(nw_inst,
                    set.control.ergm = control.ergm(MCMLE.maxit = 500,
                                                    SAN.maxit = 4,
                                                    SAN.nsteps.times = 10,
-                                                   MCMC.samplesize = 10000,
+                                                   MCMC.samplesize = 10000, # can be increased to improve fit
                                                    MCMC.interval = 5000,
                                                    parallel = ncores),
                    verbose = FALSE)
