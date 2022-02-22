@@ -37,9 +37,7 @@ control <- control_msm(simno = fsimno,
                        ncores = ncores,
                        cumulative.edgelist = TRUE,
                        truncate.el.cuml = 0,
-                       verbose = TRUE,
-                       verbose.int = 250,
-                       verbose.FUN = verbose.hpc.net)
+                       verbose = TRUE)
 ## Simulation
 sim <- netsim(est, param, init, control)
 
