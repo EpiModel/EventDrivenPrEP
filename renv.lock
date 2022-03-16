@@ -87,9 +87,9 @@
       "RemoteHost": "api.github.com",
       "RemoteRepo": "EpiModelHIV-p",
       "RemoteUsername": "EpiModel",
-      "RemoteRef": "EDP",
-      "RemoteSha": "721635b8228d899a309cef9419996ac4d3f63963",
-      "Hash": "e3f9aeb010764511507207870826f94a",
+      "RemoteRef": "EDP-mod-timeupdate",
+      "RemoteSha": "4cbf624fd70d6bdcd275216db018058077ced3ec",
+      "Hash": "a8ce80356403196840e6cac2e5ef368d",
       "Requirements": [
         "EpiModel",
         "ergm",
@@ -143,10 +143,10 @@
     },
     "ape": {
       "Package": "ape",
-      "Version": "5.6-1",
+      "Version": "5.6-2",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "2402767aec99bce0a877240e226446b6",
+      "Hash": "894108412a7ec23d5de85cdcce871c8b",
       "Requirements": [
         "Rcpp",
         "lattice",
@@ -1287,10 +1287,10 @@
     },
     "tidyselect": {
       "Package": "tidyselect",
-      "Version": "1.1.1",
+      "Version": "1.1.2",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "7243004a708d06d4716717fa1ff5b2fe",
+      "Hash": "17f6da8cfd7002760a859915ce7eef8f",
       "Requirements": [
         "ellipsis",
         "glue",
@@ -1426,10 +1426,10 @@
     },
     "withr": {
       "Package": "withr",
-      "Version": "2.4.3",
+      "Version": "2.5.0",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "a376b424c4817cda4920bbbeb3364e85",
+      "Hash": "c0e49a9760983e81e55cdd9be92e7182",
       "Requirements": []
     },
     "xfun": {
