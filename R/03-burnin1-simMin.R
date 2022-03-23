@@ -3,21 +3,25 @@
 ## 03. Epidemic Model Burnin, Stage 1, Parameter Calibration
 ##
 
+#library(remotes)
+#remotes::install_github("EpiModel/EpiModelHIV-p@EDP-mod-timeupdate")
+#renv::snapshot()
+
+#pkgload::load_all("C:\\Users\\clchand\\OneDrive - Emory University\\EpiModel-repos\\EpiModelHIV-p")
+#pkgload::load_all("C:\\Users\\clchand\\OneDrive - Emory University\\EpiModel-repos\\EpiModel")
 
 ## Packages
 library("methods")
 suppressMessages(library("EpiModelHIV"))
 suppressMessages(library("EpiModelHPC"))
+library(EpiModel)
 
-## Environmental Arguments
 pull_env_vars(num.vars = "NETSIZE")
-
-netsize.fn <- paste0(NETSIZE, "k.rds")
 
 ## Parameters
 epistats <- readRDS("data/input/epistats.rds")
-netstats <- readRDS(paste0("data/input/netstats-", netsize.fn))
-est <- readRDS(paste0("data/input/netest-", netsize.fn))
+netstats <- readRDS("data/input/netstats-10k.rds")
+est <- readRDS("data/input/netest-10k.rds")
 
 param <- param_msm(netstats = netstats,
                    epistats = epistats,
@@ -30,7 +34,9 @@ param <- param_msm(netstats = netstats,
                    riskh.start = 52 * 59,
                    prep.start = (52 * 60) + 1,
                    prep.start.prob = 0.66)
+
 init <- init_msm()
+
 control <- control_msm(simno = fsimno,
                        nsteps = 52 * 60,
                        nsims = ncores,

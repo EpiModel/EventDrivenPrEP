@@ -14,12 +14,20 @@ ncores <- parallel::detectCores() - 1
 
 # 0. Initialize Network ---------------------------------------------------
 
+#install older version of ARTnet
+#library(remotes)
+#install_github("EpiModel/ARTnet", ref = 'v2.5.0')
+
+#install local version of ARTnet for any changes
+#pkgload::load_all("C:\\Users\\clchand\\OneDrive - Emory University\\EpiModel-repos\\ARTnet")
+
 epistats <- build_epistats(
   geog.lvl = "city",
   geog.cat = "Atlanta",
   init.hiv.prev = c(0.33, 0.137, 0.084),
   race = TRUE,
-  time.unit = 1
+  #time.unit = 7, #change to 1 for daily
+  browser = TRUE
 )
 saveRDS(epistats, file = "data/input/epistats.rds")
 
@@ -27,7 +35,7 @@ netparams <- build_netparams(epistats = epistats, smooth.main.dur = TRUE)
 netstats <- build_netstats(
   epistats,
   netparams,
-  expect.mort = 0.000478213/7,
+  expect.mort = 0.000478213, #divide by 7 for daily
   network.size = 10000
 )
 saveRDS(netstats, file = "data/input/netstats-10k.rds")
@@ -40,8 +48,7 @@ attr.names <- names(netstats$attr)
 attr.values <- netstats$attr
 nw <- EpiModel::set_vertex_attribute(nw, attr.names, attr.values)
 nw_main <- nw_casl <- nw_inst <- nw
-#replicates netwrks x3 for partnership types: main, casual, one-time
-
+#replicates networks x3 for partnership types: main, casual, one-time
 
 
 # 1. Main Model -----------------------------------------------------------

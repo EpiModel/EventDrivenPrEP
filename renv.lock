@@ -88,14 +88,34 @@
       "RemoteRepo": "EpiModelHIV-p",
       "RemoteUsername": "EpiModel",
       "RemoteRef": "EDP-mod-timeupdate",
-      "RemoteSha": "4cbf624fd70d6bdcd275216db018058077ced3ec",
-      "Hash": "a8ce80356403196840e6cac2e5ef368d",
+      "RemoteSha": "964cc5c7292e1fe05c989c1948eaea76a2bc8c7f",
+      "Hash": "88681318f7bdb2c896edd40f2027f3b6",
       "Requirements": [
         "EpiModel",
         "ergm",
         "network",
         "networkDynamic",
         "statnet.common",
+        "tergm"
+      ]
+    },
+    "EpiModelHPC": {
+      "Package": "EpiModelHPC",
+      "Version": "2.1.2",
+      "Source": "GitHub",
+      "RemoteType": "github",
+      "RemoteHost": "api.github.com",
+      "RemoteRepo": "EpiModelHPC",
+      "RemoteUsername": "EpiModel",
+      "RemoteRef": "HEAD",
+      "RemoteSha": "a1e2daa9cf17806d02608ce9c9b1525104629f2e",
+      "Hash": "7a3c0ffee23c2df794fedf0c5ff52057",
+      "Requirements": [
+        "EpiModel",
+        "doParallel",
+        "ergm",
+        "foreach",
+        "stringr",
         "tergm"
       ]
     },
@@ -376,6 +396,18 @@
       "Repository": "CRAN",
       "Hash": "b966ebcb01c2bce92c42999d5aff52cd",
       "Requirements": []
+    },
+    "desc": {
+      "Package": "desc",
+      "Version": "1.4.0",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "28763d08fadd0b733e3cee9dab4e12fe",
+      "Requirements": [
+        "R6",
+        "crayon",
+        "rprojroot"
+      ]
     },
     "digest": {
       "Package": "digest",
@@ -952,6 +984,22 @@
       "Hash": "01f28d4278f15c76cddbea05899c5d6f",
       "Requirements": []
     },
+    "pkgload": {
+      "Package": "pkgload",
+      "Version": "1.2.4",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "7533cd805940821bf23eaf3c8d4c1735",
+      "Requirements": [
+        "cli",
+        "crayon",
+        "desc",
+        "rlang",
+        "rprojroot",
+        "rstudioapi",
+        "withr"
+      ]
+    },
     "prettyunits": {
       "Package": "prettyunits",
       "Version": "1.1.1",
@@ -1141,6 +1189,14 @@
         "DEoptimR"
       ]
     },
+    "rprojroot": {
+      "Package": "rprojroot",
+      "Version": "2.0.2",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "249d8cd1e74a8f6a26194a91b47f21d1",
+      "Requirements": []
+    },
     "rstudioapi": {
       "Package": "rstudioapi",
       "Version": "0.13",
@@ -1204,10 +1260,10 @@
     },
     "stringi": {
       "Package": "stringi",
-      "Version": "1.7.5",
+      "Version": "1.7.6",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "cd50dc9b449de3d3b47cdc9976886999",
+      "Hash": "bba431031d30789535745a9627ac9271",
       "Requirements": []
     },
     "stringr": {
