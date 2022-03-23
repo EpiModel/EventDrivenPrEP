@@ -15,14 +15,19 @@
 library("methods")
 suppressMessages(library("EpiModelHIV"))
 suppressMessages(library("EpiModelHPC"))
-library(EpiModel)
 
-pull_env_vars(num.vars = "NETSIZE")
+pull_env_vars()
+
+network.size <- 10000
+time.unit <- 7
+
+fn.fx <- function(file, tu = 7, ns = 10000)
+  paste0("data/input/", file, "-time", tu, "-size", ns, ".rds")
 
 ## Parameters
-epistats <- readRDS("data/input/epistats.rds")
-netstats <- readRDS("data/input/netstats-10k.rds")
-est <- readRDS("data/input/netest-10k.rds")
+epistats <- readRDS(fn.fx("epistats"))
+netstats <- readRDS(fn.fx("netstats"))
+est <- readRDS(fn.fx("netest"))
 
 param <- param_msm(netstats = netstats,
                    epistats = epistats,
@@ -42,8 +47,6 @@ control <- control_msm(simno = fsimno,
                        nsteps = 52 * 60,
                        nsims = ncores,
                        ncores = ncores,
-                       cumulative.edgelist = TRUE,
-                       truncate.el.cuml = 0,
                        verbose = TRUE)
 ## Simulation
 sim <- netsim(est, param, init, control)

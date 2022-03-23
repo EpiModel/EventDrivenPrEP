@@ -10,6 +10,8 @@ suppressMessages(library("ARTnetData"))
 library("ARTnet")
 library("tidyverse")
 
+network.size <- 10000
+time.unit <- 7
 ncores <- parallel::detectCores() - 1
 
 # 0. Initialize Network ---------------------------------------------------
@@ -26,23 +28,24 @@ epistats <- build_epistats(
   geog.cat = "Atlanta",
   init.hiv.prev = c(0.33, 0.137, 0.084),
   race = TRUE,
-  #time.unit = 7, #change to 1 for daily
-  browser = TRUE
+  time.unit = time.unit,
+  browser = FALSE
 )
-saveRDS(epistats, file = "data/input/epistats.rds")
+fn <- paste0("data/input/epistats-time", time.unit, "-size", network.size, ".rds")
+saveRDS(epistats, file = fn)
 
 netparams <- build_netparams(epistats = epistats, smooth.main.dur = TRUE)
 netstats <- build_netstats(
   epistats,
   netparams,
-  expect.mort = 0.000478213, #divide by 7 for daily
-  network.size = 10000
+  expect.mort = (0.000478213 / 7) * time.unit,
+  network.size = network.size
 )
-saveRDS(netstats, file = "data/input/netstats-10k.rds")
+fn <- paste0("data/input/netstats-time", time.unit, "-size", network.size, ".rds")
+saveRDS(netstats, file = fn)
 
 num <- netstats$demog$num
 nw <- EpiModel::network_initialize(num, directed = FALSE)
-
 
 attr.names <- names(netstats$attr)
 attr.values <- netstats$attr
@@ -205,7 +208,9 @@ fit_casl$fit$newnetworks <- NULL
 fit_inst$fit$newnetworks <- NULL
 
 out <- list(fit_main = fit_main, fit_casl = fit_casl, fit_inst = fit_inst)
-saveRDS(out, file = "data/input/netest-10k.rds")
+
+fn <- paste0("data/input/netest-time", time.unit, "-size", network.size, ".rds")
+saveRDS(out, file = fn)
 
 #refit model to daily time steps instead of weekly time steps
 #will need to go in to ARTnet

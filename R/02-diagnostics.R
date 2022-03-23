@@ -7,10 +7,14 @@ rm(list = ls())
 library("methods")
 suppressMessages(library("EpiModelHIV"))
 
-est <- readRDS("data/input/netest-10k.rds")
+network.size <- 10000
+time.unit <- 7
+
+fn.est <- paste0("data/input/netest-time", time.unit, "-size", network.size, ".rds")
+est <- readRDS(fn.est)
 
 #ncores <- 30
-ncores <- 1
+ncores <- 10
 nsims <- 10
 nsteps <- 1000
 
@@ -91,41 +95,43 @@ dx <- list(dx_main = dx_main, dx_main_static = dx_main_static,
            dx_casl = dx_casl, dx_casl_static = dx_casl_static,
            dx_inst = dx_inst)
 
-saveRDS(dx, file = "data/input/netdx.rds")
+fn.dx <- paste0("data/input/netdx-time", time.unit, "-size", network.size, ".rds")
+saveRDS(dx, file = fn.dx)
 
 
 # Interactive Dx Analysis -------------------------------------------------
 
 if (interactive()) {
 
-  netstats <- readRDS("data/input/netstats-10k.rds")
-  dx <- readRDS("data/input/netdx.rds")
+fn.ns <- paste0("data/input/netstats-time", time.unit, "-size", network.size, ".rds")
+netstats <- readRDS(fn.ns)
 
-  # Main
-  print(dx$dx_main, digits = 2)
-  plot(dx$dx_main)
+dx <- readRDS(fn.dx)
 
-  netstats$main
+# Main
+print(dx$dx_main, digits = 2)
+plot(dx$dx_main)
 
-  print(dx$dx_main_static, digits = 2)
-  plot(dx$dx_main_static)
+netstats$main
 
-  # Casual
-  print(dx$dx_casl, digits = 2)
-  plot(dx$dx_casl)
+print(dx$dx_main_static, digits = 2)
+plot(dx$dx_main_static)
 
-  netstats$casl
+# Casual
+print(dx$dx_casl, digits = 2)
+plot(dx$dx_casl)
 
-  print(dx$dx_casl_static, digits = 2)
-  plot(dx$dx_casl_static)
+netstats$casl
 
-  # Inst
-  print(dx$dx_inst, digits = 2)
-  plot(dx$dx_inst)
+print(dx$dx_casl_static, digits = 2)
+plot(dx$dx_casl_static)
 
-}
+# Inst
+print(dx$dx_inst, digits = 2)
+plot(dx$dx_inst)
 
 mcmc.diagnostics(fit_main$fit)
 mcmc.diagnostics(fit_casl$fit)
 mcmc.diagnostics(fit_inst$fit)
 
+}
