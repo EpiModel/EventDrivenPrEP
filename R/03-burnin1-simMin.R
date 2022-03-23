@@ -46,8 +46,6 @@ control <- control_msm(simno = fsimno,
                        nsteps = 52 * 60,
                        nsims = ncores,
                        ncores = ncores,
-                       cumulative.edgelist = TRUE,
-                       truncate.el.cuml = 0,
                        verbose = TRUE)
 ## Simulation
 sim <- netsim(est, param, init, control)
