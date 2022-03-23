@@ -5,6 +5,7 @@
 
 #library(remotes)
 #remotes::install_github("EpiModel/EpiModelHIV-p@EDP-mod-timeupdate")
+#remotes::install_github("EpiModel/ARTnet")
 #renv::snapshot()
 
 #pkgload::load_all("C:\\Users\\clchand\\OneDrive - Emory University\\EpiModel-repos\\EpiModelHIV-p")
