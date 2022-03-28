@@ -28,7 +28,7 @@ epistats <- build_epistats(
   geog.cat = "Atlanta",
   init.hiv.prev = c(0.33, 0.137, 0.084),
   race = TRUE,
-  time.unit = time.unit,
+  #time.unit = time.unit,
   browser = FALSE
 )
 fn <- paste0("data/input/epistats-time", time.unit, "-size", network.size, ".rds")
@@ -38,7 +38,8 @@ netparams <- build_netparams(epistats = epistats, smooth.main.dur = TRUE)
 netstats <- build_netstats(
   epistats,
   netparams,
-  expect.mort = (0.000478213 / 7) * time.unit,
+  #expect.mort = (0.000478213 / 7) * time.unit,
+  expect.mort = 0.000478213,
   network.size = network.size
 )
 fn <- paste0("data/input/netstats-time", time.unit, "-size", network.size, ".rds")
