@@ -2,25 +2,31 @@
 ## 02. Network Model Diagnostics
 ##
 
-## Packages ##
-rm(list = ls())
-library("methods")
-suppressMessages(library("EpiModelHIV"))
+# Required variables:
+#   - ncores
+#   - nsims
+#   - nsteps
+if (interactive()) {
+  ncores <- 2
+  nsims <- 10
+  nsteps <- 500
+}
 
-network.size <- 10000
-time.unit <- 7
+# Setup ------------------------------------------------------------------------
+suppressMessages({
+  library("EpiModelHIV")
+})
 
-fn.est <- paste0("data/input/netest-time", time.unit, "-size", network.size, ".rds")
-est <- readRDS(fn.est)
+# Load the `NETSIZE` value and the formatted `netsize_string`
+# NETSIZE <- 1e4 # to override (before sourcing the file)
+source("R/utils-netsize.R")
 
-#ncores <- 30
-ncores <- 10
-nsims <- 10
-nsteps <- 1000
+fn <- paste0("data/input/netest-", netsize_string, ".rds")
+est <- readRDS(fn)
 
-# Main --------------------------------------------------------------------
+# Main -------------------------------------------------------------------------
 
-fit_main <- est[[1]]
+fit_main <- est[["fit_main"]]
 
 model_main_dx <- ~edges +
   nodematch("age.grp", diff = TRUE) +
@@ -34,20 +40,33 @@ model_main_dx <- ~edges +
   degree(0:3)
 
 dx_main <- netdx(
-  fit_main, nsims = nsims, ncores = ncores, nsteps = nsteps,
-  nwstats.formula = model_main_dx, skip.dissolution = TRUE,
-  set.control.ergm = control.simulate.ergm(MCMC.burnin = 1e5),
-  set.control.stergm = control.simulate.network(MCMC.burnin.min = 2e5))
+  fit_main,
+  nsims = nsims,
+  ncores = ncores,
+  nsteps = nsteps,
+  nwstats.formula = model_main_dx,
+  skip.dissolution = TRUE,
+  set.control.ergm = control.simulate.formula(MCMC.burnin = 1e5),
+  set.control.tergm = control.simulate.formula.tergm(MCMC.burnin.min = 2e5)
+)
 
 dx_main_static <- EpiModel::netdx(
-  fit_main, dynamic = FALSE, nsims = 10,
-  nwstats.formula = model_main_dx, skip.dissolution = TRUE,
-  set.control.ergm = control.simulate.ergm(MCMC.burnin = 1e5))
+  fit_main,
+  dynamic = FALSE,
+  nsims = 10000,
+  nwstats.formula = model_main_dx,
+  skip.dissolution = TRUE,
+  set.control.ergm = control.simulate.formula(MCMC.burnin = 1e5)
+)
 
+dx <- list(dx_main = dx_main, dx_main_static = dx_main_static)
+fn <- paste0("data/input/netdx-main-", netsize_string, ".rds")
+saveRDS(dx, file = fn)
+rm(dx, dx_main, dx_main_static)
 
-# Casual ------------------------------------------------------------------
+# Casual -----------------------------------------------------------------------
 
-fit_casl <- est[[2]]
+fit_casl <- est[["fit_casl"]]
 
 model_casl_dx <- ~edges +
   nodematch("age.grp", diff = TRUE) +
@@ -61,20 +80,33 @@ model_casl_dx <- ~edges +
   degree(0:4)
 
 dx_casl <- netdx(
-  fit_casl, nsims = nsims, ncores = ncores, nsteps = nsteps,
-  nwstats.formula = model_casl_dx, skip.dissolution = TRUE,
-  set.control.ergm = control.simulate.ergm(MCMC.burnin = 1e5),
-  set.control.stergm = control.simulate.network(MCMC.burnin.min = 2e5))
+  fit_casl,
+  nsims = nsims,
+  ncores = ncores,
+  nsteps = nsteps,
+  nwstats.formula = model_casl_dx,
+  skip.dissolution = TRUE,
+  set.control.ergm = control.simulate.formula(MCMC.burnin = 1e5),
+  set.control.tergm = control.simulate.formula.tergm(MCMC.burnin.min = 2e5)
+)
 
 dx_casl_static <- netdx(
-  fit_casl, dynamic = FALSE, nsims = 10,
-  nwstats.formula = model_casl_dx, skip.dissolution = TRUE,
-  set.control.ergm = control.simulate.ergm(MCMC.burnin = 1e5))
+  fit_casl,
+  dynamic = FALSE,
+  nsims = 10000,
+  nwstats.formula = model_casl_dx,
+  skip.dissolution = TRUE,
+  set.control.ergm = control.simulate.formula(MCMC.burnin = 1e5)
+)
 
+dx <- list(dx_casl = dx_casl, dx_casl_static = dx_casl_static)
+fn <- paste0("data/input/netdx-casl-", netsize_string, ".rds")
+saveRDS(dx, file = fn)
+rm(dx, dx_casl, dx_casl_static)
 
-# One-Off -----------------------------------------------------------------
+# One-Off ----------------------------------------------------------------------
 
-fit_inst <- est[[3]]
+fit_inst <- est[["fit_inst"]]
 
 model_inst_dx <- ~edges +
   nodematch("age.grp", diff = FALSE) +
@@ -87,51 +119,13 @@ model_inst_dx <- ~edges +
   degree(0:4)
 
 dx_inst <- netdx(
-  fit_inst, nsims = 10, dynamic = FALSE,
+  fit_inst,
+  nsims = 10000,
+  dynamic = FALSE,
   nwstats.formula = model_inst_dx,
-  set.control.ergm = control.simulate.ergm(MCMC.burnin = 1e5)) #other options can improve fit
+  set.control.ergm = control.simulate.formula(MCMC.burnin = 1e5)
+)
 
-dx <- list(dx_main = dx_main, dx_main_static = dx_main_static,
-           dx_casl = dx_casl, dx_casl_static = dx_casl_static,
-           dx_inst = dx_inst)
-
-fn.dx <- paste0("data/input/netdx-time", time.unit, "-size", network.size, ".rds")
-saveRDS(dx, file = fn.dx)
-
-
-# Interactive Dx Analysis -------------------------------------------------
-
-if (interactive()) {
-
-fn.ns <- paste0("data/input/netstats-time", time.unit, "-size", network.size, ".rds")
-netstats <- readRDS(fn.ns)
-
-dx <- readRDS(fn.dx)
-
-# Main
-print(dx$dx_main, digits = 2)
-plot(dx$dx_main)
-
-netstats$main
-
-print(dx$dx_main_static, digits = 2)
-plot(dx$dx_main_static)
-
-# Casual
-print(dx$dx_casl, digits = 2)
-plot(dx$dx_casl)
-
-netstats$casl
-
-print(dx$dx_casl_static, digits = 2)
-plot(dx$dx_casl_static)
-
-# Inst
-print(dx$dx_inst, digits = 2)
-plot(dx$dx_inst)
-
-mcmc.diagnostics(fit_main$fit)
-mcmc.diagnostics(fit_casl$fit)
-mcmc.diagnostics(fit_inst$fit)
-
-}
+dx <- list(dx_inst = dx_inst)
+fn <- paste0("data/input/netdx-inst-", netsize_string, ".rds")
+saveRDS(dx, file = fn)
