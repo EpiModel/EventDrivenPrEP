@@ -63,9 +63,6 @@ param <- param_msm(netstats = netstats,
                    ct.tx.int = (1.4/7)*time.unit,
 
                    # PrEP
-                   riskh.start = (364/time.unit)*59,
-                   prep.start = ((364/time.unit)*60) + 1,
-                   prep.start.prob = 0.66,
                    prep.tst.int = 90 / time.unit,
                    prep.risk.int = 182 / time.unit,
                    prep.sti.screen.int = 182 / time.unit,
@@ -99,7 +96,7 @@ control <- control_msm(
   simno = 1,
   nsteps = 100*7,
   nsims = 1,
-  ncores = 1,
+  ncores = 7,
   verbose = TRUE
 )
 
