@@ -87,7 +87,11 @@ param <- param_msm(netstats = netstats,
 
                    riskh.start            = 52*7,
                    prep.start             = 2*7,
-                   prep.start.prob        = rep(0.66, 3)
+                   prep.start.prob        = rep(0.66, 3),
+
+                   # New EDP parameters
+                   prep.edp.start  = 364*2, # the timeline used for LAI PrEP
+                   prep.daily.prob = 0.5    # the probability of starting daily vs. EDP
 )
 
 init <- init_msm()
