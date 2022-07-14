@@ -5,7 +5,7 @@
 # Required variables:
 #   - ncores
 if (interactive()) {
-  ncores <- 2
+  ncores <- 7
 }
 
 ## Packages ##
@@ -26,9 +26,9 @@ epistats <- build_epistats(
   geog.cat = "Atlanta",
   init.hiv.prev = c(0.33, 0.137, 0.084),
   race = TRUE,
-  time.unit = 7
+  time.unit = 1
 )
-saveRDS(epistats, file = "data/input/epistats_wk.rds")
+saveRDS(epistats, file = "data/input/epistats_daily.rds")
 
 netparams <- build_netparams(
   epistats = epistats,

@@ -3,7 +3,7 @@
 pkgload::load_all("C:\\Users\\clchand\\OneDrive - Emory University\\EpiModel-repos\\EpiModelHIV-p")
 renv::snapshot()
 
-at <- 364*2.5
+at <- 920
 
 dat <- initialize_msm(est, param, init, control)
 dat <- aging_msm(dat, at)
@@ -21,7 +21,8 @@ dat <- condoms_msm(dat, at) # acts list al saved into dat object here
 al <- dat$temp$al
 
 dat <- position_msm(dat, at)
-dat <- prep_msm(dat, at) # can incorporate adherence per act here
+dat <- prep_msm(dat, at)
+
 dat <- hivtrans_msm(dat, at)
 dat <- stitrans_msm(dat, at)
 dat <- stirecov_msm(dat, at)

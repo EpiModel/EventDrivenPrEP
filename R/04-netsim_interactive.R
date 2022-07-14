@@ -4,15 +4,17 @@
 ##
 
 ## Packages
+pkgload::load_all("C:\\Users\\clchand\\OneDrive - Emory University\\EpiModel-repos\\EpiModelHIV-p")
 suppressMessages(library("EpiModelHIV"))
 suppressMessages(library("EpiModelHPC"))
+
 
 # Load the `NETSIZE` value and the formatted `netsize_string`
 # NETSIZE <- 1e4     # to override (before sourcing the file)
 source("R/utils-netsize.R")
 
 ## Parameters
-epistats <- readRDS("data/input/epistats.rds")
+epistats <- readRDS("data/input/epistats_daily.rds")
 netstats <- readRDS(paste0("data/input/netstats-", netsize_string, ".rds"))
 est <- readRDS(paste0("data/input/netest-", netsize_string, ".rds"))
 
@@ -85,23 +87,51 @@ param <- param_msm(netstats = netstats,
                                            (0.5/7)*time.unit,
                                            (0.5/7)*time.unit),
 
-                   riskh.start            = 52*7,
-                   prep.start             = 2*7,
+                   riskh.start            = 1,
+                   prep.start             = 26*7, # needs to start at least 6 months after riskh.start
                    prep.start.prob        = rep(0.66, 3),
 
                    # New EDP parameters
-                   prep.edp.start  = 364*2, # the timeline used for LAI PrEP
+                   prep.edp.start  = 400,   # the timeline used for LAI PrEP
                    prep.daily.prob = 0.5    # the probability of starting daily vs. EDP
+
+                   # set LNT parameter to false
+
 )
 
 init <- init_msm()
 
 control <- control_msm(
   simno = 1,
-  nsteps = 100*7,
+  nsteps = 364*2,
   nsims = 1,
   ncores = 7,
-  verbose = TRUE
+  verbose = TRUE,
+  raw.output = TRUE # will output raw data including raw attribute vectors up until that time step
 )
 
 sim <- netsim(est, param, init, control)
+
+
+# Explore sim object
+
+x <- 1:728
+
+prepDailyStart <- ifelse(is.na(sim[[1]]$epi$prep.daily.start), 0, sim[[1]]$epi$prep.daily.start)
+prepDailyStart
+
+cum.prepDailyStart <- cumsum(prepDailyStart)
+cum.prepDailyStart
+
+prepEDPStart <- ifelse(is.na(sim[[1]]$epi$prep.edp.start), 0, sim[[1]]$epi$prep.edp.start)
+prepEDPStart
+
+cum.prepEDPStart <- cumsum(prepEDPStart)
+cum.prepEDPStart
+
+plot(x, y = cum.prepDailyStart, type = "l", col = "red", xlab = "Day", ylab = "Cumulative Number of PrEP Starters")
+lines(x, y = cum.prepEDPStart, type = "l", col = "blue")
+legend("topleft", legend = c("Daily PrEP", "Event-Driven PrEP"), col = c("red", "blue"), lty = 1)
+
+summary(sim[[1]]$epi$prep.daily.start)
+summary(sim[[1]]$epi$prep.edp.start)
