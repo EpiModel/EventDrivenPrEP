@@ -92,8 +92,10 @@ param <- param_msm(netstats = netstats,
                    prep.start.prob        = rep(0.66, 3),
 
                    # New EDP parameters
-                   prep.edp.start  = 400,   # the timeline used for LAI PrEP
-                   prep.daily.prob = 0.5    # the probability of starting daily vs. EDP
+                   prep.edp.start     = 400, # the timeline used for LAI PrEP
+                   prep.daily.prob    = 0.5, # the probability of starting daily vs. EDP
+                   prep.adhr.dist.edp = c(0.11, 0.06, 0.09, 0.74), # 4 adherence classes for EDP
+                   prep.adhr.rr.edp   = c(1, 0.24, 0.14, 0.03) # relative risk based on adherence class
 
                    # set LNT parameter to false
 
@@ -112,9 +114,9 @@ control <- control_msm(
 
 sim <- netsim(est, param, init, control)
 
-
 # Explore sim object
 
+## Explore the number of people starting daily oral PrEP vs. EDP
 x <- 1:728
 
 prepDailyStart <- ifelse(is.na(sim[[1]]$epi$prep.daily.start), 0, sim[[1]]$epi$prep.daily.start)
@@ -135,3 +137,9 @@ legend("topleft", legend = c("Daily PrEP", "Event-Driven PrEP"), col = c("red", 
 
 summary(sim[[1]]$epi$prep.daily.start)
 summary(sim[[1]]$epi$prep.edp.start)
+
+## Explore the distribution of EDP PrEP classes among those starting PrEP
+
+table(sim[[1]]$attr$prepClass.edp)
+table(sim[[1]]$attr$prepClass)
+
