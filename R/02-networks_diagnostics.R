@@ -1,30 +1,19 @@
-##
+#
 ## 02. Network Model Diagnostics
 ##
 
-# Required variables:
-#   - ncores
-#   - nsims
-#   - nsteps
+# Setup ------------------------------------------------------------------------
 if (interactive()) {
-  ncores <- 2
-  nsims <- 10
+  ncores <- 7
+  nsims  <- 10
   nsteps <- 500
 }
 
-# Setup ------------------------------------------------------------------------
-suppressMessages({
-  library("EpiModelHIV")
-})
-
-# Load the `NETSIZE` value and the formatted `netsize_string`
-# NETSIZE <- 1e4 # to override (before sourcing the file)
-source("R/utils-netsize.R")
+library("EpiModelHIV")
 
 est <- readRDS("data/intermediate/estimates/netest.rds")
 
 # Main -------------------------------------------------------------------------
-
 fit_main <- est[["fit_main"]]
 
 model_main_dx <- ~edges +
@@ -49,7 +38,7 @@ dx_main <- netdx(
   set.control.tergm = control.simulate.formula.tergm(MCMC.burnin.min = 2e5)
 )
 
-dx_main_static <- EpiModel::netdx(
+dx_main_static <- netdx(
   fit_main,
   dynamic = FALSE,
   nsims = 10000,
@@ -59,12 +48,10 @@ dx_main_static <- EpiModel::netdx(
 )
 
 dx <- list(dx_main = dx_main, dx_main_static = dx_main_static)
-fn <- paste0("data/input/netdx-main-", netsize_string, ".rds")
-saveRDS(dx, file = fn)
+saveRDS(dx, "data/intermediate/diagnostics/netdx-main.rds")
 rm(dx, dx_main, dx_main_static)
 
 # Casual -----------------------------------------------------------------------
-
 fit_casl <- est[["fit_casl"]]
 
 model_casl_dx <- ~edges +
@@ -99,12 +86,10 @@ dx_casl_static <- netdx(
 )
 
 dx <- list(dx_casl = dx_casl, dx_casl_static = dx_casl_static)
-fn <- paste0("data/input/netdx-casl-", netsize_string, ".rds")
-saveRDS(dx, file = fn)
+saveRDS(dx, "data/intermediate/diagnostics/netdx-casl.rds")
 rm(dx, dx_casl, dx_casl_static)
 
 # One-Off ----------------------------------------------------------------------
-
 fit_inst <- est[["fit_inst"]]
 
 model_inst_dx <- ~edges +
@@ -126,5 +111,4 @@ dx_inst <- netdx(
 )
 
 dx <- list(dx_inst = dx_inst)
-fn <- paste0("data/input/netdx-inst-", netsize_string, ".rds")
-saveRDS(dx, file = fn)
+saveRDS(dx, "data/intermediate/diagnostics/netdx-inst.rds")

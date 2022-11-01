@@ -93,7 +93,7 @@ param <- param_msm(netstats = netstats,
 
                    # New EDP parameters
                    prep.edp.start     = 400, # the timeline used for LAI PrEP
-                   prep.daily.prob    = 0.5, # the probability of starting daily vs. EDP
+                   prep.daily.prob    = 0.9, # the probability of starting daily vs. EDP
                    prep.adhr.dist.edp = c(0.11, 0.06, 0.09, 0.74), # 4 adherence classes for EDP
                    prep.adhr.rr.edp   = c(1, 0.24, 0.14, 0.03) # relative risk based on adherence class
 
@@ -112,6 +112,7 @@ control <- control_msm(
   raw.output = TRUE # will output raw data including raw attribute vectors up until that time step
 )
 
+debug(prep_msm)
 sim <- netsim(est, param, init, control)
 
 # Explore sim object
@@ -119,27 +120,38 @@ sim <- netsim(est, param, init, control)
 ## Explore the number of people starting daily oral PrEP vs. EDP
 x <- 1:728
 
-prepDailyStart <- ifelse(is.na(sim[[1]]$epi$prep.daily.start), 0, sim[[1]]$epi$prep.daily.start)
+prepDailyStart <- ifelse(is.na(sim[[1]]$epi$daily.starters), 0, sim[[1]]$epi$daily.starters)
 prepDailyStart
 
 cum.prepDailyStart <- cumsum(prepDailyStart)
 cum.prepDailyStart
 
-prepEDPStart <- ifelse(is.na(sim[[1]]$epi$prep.edp.start), 0, sim[[1]]$epi$prep.edp.start)
+prepEDPStart <- ifelse(is.na(sim[[1]]$epi$edp.starters), 0, sim[[1]]$epi$edp.starters)
 prepEDPStart
 
 cum.prepEDPStart <- cumsum(prepEDPStart)
 cum.prepEDPStart
 
-plot(x, y = cum.prepDailyStart, type = "l", col = "red", xlab = "Day", ylab = "Cumulative Number of PrEP Starters")
+plot(x, y = cum.prepDailyStart, type = "l", col = "red", xlab = "Day", ylab = "Cumulative Number of PrEP Starters",
+     main = "Probability of starting Daily PrEP = 0.9")
 lines(x, y = cum.prepEDPStart, type = "l", col = "blue")
 legend("topleft", legend = c("Daily PrEP", "Event-Driven PrEP"), col = c("red", "blue"), lty = 1)
 
-summary(sim[[1]]$epi$prep.daily.start)
-summary(sim[[1]]$epi$prep.edp.start)
+summary(sim[[1]]$epi$daily.starters)
+summary(sim[[1]]$epi$edp.starters)
+
+summary(sim[[1]]$epi$daily.starters, at = 400)
+summary(sim[[1]]$epi$edp.starters, at = 400)
+
+## Explore the change in prep.daily.prob over time
+plot(x, y = sim[[1]]$epi$prep.daily.prob, xlab = "Day", ylab = "Probability of Daily Oral PrEP vs. EDP")
 
 ## Explore the distribution of EDP PrEP classes among those starting PrEP
 
 table(sim[[1]]$attr$prepClass.edp)
 table(sim[[1]]$attr$prepClass)
+
+## Explore EDP adherence class distribution over time
+
+summary(sim[[1]]$attr$prepClass.edp)
 
