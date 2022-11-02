@@ -1,6 +1,6 @@
 {
   "R": {
-    "Version": "4.2.1",
+    "Version": "4.2.2",
     "Repositories": [
       {
         "Name": "CRAN",
@@ -20,7 +20,7 @@
       "RemoteSha": "dce6c96c8e9b82949287dca29fb9fe9ed0daf3a7",
       "RemoteHost": "api.github.com",
       "Remotes": "github::EpiModel/ARTnetData@main",
-      "Hash": "91b10d2685da5f6c2e1f959fee7b3e86",
+      "Hash": "87ec6cdd55041e79849334d96cae1a9c",
       "Requirements": [
         "ARTnetData",
         "EpiModel",
@@ -107,7 +107,7 @@
       "RemoteSha": "091f9913e5374320031cbf5b7e42d142f51366c0",
       "RemoteHost": "api.github.com",
       "Remotes": "github::EpiModel/slurmworkflow",
-      "Hash": "0b03eaa65efaee97b613d3ba66c1401b",
+      "Hash": "e713bdead21d7ac41f309779315590f3",
       "Requirements": [
         "EpiModel",
         "doParallel",
@@ -160,6 +160,16 @@
       "Repository": "CRAN",
       "Hash": "e9c08b94391e9f3f97355841229124f2",
       "Requirements": []
+    },
+    "Rglpk": {
+      "Package": "Rglpk",
+      "Version": "0.6-4",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "94a9ae53d323c330f2bc5bda54ea9f31",
+      "Requirements": [
+        "slam"
+      ]
     },
     "ape": {
       "Package": "ape",
@@ -943,6 +953,14 @@
       "Requirements": [
         "cli"
       ]
+    },
+    "slam": {
+      "Package": "slam",
+      "Version": "0.1-50",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "e25793551cbdb843154152e5ee88cbd6",
+      "Requirements": []
     },
     "slurmworkflow": {
       "Package": "slurmworkflow",
