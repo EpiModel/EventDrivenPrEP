@@ -14,9 +14,9 @@ suppressMessages(library("EpiModelHPC"))
 source("R/utils-netsize.R")
 
 ## Parameters
-epistats <- readRDS("data/input/epistats_daily.rds")
-netstats <- readRDS(paste0("data/input/netstats-", netsize_string, ".rds"))
-est <- readRDS(paste0("data/input/netest-", netsize_string, ".rds"))
+epistats <- readRDS("data/intermediate/estimates/epistats.rds")
+netstats <- readRDS("data/intermediate/estimates/netstats.rds")
+est      <- readRDS("data/intermediate/estimates/netest.rds")
 
 time.unit <- 1
 
@@ -93,7 +93,7 @@ param <- param_msm(netstats = netstats,
 
                    # New EDP parameters
                    prep.edp.start     = 400, # the timeline used for LAI PrEP
-                   prep.daily.prob    = 0.9, # the probability of starting daily vs. EDP
+                   prep.daily.prob    = 0.5, # the probability of starting daily vs. EDP
                    prep.adhr.dist.edp = c(0.11, 0.06, 0.09, 0.74), # 4 adherence classes for EDP
                    prep.adhr.rr.edp   = c(1, 0.24, 0.14, 0.03) # relative risk based on adherence class
 
@@ -133,7 +133,8 @@ cum.prepEDPStart <- cumsum(prepEDPStart)
 cum.prepEDPStart
 
 plot(x, y = cum.prepDailyStart, type = "l", col = "red", xlab = "Day", ylab = "Cumulative Number of PrEP Starters",
-     main = "Probability of starting Daily PrEP = 0.9")
+     main = paste("Probability of starting Daily PrEP =", param$prep.daily.prob),
+     sub = paste("Total MSM starting PrEP by day 600 =", cum.prepDailyStart[600] + cum.prepEDPStart[600]))
 lines(x, y = cum.prepEDPStart, type = "l", col = "blue")
 legend("topleft", legend = c("Daily PrEP", "Event-Driven PrEP"), col = c("red", "blue"), lty = 1)
 
@@ -143,15 +144,22 @@ summary(sim[[1]]$epi$edp.starters)
 summary(sim[[1]]$epi$daily.starters, at = 400)
 summary(sim[[1]]$epi$edp.starters, at = 400)
 
+cum.prepDailyStart[600] + cum.prepEDPStart[600]
+
 ## Explore the change in prep.daily.prob over time
 plot(x, y = sim[[1]]$epi$prep.daily.prob, xlab = "Day", ylab = "Probability of Daily Oral PrEP vs. EDP")
 
 ## Explore the distribution of EDP PrEP classes among those starting PrEP
 
-table(sim[[1]]$attr$prepClass.edp)
-table(sim[[1]]$attr$prepClass)
+a <- table(sim[[1]]$attr$prepClass.edp)
+a/sum(a)
+
+b <- table(sim[[1]]$attr$prepClass)
+sum(b)
+b/sum(b)
+
 
 ## Explore EDP adherence class distribution over time
 
-summary(sim[[1]]$attr$prepClass.edp)
+
 
