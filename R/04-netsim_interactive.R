@@ -6,8 +6,6 @@
 ## Packages
 pkgload::load_all("C:\\Users\\clchand\\OneDrive - Emory University\\EpiModel-repos\\EpiModelHIV-p")
 suppressMessages(library("EpiModelHIV"))
-suppressMessages(library("EpiModelHPC"))
-
 
 # Load the `NETSIZE` value and the formatted `netsize_string`
 # NETSIZE <- 1e4     # to override (before sourcing the file)
@@ -112,12 +110,15 @@ control <- control_msm(
   raw.output = TRUE # will output raw data including raw attribute vectors up until that time step
 )
 
-debug(prep_msm)
+debug(hivtrans_msm)
 sim <- netsim(est, param, init, control)
 
 # Explore sim object
 
 ## Explore the number of people starting daily oral PrEP vs. EDP
+sim[[1]]$epi$edp.starters
+sim[[1]]$epi$daily.starters
+
 x <- 1:728
 
 prepDailyStart <- ifelse(is.na(sim[[1]]$epi$daily.starters), 0, sim[[1]]$epi$daily.starters)
@@ -138,12 +139,6 @@ plot(x, y = cum.prepDailyStart, type = "l", col = "red", xlab = "Day", ylab = "C
 lines(x, y = cum.prepEDPStart, type = "l", col = "blue")
 legend("topleft", legend = c("Daily PrEP", "Event-Driven PrEP"), col = c("red", "blue"), lty = 1)
 
-summary(sim[[1]]$epi$daily.starters)
-summary(sim[[1]]$epi$edp.starters)
-
-summary(sim[[1]]$epi$daily.starters, at = 400)
-summary(sim[[1]]$epi$edp.starters, at = 400)
-
 cum.prepDailyStart[600] + cum.prepEDPStart[600]
 
 ## Explore the change in prep.daily.prob over time
@@ -155,11 +150,40 @@ a <- table(sim[[1]]$attr$prepClass.edp)
 a/sum(a)
 
 b <- table(sim[[1]]$attr$prepClass)
-sum(b)
 b/sum(b)
 
+sim[[1]]$epi$edp.class.1
+sim[[1]]$epi$edp.class.2
+sim[[1]]$epi$edp.class.3
+sim[[1]]$epi$edp.class.4
+
+sum(sim[[1]]$epi$incid.edp, na.rm = T)
+sim[[1]]$epi$incid.edp.1
+sim[[1]]$epi$incid.edp.2
+sim[[1]]$epi$incid.edp.3
+sim[[1]]$epi$incid.edp.4
+
+sum(sim[[1]]$epi$incid, na.rm = T)
 
 ## Explore EDP adherence class distribution over time
+plot(x, y = sim[[1]]$epi$edp.class.1, type = "l", col = "red",
+     xlab = "Day", ylab = "Number of EDP Users",
+     xlim = c(400, 728),
+     ylim = c(0, max(unlist(sim[[1]]$epi$edp.class.1), na.rm = T)),
+     main = "EDP Users by Adherence Class")
+lines(x, sim[[1]]$epi$edp.class.2, type = "l", col = "blue")
+lines(x, sim[[1]]$epi$edp.class.3, type = "l", col = "green")
+lines(x, sim[[1]]$epi$edp.class.4, type = "l", col = "black")
+legend("topleft", legend = c("None", "Bad", "Good", "Excellent"),
+       col = c("red", "blue", "green", "black"), lty = 1)
+
+sum(sim[[1]]$epi$incid.edp.1, na.rm = T)
+sum(sim[[1]]$epi$incid.edp.2, na.rm = T)
+sum(sim[[1]]$epi$incid.edp.3, na.rm = T)
+sum(sim[[1]]$epi$incid.edp.4, na.rm = T)
+
+
+## Explore the distribution of HIV RR by EDP PrEP classes among those starting PrEP
 
 
 
