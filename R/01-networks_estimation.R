@@ -13,7 +13,7 @@ source("R/00-project_settings.R")
 
 if (interactive()) {
   ncores <- 7
-  networks_size <- 5e3
+  networks_size <- 1e4
 }
 
 # 0. Initialize Network --------------------------------------------------------
