@@ -9,3 +9,4 @@ staging/
 .RData
 .Ruserdata
 *.rds
+workflows/
