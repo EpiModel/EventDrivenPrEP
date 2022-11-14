@@ -104,7 +104,7 @@ control <- control_msm(
   nsims = 1,
   ncores = 7,
   verbose = TRUE,
-  raw.output = TRUE # will output raw data including raw attribute vectors up until that time step
+  raw.output = FALSE # will output raw data including raw attribute vectors up until that time step
 )
 
 debug(hivtrans_msm)
@@ -181,6 +181,7 @@ sum(sim[[1]]$epi$incid.edp.4, na.rm = T)
 
 ## Explore history of prepClass.edp attribute for EDP users
 
+debug(get_attr_history)
 attr_history <- get_attr_history(sim)
 attr_history
 
