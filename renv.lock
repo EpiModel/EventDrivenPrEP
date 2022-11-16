@@ -50,10 +50,15 @@
     },
     "EpiModel": {
       "Package": "EpiModel",
-      "Version": "2.3.1",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "220ac288b89aff967f1a6fc2ea6b2f71",
+      "Version": "2.3.2",
+      "Source": "GitHub",
+      "RemoteType": "github",
+      "RemoteHost": "api.github.com",
+      "RemoteRepo": "EpiModel",
+      "RemoteUsername": "EpiModel",
+      "RemoteRef": "HEAD",
+      "RemoteSha": "66d8bd215f60a81142b75d6d43847a7447c40a11",
+      "Hash": "92c3d99a031eed693dba66f9eecaccee",
       "Requirements": [
         "RColorBrewer",
         "Rcpp",
@@ -364,10 +369,10 @@
     },
     "ergm": {
       "Package": "ergm",
-      "Version": "4.2.3",
+      "Version": "4.3.1",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "80753b7fd3f33a41d9882b1466840f99",
+      "Hash": "6f9006c6bb7f16015a6ee4eddbac537d",
       "Requirements": [
         "MASS",
         "Matrix",
@@ -389,10 +394,10 @@
     },
     "evaluate": {
       "Package": "evaluate",
-      "Version": "0.17",
+      "Version": "0.18",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "9171b012a55a1ef53f1442b1d798a3b4",
+      "Hash": "6b6c0f8467cd4ce0b500cabbc1bd1763",
       "Requirements": []
     },
     "fansi": {
@@ -472,20 +477,22 @@
     },
     "ggplot2": {
       "Package": "ggplot2",
-      "Version": "3.3.6",
+      "Version": "3.4.0",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "0fb26d0674c82705c6b701d1a61e02ea",
+      "Hash": "fd2aab12f54400c6bca43687231e246b",
       "Requirements": [
         "MASS",
-        "digest",
+        "cli",
         "glue",
         "gtable",
         "isoband",
+        "lifecycle",
         "mgcv",
         "rlang",
         "scales",
         "tibble",
+        "vctrs",
         "withr"
       ]
     },
@@ -1010,10 +1017,10 @@
     },
     "tergm": {
       "Package": "tergm",
-      "Version": "4.1.0",
+      "Version": "4.1.1",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "5063f080fcf15f8c711f699077bf3120",
+      "Hash": "d53e468a32725c1431d15cd8e8d08262",
       "Requirements": [
         "MASS",
         "coda",
@@ -1095,10 +1102,10 @@
     },
     "vctrs": {
       "Package": "vctrs",
-      "Version": "0.5.0",
+      "Version": "0.5.1",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "001fd6a5ebfff8316baf9fb2b5516dc9",
+      "Hash": "970324f6572b4fd81db507b5d4062cb0",
       "Requirements": [
         "cli",
         "glue",
