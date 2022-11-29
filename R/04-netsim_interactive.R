@@ -6,6 +6,7 @@
 ## Packages
 pkgload::load_all("C:\\Users\\clchand\\OneDrive - Emory University\\EpiModel-repos\\EpiModelHIV-p")
 suppressMessages(library("EpiModelHIV"))
+library(dplyr)
 
 ## Parameters
 epistats <- readRDS("data/intermediate/estimates/epistats.rds")
@@ -109,23 +110,25 @@ control <- control_msm(
 
 debug(hivtrans_msm)
 undebug(hivtrans_msm)
+
+options(error = recover)
+
 sim <- netsim(est, param, init, control)
 
 # Explore sim object
 
 ## Explore the number of people starting daily oral PrEP vs. EDP
-sim[[1]]$epi$edp.starters
-sim[[1]]$epi$daily.starters
+sim$epi$edp.starters
+sim$epi$daily.starters
 
 x <- 1:728
 
-prepDailyStart <- ifelse(is.na(sim[[1]]$epi$daily.starters), 0, sim[[1]]$epi$daily.starters)
-prepDailyStart
+prepDailyStart <- ifelse(is.na(sim$epi$daily.starters$sim1), 0, sim$epi$daily.starters$sim1)
 
 cum.prepDailyStart <- cumsum(prepDailyStart)
 cum.prepDailyStart
 
-prepEDPStart <- ifelse(is.na(sim[[1]]$epi$edp.starters), 0, sim[[1]]$epi$edp.starters)
+prepEDPStart <- ifelse(is.na(sim$epi$edp.starters$sim1), 0, sim$epi$edp.starters$sim1)
 prepEDPStart
 
 cum.prepEDPStart <- cumsum(prepEDPStart)
@@ -138,9 +141,10 @@ lines(x, y = cum.prepEDPStart, type = "l", col = "blue")
 legend("topleft", legend = c("Daily PrEP", "Event-Driven PrEP"), col = c("red", "blue"), lty = 1)
 
 ## Explore the change in prep.daily.prob over time
-plot(x, y = sim[[1]]$epi$prep.daily.prob, xlab = "Day", ylab = "Probability of Daily Oral PrEP vs. EDP")
+plot(x, y = sim$epi$prep.daily.prob$sim1, xlab = "Day", ylab = "Probability of Daily Oral PrEP vs. EDP")
 
 ## Explore the distribution of EDP PrEP classes among those starting PrEP
+### set raw.output = TRUE in control settings
 
 a <- table(sim[[1]]$attr$prepClass.edp)
 a/sum(a)
@@ -170,19 +174,29 @@ lines(x, sim[[1]]$epi$edp.class.4, type = "l", col = "black")
 legend("topleft", legend = c("None", "Bad", "Good", "Excellent"),
        col = c("red", "blue", "green", "black"), lty = 1)
 
-## Explore HIV incidence by EDP use
-sum(sim[[1]]$epi$incid, na.rm = T)
-sum(sim[[1]]$epi$incid.edp, na.rm = T)
-sum(sim[[1]]$epi$incid.edp.1, na.rm = T)
-sum(sim[[1]]$epi$incid.edp.2, na.rm = T)
-sum(sim[[1]]$epi$incid.edp.3, na.rm = T)
-sum(sim[[1]]$epi$incid.edp.4, na.rm = T)
+# Explore HIV incidence by EDP use
+sum(sim$epi$incid$sim1, na.rm = T)
+sum(sim$epi$incid.edp$sim1, na.rm = T)
+sum(sim$epi$incid.edp.1$sim1, na.rm = T)
+sum(sim$epi$incid.edp.2$sim1, na.rm = T)
+sum(sim$epi$incid.edp.3$sim1, na.rm = T)
+sum(sim$epi$incid.edp.4$sim1, na.rm = T)
 
 
 ## Explore history of prepClass.edp attribute for EDP users
 
-debug(get_attr_history)
 attr_history <- get_attr_history(sim)
 attr_history
 
+unique(attr_history$prepClass.edp$uids)
+length(unique(attr_history$prepClass.edp$uids))
 
+attr_history_merged <- left_join(attr_history$prepClass.edp, attr_history$sex.edp, by = c("time", "uids")) %>%
+  left_join(., attr_history$prepTimeLastPill, by = c("time", "uids")) %>%
+  select(time, uids, values.x, values.y, values) %>%
+  rename("prepClass" = "values.x",
+         "sex" = "values.y",
+         "prepTimeLastPill" = "values")
+
+id_7031 <- filter(attr_history_merged, uids == 7031)
+id_37 <- filter(attr_history_merged, uids == 37)
