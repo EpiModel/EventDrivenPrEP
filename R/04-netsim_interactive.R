@@ -5,7 +5,7 @@
 
 ## Packages
 pkgload::load_all("C:\\Users\\clchand\\OneDrive - Emory University\\EpiModel-repos\\EpiModelHIV-p")
-suppressMessages(library("EpiModelHIV"))
+#suppressMessages(library("EpiModelHIV"))
 library(dplyr)
 library(ggplot2)
 
@@ -59,7 +59,7 @@ param <- param_msm(netstats = netstats,
                    prep.risk.int = 182 / time.unit,
                    prep.sti.screen.int = 182 / time.unit,
                    prep.risk.reassess.int = 364/time.unit,
-                   prep.discont.int = rep(224.4237, 3), # divide 224.4237 by 7 for weekly time steps
+                   prep.discont.int = rep(224.4237/7*time.unit, 3),
 
                    # Partner notification
                    part.ident.main.window.int = (12/7)*time.unit,
@@ -73,7 +73,11 @@ param <- param_msm(netstats = netstats,
                                          (0.8/7)*time.unit),
                    part.tx.reinit.rate = c((0.5/7)*time.unit,
                                            (0.5/7)*time.unit,
-                                           (0.5/7)*time.unit)
+                                           (0.5/7)*time.unit),
+
+                   # PrEP start
+                   riskh.start = 1,
+                   prep.start = 182
 
 )
 
@@ -83,7 +87,7 @@ control <- control_msm(
   simno = 1,
   nsteps = 364*2,
   nsims = 1,
-  ncores = 7,
+  ncores = 1,
   verbose = TRUE,
   raw.output = FALSE # will output raw data including raw attribute vectors up until that time step
 )
