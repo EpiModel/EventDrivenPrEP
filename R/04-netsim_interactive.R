@@ -7,6 +7,7 @@
 pkgload::load_all("C:\\Users\\clchand\\OneDrive - Emory University\\EpiModel-repos\\EpiModelHIV-p")
 suppressMessages(library("EpiModelHIV"))
 library(dplyr)
+library(ggplot2)
 
 ## Parameters
 epistats <- readRDS("data/intermediate/estimates/epistats.rds")
@@ -19,37 +20,31 @@ param <- param_msm(netstats = netstats,
                    epistats = epistats,
 
                    # Clinical
-                   hiv.test.rate = c((0.00385/7)*time.unit,
-                                     (0.00380/7)*time.unit,
-                                     (0.00690/7)*time.unit),
+                   hiv.test.rate = c((0.01325/7)*time.unit,
+                                     (0.0125/7)*time.unit,
+                                     (0.0124/7)*time.unit),
                    test.window.int = 21 / time.unit,
-                   tx.init.rate = c((0.1775/7)*time.unit,
-                                  (0.190/7)*time.unit,
-                                  (0.2521/7)*time.unit),
-                   tx.halt.partial.rate = c((0.0062/7)*time.unit,
-                                            (0.0055/7)*time.unit,
-                                            (0.0031/7)*time.unit),
-                   tx.reinit.partial.rate = c((0.00255/7)*time.unit,
-                                              (0.00255/7)*time.unit,
-                                              (0.00255/7)*time.unit),
+                   tx.init.rate = c((0.092/7)*time.unit,
+                                  (0.092/7)*time.unit,
+                                  (0.127/7)*time.unit),
+                   tx.halt.partial.rate = c((0.0102/7)*time.unit,
+                                            (0.0102/7)*time.unit,
+                                            (0.0071/7)*time.unit),
+                   tx.reinit.partial.rate = c((0.00066/7)*time.unit,
+                                              (0.00066/7)*time.unit,
+                                              (0.00291/7)*time.unit),
 
                    # HIV natural history
                    max.time.off.tx.full.int = (364/time.unit) * 15,
                    max.time.on.tx.partial.int = (364/time.unit) * 10,
                    max.time.off.tx.partial.int = (364/time.unit) * 10,
-                   vl.acute.rise.int = (6.4/7)*time.unit,
-                   vl.acute.fall.int = (6.4/7)*time.unit,
+                   vl.acute.rise.int = (3/7)*time.unit,
+                   vl.acute.fall.int = (3/7)*time.unit,
                    vl.aids.onset.int = (520/7)*time.unit,
                    vl.aids.int = (104/7)*time.unit,
-                   vl.tx.down.slope = (0.25/7)*time.unit,
-                   vl.tx.aids.down.slope = (0.25/7)*time.unit,
-                   vl.tx.up.slope = (0.25/7)*time.unit,
-
-                   # Demographic
-                   a.rate = 0.00049,
-
-                   # HIV transmission prob
-                   hiv.trans.scale = c(2.44, 0.424, 0.270),
+                   vl.tx.down.rate = (0.25/7)*time.unit,
+                   vl.tx.aids.down.rate = (0.25/7)*time.unit,
+                   vl.tx.up.rate = (0.25/7)*time.unit,
 
                    # STI epi
                    rgc.ntx.int = (16.8/7)*time.unit,
@@ -64,7 +59,7 @@ param <- param_msm(netstats = netstats,
                    prep.risk.int = 182 / time.unit,
                    prep.sti.screen.int = 182 / time.unit,
                    prep.risk.reassess.int = 364/time.unit,
-                   prep.discont.rate = rep(1 - (2 ^ (-1 / (224.4237))), 3), # divide 224.4237 by 7 for weekly time steps
+                   prep.discont.int = rep(224.4237, 3), # divide 224.4237 by 7 for weekly time steps
 
                    # Partner notification
                    part.ident.main.window.int = (12/7)*time.unit,
@@ -73,27 +68,12 @@ param <- param_msm(netstats = netstats,
                    part.prep.start.prob = c((0.5/7)*time.unit,
                                             (0.5/7)*time.unit,
                                             (0.5/7)*time.unit),
-                   part.tx.init.prob = c((0.6/7)*time.unit,
+                   part.tx.init.rate = c((0.6/7)*time.unit,
                                          (0.6/7)*time.unit,
                                          (0.8/7)*time.unit),
-                   part.tx.halt.prob = c((0.00102/7)*time.unit,
-                                         (0.00102/7)*time.unit,
-                                         (0.00071/7)*time.unit),
-                   part.tx.reinit.prob = c((0.5/7)*time.unit,
+                   part.tx.reinit.rate = c((0.5/7)*time.unit,
                                            (0.5/7)*time.unit,
-                                           (0.5/7)*time.unit),
-
-                   riskh.start            = 1,
-                   prep.start             = 26*7, # needs to start at least 6 months after riskh.start
-                   prep.start.prob        = rep(0.66, 3),
-
-                   # New EDP parameters
-                   prep.edp.start     = 400, # the timeline used for LAI PrEP
-                   prep.daily.prob    = 0.5, # the probability of starting daily vs. EDP
-                   prep.adhr.dist.edp = c(0.11, 0.06, 0.09, 0.74), # 4 adherence classes for EDP
-                   prep.adhr.rr.edp   = c(1, 0.24, 0.14, 0.03) # relative risk based on adherence class
-
-                   # set LNT parameter to false
+                                           (0.5/7)*time.unit)
 
 )
 
@@ -108,10 +88,10 @@ control <- control_msm(
   raw.output = FALSE # will output raw data including raw attribute vectors up until that time step
 )
 
-debug(hivtrans_msm)
-undebug(hivtrans_msm)
+#debug(hivtrans_msm)
+#undebug(hivtrans_msm)
 
-options(error = recover)
+#options(error = recover)
 
 sim <- netsim(est, param, init, control)
 
@@ -146,31 +126,31 @@ plot(x, y = sim$epi$prep.daily.prob$sim1, xlab = "Day", ylab = "Probability of D
 ## Explore the distribution of EDP PrEP classes among those starting PrEP
 ### set raw.output = TRUE in control settings
 
-a <- table(sim[[1]]$attr$prepClass.edp)
+a <- table(sim$attr$prepClass.edp)
 a/sum(a)
 
-b <- table(sim[[1]]$attr$prepClass)
+b <- table(sim$attr$prepClass)
 b/sum(b)
 
-sim[[1]]$epi$edp.class.1
-sim[[1]]$epi$edp.class.2
-sim[[1]]$epi$edp.class.3
-sim[[1]]$epi$edp.class.4
+sim$epi$edp.class.1
+sim$epi$edp.class.2
+sim$epi$edp.class.3
+sim$epi$edp.class.4
 
-sim[[1]]$epi$incid.edp.1
-sim[[1]]$epi$incid.edp.2
-sim[[1]]$epi$incid.edp.3
-sim[[1]]$epi$incid.edp.4
+sim$epi$incid.edp.1
+sim$epi$incid.edp.2
+sim$epi$incid.edp.3
+sim$epi$incid.edp.4
 
 ## Explore EDP adherence class distribution over time
-plot(x, y = sim[[1]]$epi$edp.class.1, type = "l", col = "red",
+plot(x, y = sim$epi$edp.class.1, type = "l", col = "red",
      xlab = "Day", ylab = "Number of EDP Users",
      xlim = c(400, 728),
-     ylim = c(0, max(unlist(sim[[1]]$epi$edp.class.4), na.rm = T)),
+     ylim = c(0, max(sim$epi$edp.class.4)),
      main = "EDP Users by Adherence Class")
-lines(x, sim[[1]]$epi$edp.class.2, type = "l", col = "blue")
-lines(x, sim[[1]]$epi$edp.class.3, type = "l", col = "green")
-lines(x, sim[[1]]$epi$edp.class.4, type = "l", col = "black")
+lines(x, sim$epi$edp.class.2, type = "l", col = "blue")
+lines(x, sim$epi$edp.class.3, type = "l", col = "green")
+lines(x, sim$epi$edp.class.4, type = "l", col = "black")
 legend("topleft", legend = c("None", "Bad", "Good", "Excellent"),
        col = c("red", "blue", "green", "black"), lty = 1)
 
@@ -188,15 +168,36 @@ sum(sim$epi$incid.edp.4$sim1, na.rm = T)
 attr_history <- get_attr_history(sim)
 attr_history
 
-unique(attr_history$prepClass.edp$uids)
-length(unique(attr_history$prepClass.edp$uids))
+unique(attr_history$edp.prepClass$uids)
+length(unique(attr_history$edp.prepClass$uids))
 
-attr_history_merged <- left_join(attr_history$prepClass.edp, attr_history$sex.edp, by = c("time", "uids")) %>%
-  left_join(., attr_history$prepTimeLastPill, by = c("time", "uids")) %>%
+attr_history_merged <- left_join(attr_history$edp.prepClass, attr_history$sex.edp, by = c("time", "uids")) %>%
+  left_join(., attr_history$lastPrepCombo, by = c("time", "uids")) %>%
   select(time, uids, values.x, values.y, values) %>%
   rename("prepClass" = "values.x",
          "sex" = "values.y",
-         "prepTimeLastPill" = "values")
+         "lastPrepCombo" = "values")
 
-id_7031 <- filter(attr_history_merged, uids == 7031)
-id_37 <- filter(attr_history_merged, uids == 37)
+id_4855 <- filter(attr_history_merged, uids == 4855)
+id_42 <- filter(attr_history_merged, uids == 42)
+id_9587 <- filter(attr_history_merged, uids == 9587)
+id_3061 <- filter(attr_history_merged, uids == 3061)
+id_3934 <- filter(attr_history_merged, uids == 3934)
+
+# Plotting PrEP adherence class over time
+
+ggplot(data = attr_history_merged, aes(x = time, y = factor(uids), group = prepClass)) +
+  geom_point(aes(color = factor(prepClass)))
+
+attr_history_trunc_time <- attr_history_merged %>%
+  filter(time >= 600) %>%
+  filter(2500 <= uids & uids <= 5000)
+
+ggplot(data = attr_history_trunc_time, aes(x = time, y = factor(uids), group = prepClass)) +
+  geom_point(aes(color = factor(prepClass)))
+
+attr_history_trunc_uids <- attr_history_merged %>%
+  filter(2500 <= uids & uids <= 5000)
+
+ggplot(data = attr_history_trunc_uids, aes(x = time, y = factor(uids), group = prepClass)) +
+  geom_point(aes(color = factor(prepClass)))
