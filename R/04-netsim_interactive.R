@@ -5,7 +5,7 @@
 
 ## Packages
 pkgload::load_all("C:\\Users\\clchand\\OneDrive - Emory University\\EpiModel-repos\\EpiModelHIV-p")
-#suppressMessages(library("EpiModelHIV"))
+suppressMessages(library("EpiModelHIV"))
 library(dplyr)
 library(ggplot2)
 
@@ -59,7 +59,7 @@ param <- param_msm(netstats = netstats,
                    prep.risk.int = 182 / time.unit,
                    prep.sti.screen.int = 182 / time.unit,
                    prep.risk.reassess.int = 364/time.unit,
-                   prep.discont.int = rep(224.4237/7*time.unit, 3),
+                   prep.discont.int = c(33.42*7, 57.48*7, 57.39*7),
 
                    # Partner notification
                    part.ident.main.window.int = (12/7)*time.unit,
@@ -150,6 +150,9 @@ lines(x, as.vector(unlist(sim$epi$edp.class.4)), type = "l", col = "black")
 legend("topleft", legend = c("None", "Bad", "Good", "Excellent"),
        col = c("red", "blue", "green", "black"), lty = 1)
 
+## Stacked bar chart for adherence
+
+
 # Explore HIV incidence by EDP use
 sum(sim$epi$incid$sim1, na.rm = T)
 sum(sim$epi$incid.edp$sim1, na.rm = T)
@@ -176,11 +179,13 @@ attr_history_merged <- left_join(attr_history$edp.prepClass, attr_history$sex.ed
          "sex" = "values.y",
          "lastPrepCombo" = "values")
 
-id_9007 <- filter(attr_history_merged, uids == 9007)
-id_3235 <- filter(attr_history_merged, uids == 3235)
-id_11105 <- filter(attr_history_merged, uids == 11105)
-id_5417 <- filter(attr_history_merged, uids == 5417)
-id_2074 <- filter(attr_history_merged, uids == 2074)
+id_a <- filter(attr_history_merged, uids == 6671)
+id_b <- filter(attr_history_merged, uids == 11)
+id_c <- filter(attr_history_merged, uids == 3232)
+id_d <- filter(attr_history_merged, uids == 4318)
+id_e <- filter(attr_history_merged, uids == 61)
+
+#write.csv(id_a, "id_a.csv")
 
 # Plotting PrEP adherence class over time
 
@@ -189,10 +194,11 @@ ggplot(data = attr_history_merged, aes(x = time, y = factor(uids), group = prepC
 
 attr_history_trunc_time <- attr_history_merged %>%
   filter(time >= 600) %>%
-  filter(2500 <= uids & uids <= 5000)
+  filter(3000<= uids & uids <= 5000)
 
 ggplot(data = attr_history_trunc_time, aes(x = time, y = factor(uids), group = prepClass)) +
-  geom_point(aes(color = factor(prepClass)))
+  geom_point(aes(color = factor(prepClass))) +
+  theme_minimal()
 
 attr_history_trunc_uids <- attr_history_merged %>%
   filter(2500 <= uids & uids <= 5000)
