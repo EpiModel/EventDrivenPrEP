@@ -130,31 +130,23 @@ plot(x, y = sim$epi$prep.daily.prob$sim1, xlab = "Day", ylab = "Probability of D
 ## Explore the distribution of EDP PrEP classes among those starting PrEP
 ### set raw.output = TRUE in control settings
 
-a <- table(sim$attr$prepClass.edp)
-a/sum(a)
-
-b <- table(sim$attr$prepClass)
-b/sum(b)
+b <- table(sim$attr$sim1$prepClass)
+prop.table(b)
 
 sim$epi$edp.class.1
 sim$epi$edp.class.2
 sim$epi$edp.class.3
 sim$epi$edp.class.4
 
-sim$epi$incid.edp.1
-sim$epi$incid.edp.2
-sim$epi$incid.edp.3
-sim$epi$incid.edp.4
-
 ## Explore EDP adherence class distribution over time
-plot(x, y = sim$epi$edp.class.1, type = "l", col = "red",
+plot(x, y = as.vector(unlist(sim$epi$edp.class.1)), type = "l", col = "red",
      xlab = "Day", ylab = "Number of EDP Users",
      xlim = c(400, 728),
-     ylim = c(0, max(sim$epi$edp.class.4)),
+     ylim = c(0, max(as.vector(unlist(sim$epi$edp.class.4)), na.rm = T)),
      main = "EDP Users by Adherence Class")
-lines(x, sim$epi$edp.class.2, type = "l", col = "blue")
-lines(x, sim$epi$edp.class.3, type = "l", col = "green")
-lines(x, sim$epi$edp.class.4, type = "l", col = "black")
+lines(x, as.vector(unlist(sim$epi$edp.class.2)), type = "l", col = "blue")
+lines(x, as.vector(unlist(sim$epi$edp.class.3)), type = "l", col = "green")
+lines(x, as.vector(unlist(sim$epi$edp.class.4)), type = "l", col = "black")
 legend("topleft", legend = c("None", "Bad", "Good", "Excellent"),
        col = c("red", "blue", "green", "black"), lty = 1)
 
@@ -175,6 +167,8 @@ attr_history
 unique(attr_history$edp.prepClass$uids)
 length(unique(attr_history$edp.prepClass$uids))
 
+prop.table(table(attr_history$edp.prepClass$values))
+
 attr_history_merged <- left_join(attr_history$edp.prepClass, attr_history$sex.edp, by = c("time", "uids")) %>%
   left_join(., attr_history$lastPrepCombo, by = c("time", "uids")) %>%
   select(time, uids, values.x, values.y, values) %>%
@@ -182,11 +176,11 @@ attr_history_merged <- left_join(attr_history$edp.prepClass, attr_history$sex.ed
          "sex" = "values.y",
          "lastPrepCombo" = "values")
 
-id_4855 <- filter(attr_history_merged, uids == 4855)
-id_42 <- filter(attr_history_merged, uids == 42)
-id_9587 <- filter(attr_history_merged, uids == 9587)
-id_3061 <- filter(attr_history_merged, uids == 3061)
-id_3934 <- filter(attr_history_merged, uids == 3934)
+id_9007 <- filter(attr_history_merged, uids == 9007)
+id_3235 <- filter(attr_history_merged, uids == 3235)
+id_11105 <- filter(attr_history_merged, uids == 11105)
+id_5417 <- filter(attr_history_merged, uids == 5417)
+id_2074 <- filter(attr_history_merged, uids == 2074)
 
 # Plotting PrEP adherence class over time
 
