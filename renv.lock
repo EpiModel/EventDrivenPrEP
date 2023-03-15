@@ -17,10 +17,10 @@
       "RemoteUsername": "EpiModel",
       "RemoteRepo": "ARTnet",
       "RemoteRef": "HEAD",
-      "RemoteSha": "9c4adab02fd753f78fc61963201817a292b54a2d",
+      "RemoteSha": "0e67b01433447d1f9dba33d3f8f5398f4345c5f7",
       "RemoteHost": "api.github.com",
-      "Remotes": "github::EpiModel/EpiModel@main, github::EpiModel/ARTnetData@main,\n    github::EpiModel/EpiModelHIV-p@main",
-      "Hash": "6da5aac15cc67f7c68a76f195baf6ee4",
+      "Remotes": "github::EpiModel/ARTnetData@main, github::EpiModel/EpiModelHIV-p@main",
+      "Hash": "831ebf6358cced7ba428c9a04ce5edd3",
       "Requirements": [
         "ARTnetData",
         "EpiModel",
@@ -33,11 +33,19 @@
       "Source": "GitHub",
       "RemoteType": "github",
       "RemoteHost": "api.github.com",
-      "RemoteUsername": "EpiModel",
       "RemoteRepo": "ARTnetData",
+      "RemoteUsername": "EpiModel",
       "RemoteRef": "main",
       "RemoteSha": "5220754935e3ddbe3a10ae5c366355d8a987f2fb",
       "Hash": "2eec49921ed5305eb22c20cc85c2b101",
+      "Requirements": []
+    },
+    "DBI": {
+      "Package": "DBI",
+      "Version": "1.1.3",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "b2866e62bab9378c3cc9476a1954226b",
       "Requirements": []
     },
     "DEoptimR": {
@@ -51,14 +59,9 @@
     "EpiModel": {
       "Package": "EpiModel",
       "Version": "2.3.2",
-      "Source": "GitHub",
-      "RemoteType": "github",
-      "RemoteHost": "api.github.com",
-      "RemoteRepo": "EpiModel",
-      "RemoteUsername": "EpiModel",
-      "RemoteRef": "main",
-      "RemoteSha": "c41ae3616d60f85ced628e9ea3a2e6dfe6472a6c",
-      "Hash": "b08133839fd253c47246d2a90a419581",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "dfd8d752775e4d81ac7a3f500e4fe129",
       "Requirements": [
         "RColorBrewer",
         "Rcpp",
@@ -67,12 +70,15 @@
         "deSolve",
         "doParallel",
         "dplyr",
+        "egor",
         "ergm",
+        "ergm.ego",
         "foreach",
         "ggplot2",
         "lazyeval",
         "network",
         "networkDynamic",
+        "networkLite",
         "rlang",
         "statnet.common",
         "tergm",
@@ -83,20 +89,21 @@
       "Package": "EpiModelHIV",
       "Version": "2.6.0",
       "Source": "GitHub",
-      "Remotes": "github::EpiModel/ARTnet@main,\n        github::EpiModel/ARTnetData@main,\n        github::EpiModel/EpiModel@main",
       "RemoteType": "github",
-      "RemoteHost": "api.github.com",
-      "RemoteRepo": "EpiModelHIV-p",
       "RemoteUsername": "EpiModel",
+      "RemoteRepo": "EpiModelHIV-p",
       "RemoteRef": "EDP",
-      "RemoteSha": "eea3822168f1477491a3a790b9fda1bea2006737",
-      "Hash": "18795f5d3021eb9e612fec75fd4131ee",
+      "RemoteSha": "8ac8e4c273972d9aa172acc6d2e4c32412f1ba52",
+      "RemoteHost": "api.github.com",
+      "Remotes": "github::EpiModel/ARTnet@main, github::EpiModel/ARTnetData@main",
+      "Hash": "6c3536650bcdc9c8d956ff2c0813ee14",
       "Requirements": [
         "EpiModel",
         "dplyr",
         "ergm",
         "network",
         "networkDynamic",
+        "networkLite",
         "progressr",
         "statnet.common",
         "tergm"
@@ -130,10 +137,10 @@
     },
     "MASS": {
       "Package": "MASS",
-      "Version": "7.3-58.2",
+      "Version": "7.3-58.3",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "e02d1a0f6122fd3e634b25b433704344",
+      "Hash": "9586b552d57f5516fe4d25398c1bacd6",
       "Requirements": []
     },
     "Matrix": {
@@ -192,12 +199,13 @@
     },
     "ape": {
       "Package": "ape",
-      "Version": "5.6-2",
+      "Version": "5.7-1",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "894108412a7ec23d5de85cdcce871c8b",
+      "Hash": "10705eec964349f270504754d8fe8ef1",
       "Requirements": [
         "Rcpp",
+        "digest",
         "lattice",
         "nlme"
       ]
@@ -248,10 +256,10 @@
     },
     "cachem": {
       "Package": "cachem",
-      "Version": "1.0.6",
+      "Version": "1.0.7",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "648c5b3d71e6a37e3043617489a0a0e9",
+      "Hash": "cda74447c42f529de601fe4d4050daef",
       "Requirements": [
         "fastmap",
         "rlang"
@@ -328,10 +336,10 @@
     },
     "deSolve": {
       "Package": "deSolve",
-      "Version": "1.34",
+      "Version": "1.35",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "c67dd1e87a978781734086453f0f1d9b",
+      "Hash": "468dea1e0e888b9b0e43c555d088897c",
       "Requirements": []
     },
     "desc": {
@@ -385,6 +393,23 @@
         "vctrs"
       ]
     },
+    "egor": {
+      "Package": "egor",
+      "Version": "1.22.12",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "75d25cf3474125adcfa330036a95f25f",
+      "Requirements": [
+        "dplyr",
+        "pillar",
+        "purrr",
+        "rlang",
+        "srvyr",
+        "tibble",
+        "tidygraph",
+        "tidyr"
+      ]
+    },
     "ellipsis": {
       "Package": "ellipsis",
       "Version": "0.3.2",
@@ -421,6 +446,24 @@
         "trust"
       ]
     },
+    "ergm.ego": {
+      "Package": "ergm.ego",
+      "Version": "1.0.1",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "95bea2cce0f2d8154272e76bbe51bd6a",
+      "Requirements": [
+        "RColorBrewer",
+        "dplyr",
+        "egor",
+        "ergm",
+        "network",
+        "purrr",
+        "statnet.common",
+        "survey",
+        "tibble"
+      ]
+    },
     "evaluate": {
       "Package": "evaluate",
       "Version": "0.20",
@@ -447,10 +490,10 @@
     },
     "fastmap": {
       "Package": "fastmap",
-      "Version": "1.1.0",
+      "Version": "1.1.1",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "77bd60a6157420d4ffa93b27cf6a58b8",
+      "Hash": "f7736a18de97dea803bde0a2daaafb27",
       "Requirements": []
     },
     "foreach": {
@@ -474,10 +517,10 @@
     },
     "future": {
       "Package": "future",
-      "Version": "1.31.0",
+      "Version": "1.32.0",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "f3f0fbe5ce9b77c002f8c5170790538a",
+      "Hash": "c68517cf2f78be4ea86e140b8598a4ca",
       "Requirements": [
         "digest",
         "globals",
@@ -586,6 +629,19 @@
         "digest",
         "ellipsis",
         "fastmap",
+        "rlang"
+      ]
+    },
+    "igraph": {
+      "Package": "igraph",
+      "Version": "1.4.1",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "a7ef0d811cb66d8be9da0d7b5ab80ded",
+      "Requirements": [
+        "Matrix",
+        "magrittr",
+        "pkgconfig",
         "rlang"
       ]
     },
@@ -709,10 +765,10 @@
     },
     "mgcv": {
       "Package": "mgcv",
-      "Version": "1.8-41",
+      "Version": "1.8-42",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "6b3904f13346742caa3e82dd0303d4ad",
+      "Hash": "3460beba7ccc8946249ba35327ba902a",
       "Requirements": [
         "Matrix",
         "nlme"
@@ -725,6 +781,26 @@
       "Repository": "CRAN",
       "Hash": "18e9c28c1d3ca1560ce30658b22ce104",
       "Requirements": []
+    },
+    "minqa": {
+      "Package": "minqa",
+      "Version": "1.2.5",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "587ce77fd3c7bada7eadb2d18b62930d",
+      "Requirements": [
+        "Rcpp"
+      ]
+    },
+    "mitools": {
+      "Package": "mitools",
+      "Version": "2.4",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "a4b659bd0528226724d55034f11ed7cb",
+      "Requirements": [
+        "DBI"
+      ]
     },
     "munsell": {
       "Package": "munsell",
@@ -750,13 +826,27 @@
     },
     "networkDynamic": {
       "Package": "networkDynamic",
-      "Version": "0.11.2",
+      "Version": "0.11.3",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "800563b69b9dfe96c1aea8cada5ede1c",
+      "Hash": "dbf1329acd23d51a62c59dea6e3c5e58",
       "Requirements": [
         "network",
+        "networkLite",
         "statnet.common"
+      ]
+    },
+    "networkLite": {
+      "Package": "networkLite",
+      "Version": "1.0.5",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "76b24ec935f6557644870eda3c0c24df",
+      "Requirements": [
+        "dplyr",
+        "network",
+        "statnet.common",
+        "tibble"
       ]
     },
     "nlme": {
@@ -768,6 +858,14 @@
       "Requirements": [
         "lattice"
       ]
+    },
+    "numDeriv": {
+      "Package": "numDeriv",
+      "Version": "2016.8-1.1",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "df58958f293b166e4ab885ebcad90e02",
+      "Requirements": []
     },
     "parallelly": {
       "Package": "parallelly",
@@ -928,18 +1026,18 @@
     },
     "renv": {
       "Package": "renv",
-      "Version": "0.16.0",
+      "Version": "0.17.0",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "c9e8442ab69bc21c9697ecf856c1e6c7",
+      "Hash": "ce3065fc1a0b64a859f55ac3998d6927",
       "Requirements": []
     },
     "rlang": {
       "Package": "rlang",
-      "Version": "1.0.6",
+      "Version": "1.1.0",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "4ed1f8336c8d52c3e750adcdc57228a7",
+      "Hash": "dc079ccd156cde8647360f473c1fa718",
       "Requirements": []
     },
     "rle": {
@@ -1041,15 +1139,32 @@
       "Version": "0.0.0.9000",
       "Source": "GitHub",
       "RemoteType": "github",
-      "RemoteHost": "api.github.com",
       "RemoteUsername": "EpiModel",
       "RemoteRepo": "slurmworkflow",
-      "RemoteRef": "main",
-      "RemoteSha": "96da618fc4c1713f76c2e42664b7e2a16c9f0718",
-      "Hash": "de2cf07f62d9922e6d9f28ef98d63d19",
+      "RemoteRef": "HEAD",
+      "RemoteSha": "fd1a5d358f3b000bed695fdddb7edf2a9dd52ae0",
+      "RemoteHost": "api.github.com",
+      "Hash": "928d8b95539eb6dd3f1f535396f8a1c2",
       "Requirements": [
         "fs",
         "yaml"
+      ]
+    },
+    "srvyr": {
+      "Package": "srvyr",
+      "Version": "1.2.0",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "9388d659c3f4b7a93be210ebaaba8cf1",
+      "Requirements": [
+        "dplyr",
+        "magrittr",
+        "rlang",
+        "survey",
+        "tibble",
+        "tidyr",
+        "tidyselect",
+        "vctrs"
       ]
     },
     "statnet.common": {
@@ -1086,6 +1201,31 @@
         "vctrs"
       ]
     },
+    "survey": {
+      "Package": "survey",
+      "Version": "4.1-1",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "8aec2bc6533a6d1e6ef43bbf0c20205a",
+      "Requirements": [
+        "Matrix",
+        "lattice",
+        "minqa",
+        "mitools",
+        "numDeriv",
+        "survival"
+      ]
+    },
+    "survival": {
+      "Package": "survival",
+      "Version": "3.5-5",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "d683341b1fa2e8d817efde27d6e6d35b",
+      "Requirements": [
+        "Matrix"
+      ]
+    },
     "tergm": {
       "Package": "tergm",
       "Version": "4.1.1",
@@ -1106,10 +1246,10 @@
     },
     "tibble": {
       "Package": "tibble",
-      "Version": "3.1.8",
+      "Version": "3.2.0",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "56b6934ef0f8c68225949a8672fe1a8f",
+      "Hash": "37695ff125982007d42a59ad10982ff2",
       "Requirements": [
         "fansi",
         "lifecycle",
@@ -1118,6 +1258,25 @@
         "pkgconfig",
         "rlang",
         "vctrs"
+      ]
+    },
+    "tidygraph": {
+      "Package": "tidygraph",
+      "Version": "1.2.3",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "0fc97a52b4b32a0b4a3de4c5241348e2",
+      "Requirements": [
+        "R6",
+        "cli",
+        "cpp11",
+        "dplyr",
+        "igraph",
+        "magrittr",
+        "pillar",
+        "rlang",
+        "tibble",
+        "tidyr"
       ]
     },
     "tidyr": {
