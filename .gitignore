@@ -1,12 +1,11 @@
 library/
-local/
-cellar/
 lock/
-python/
-staging/
 .Rproj.user
 .Rhistory
 .RData
 .Ruserdata
 *.rds
 workflows/
+renv/
+data/output
+data/intermediate
