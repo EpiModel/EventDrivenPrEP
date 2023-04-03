@@ -11,4 +11,5 @@ pkgload::load_all("C:\\Users\\clchand\\OneDrive - Emory University\\EpiModel-rep
 pkgload::load_all("C:\\Users\\clchand\\OneDrive - Emory University\\EpiModel-repos\\EpiModel")
 
 renv::update()
+renv::status()
 renv::snapshot()

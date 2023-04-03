@@ -5,7 +5,7 @@
 
 ## Packages
 pkgload::load_all("C:\\Users\\clchand\\OneDrive - Emory University\\EpiModel-repos\\EpiModelHIV-p")
-suppressMessages(library("EpiModelHIV"))
+#suppressMessages(library("EpiModelHIV"))
 library(dplyr)
 library(ggplot2)
 
@@ -60,6 +60,7 @@ param <- param_msm(netstats = netstats,
                    prep.sti.screen.int = 182 / time.unit,
                    prep.risk.reassess.int = 364/time.unit,
                    prep.discont.int = c(33.42*7, 57.48*7, 57.39*7),
+                   edp.start.scenario = 2,
 
                    # Partner notification
                    part.ident.main.window.int = (12/7)*time.unit,
@@ -92,8 +93,8 @@ control <- control_msm(
   raw.output = FALSE # will output raw data including raw attribute vectors up until that time step
 )
 
-#debug(hivtrans_msm)
-#undebug(hivtrans_msm)
+#debug(prep_msm)
+#undebug(prep_msm)
 
 #options(error = recover)
 
@@ -119,13 +120,10 @@ cum.prepEDPStart <- cumsum(prepEDPStart)
 cum.prepEDPStart
 
 plot(x, y = cum.prepDailyStart, type = "l", col = "red", xlab = "Day", ylab = "Cumulative Number of PrEP Starters",
-     main = paste("Probability of starting Daily PrEP =", param$prep.daily.prob),
+     main = paste("EDP Start Scenario =", param$edp.start.scenario),
      sub = paste("Total MSM starting PrEP by day 600 =", cum.prepDailyStart[600] + cum.prepEDPStart[600]))
 lines(x, y = cum.prepEDPStart, type = "l", col = "blue")
 legend("topleft", legend = c("Daily PrEP", "Event-Driven PrEP"), col = c("red", "blue"), lty = 1)
-
-## Explore the change in prep.daily.prob over time
-plot(x, y = sim$epi$prep.daily.prob$sim1, xlab = "Day", ylab = "Probability of Daily Oral PrEP vs. EDP")
 
 ## Explore the distribution of EDP PrEP classes among those starting PrEP
 ### set raw.output = TRUE in control settings
@@ -137,6 +135,11 @@ sim$epi$edp.class.1
 sim$epi$edp.class.2
 sim$epi$edp.class.3
 sim$epi$edp.class.4
+
+sum(sim$epi$edp.class.1$sim1, na.rm = TRUE)
+sum(sim$epi$edp.class.2$sim1, na.rm = TRUE)
+sum(sim$epi$edp.class.3$sim1, na.rm = TRUE)
+sum(sim$epi$edp.class.4$sim1, na.rm = TRUE)
 
 ## Explore EDP adherence class distribution over time
 plot(x, y = as.vector(unlist(sim$epi$edp.class.1)), type = "l", col = "red",
@@ -151,7 +154,6 @@ legend("topleft", legend = c("None", "Bad", "Good", "Excellent"),
        col = c("red", "blue", "green", "black"), lty = 1)
 
 ## Stacked bar chart for adherence
-
 
 # Explore HIV incidence by EDP use
 sum(sim$epi$incid$sim1, na.rm = T)
@@ -174,18 +176,21 @@ prop.table(table(attr_history$edp.prepClass$values))
 
 attr_history_merged <- left_join(attr_history$edp.prepClass, attr_history$sex.edp, by = c("time", "uids")) %>%
   left_join(., attr_history$lastPrepCombo, by = c("time", "uids")) %>%
-  select(time, uids, values.x, values.y, values) %>%
+  left_join(., attr_history$timeLastSex, by = c("time", "uids")) %>%
+  select(time, uids, values.x, values.y, values.x.x, values.y.y) %>%
   rename("prepClass" = "values.x",
          "sex" = "values.y",
-         "lastPrepCombo" = "values")
+         "lastPrepCombo" = "values.x.x",
+         "timeLastSex" = "values.y.y") %>%
+  mutate(timeSinceLastSex = time- timeLastSex)
 
-id_a <- filter(attr_history_merged, uids == 6671)
-id_b <- filter(attr_history_merged, uids == 11)
-id_c <- filter(attr_history_merged, uids == 3232)
-id_d <- filter(attr_history_merged, uids == 4318)
-id_e <- filter(attr_history_merged, uids == 61)
+id_a <- filter(attr_history_merged, uids == 4493)
+id_b <- filter(attr_history_merged, uids == 107)
+id_c <- filter(attr_history_merged, uids == 400)
+id_d <- filter(attr_history_merged, uids == 3169)
+id_e <- filter(attr_history_merged, uids == 7013)
 
-#write.csv(id_a, "id_a.csv")
+#write.csv(id_d, "id_d.csv")
 
 # Plotting PrEP adherence class over time
 
@@ -201,7 +206,75 @@ ggplot(data = attr_history_trunc_time, aes(x = time, y = factor(uids), group = p
   theme_minimal()
 
 attr_history_trunc_uids <- attr_history_merged %>%
-  filter(2500 <= uids & uids <= 5000)
+  filter(600 <= time) %>%
+  filter(2500 <= uids & uids <= 2600)
 
-ggplot(data = attr_history_trunc_uids, aes(x = time, y = factor(uids), group = prepClass)) +
-  geom_point(aes(color = factor(prepClass)))
+ggplot(data = attr_history_trunc_uids, aes(x = time, y = factor(uids))) +
+  geom_point(aes(color = factor(prepClass))) +
+  labs(color="EDP Adherence\nClass") +
+  xlab("Day") +
+  ylab("EDP User ID") +
+  ggtitle("Adherence Class Trajectories among EDP Users") +
+  scale_color_discrete(labels=c("None", "Poor", "Good", "Excellent", "NA"))
+
+
+# Stacked bar chart
+
+prepClass <- attr_history_merged %>%
+  select(time, prepClass) %>%
+  group_by(time, prepClass) %>%
+  summarise(value = n())
+
+time <- unique(prepClass$time)
+length(time)
+
+ggplot(data = prepClass,
+       aes(x = time, y = value, fill = factor(prepClass))) +
+         geom_bar(position="fill", stat="identity")
+
+ggplot(data = prepClass,
+       aes(x = time, y = value, fill = factor(prepClass))) +
+  geom_bar(position="stack", stat="identity") +
+  labs(fill="EDP Adherence\nClass") +
+  xlab("Day") +
+  ylab("EDP Users") +
+  ggtitle("Distribution of Adherence Classes among EDP Users") +
+  scale_fill_discrete(labels=c("None", "Poor", "Good", "Excellent", "NA"))
+
+prepClass_4 <- attr_history_merged %>%
+  select(time, prepClass) %>%
+  group_by(time, prepClass) %>%
+  summarise(value = n()) %>%
+  filter(prepClass == 4)
+
+prepClass_3 <- attr_history_merged %>%
+  select(time, prepClass) %>%
+  group_by(time, prepClass) %>%
+  summarise(value = n()) %>%
+  filter(prepClass == 3)
+
+a <- a %>%
+  mutate(time = 1:728) %>%
+  left_join(prepClass_4, by = "time")
+
+a <- a %>%
+  select(sim1, time, value) %>%
+  filter(time >= 400)
+
+## Explore number of people switching from daily to EDP and EDP to daily
+
+sim$epi$prep.switch
+sim$epi$edp.switch
+
+y1 <- as.vector(sim$epi$prep.switch$sim1)
+y2 <- as.vector(sim$epi$edp.switch$sim1)
+
+plot(x, y1, type = "l",
+     xlab = "Day", ylab = "PrEP Users",
+     xlim = c(400, 728),
+     main = "Number of PrEP Users Switching Regimens")
+lines(x, y2, type = "l", col = "blue")
+legend("topright", legend = c("Daily to EDP", "EDP to Daily"),
+       col = c("black", "blue"), lty = 1)
+
+
