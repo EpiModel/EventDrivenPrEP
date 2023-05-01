@@ -3,16 +3,19 @@
 ## 04. Small-scale epidemic simulation for testing/debugging
 ##
 
-## Packages
-pkgload::load_all("C:\\Users\\clchand\\OneDrive - Emory University\\EpiModel-repos\\EpiModelHIV-p")
-#suppressMessages(library("EpiModelHIV"))
+## Libraries ------------------------------------------------------------------
+#pkgload::load_all("C:\\Users\\clchand\\OneDrive - Emory University\\EpiModel-repos\\EpiModelHIV-p")
+library("EpiModelHIV")
 library(dplyr)
 library(ggplot2)
 
-## Parameters
-epistats <- readRDS("data/intermediate/estimates/epistats.rds")
-netstats <- readRDS("data/intermediate/estimates/netstats.rds")
-est      <- readRDS("data/intermediate/estimates/netest.rds")
+# Settings ---------------------------------------------------------------------
+source("R/utils-0_project_settings.R")
+
+# Necessary files
+epistats <- readRDS("data/intermediate/estimates/epistats-local.rds")
+netstats <- readRDS("data/intermediate/estimates/netstats-local.rds")
+est      <- readRDS("data/intermediate/estimates/netest-local.rds")
 
 time.unit <- 1
 
@@ -60,7 +63,8 @@ param <- param_msm(netstats = netstats,
                    prep.sti.screen.int = 182 / time.unit,
                    prep.risk.reassess.int = 364/time.unit,
                    prep.discont.int = c(33.42*7, 57.48*7, 57.39*7),
-                   edp.start.scenario = 2,
+                   edp.start.scenario = 1,
+                   #prep.edp.start = Inf,
 
                    # Partner notification
                    part.ident.main.window.int = (12/7)*time.unit,
@@ -120,7 +124,7 @@ cum.prepEDPStart <- cumsum(prepEDPStart)
 cum.prepEDPStart
 
 plot(x, y = cum.prepDailyStart, type = "l", col = "red", xlab = "Day", ylab = "Cumulative Number of PrEP Starters",
-     main = paste("EDP Start Scenario =", param$edp.start.scenario),
+     main = paste("EDP Start Scenario =", sim$param$edp.start.scenario),
      sub = paste("Total MSM starting PrEP by day 600 =", cum.prepDailyStart[600] + cum.prepEDPStart[600]))
 lines(x, y = cum.prepEDPStart, type = "l", col = "blue")
 legend("topleft", legend = c("Daily PrEP", "Event-Driven PrEP"), col = c("red", "blue"), lty = 1)
@@ -163,6 +167,31 @@ sum(sim$epi$incid.edp.2$sim1, na.rm = T)
 sum(sim$epi$incid.edp.3$sim1, na.rm = T)
 sum(sim$epi$incid.edp.4$sim1, na.rm = T)
 
+# Pill count tracker
+summary(sim$epi$pills, na.rm = T)
+sum(sim$epi$pills, na.rm = T)
+plot(x, unlist(sim$epi$pills))
+
+summary(sim$epi$pillspp)
+mean(sim$epi$pillspp$sim1, na.rm = T)*7
+plot(x, unlist(sim$epi$pillspp))
+
+summary(sim$epi$pills7d)
+plot(x, unlist(sim$epi$pills7d))
+
+RcppRoll::roll_meanr(unlist(sim$epi$pills7d), 7)
+
+# HIV incidence for daily PrEP
+sum(sim$epi$incid$sim1, na.rm = T)
+sum(sim$epi$incid.daily$sim1, na.rm = T)
+
+# Pill counts for daily PrEP users
+hi <- sum(sim$epi$prepCurr.hi$sim1, na.rm = T)/7*5.5
+med <- sum(sim$epi$prepCurr.med$sim1, na.rm = T)/7*2.5
+low <- sum(sim$epi$prepCurr.low$sim1, na.rm = T)/7
+
+daily.pills <- floor(hi+med+low)
+daily.pills
 
 ## Explore history of prepClass.edp attribute for EDP users
 
@@ -177,20 +206,24 @@ prop.table(table(attr_history$edp.prepClass$values))
 attr_history_merged <- left_join(attr_history$edp.prepClass, attr_history$sex.edp, by = c("time", "uids")) %>%
   left_join(., attr_history$lastPrepCombo, by = c("time", "uids")) %>%
   left_join(., attr_history$timeLastSex, by = c("time", "uids")) %>%
-  select(time, uids, values.x, values.y, values.x.x, values.y.y) %>%
+  left_join(., attr_history$pillCount, by = c("time", "uids")) %>%
+  left_join(., attr_history$pillCount7d, by = c("time", "uids")) %>%
+  select(time, uids, values.x, values.y, values.x.x, values.y.y, values.x.x.x, values.y.y.y) %>%
   rename("prepClass" = "values.x",
          "sex" = "values.y",
          "lastPrepCombo" = "values.x.x",
-         "timeLastSex" = "values.y.y") %>%
-  mutate(timeSinceLastSex = time- timeLastSex)
+         "timeLastSex" = "values.y.y",
+         "pillCount" = "values.x.x.x",
+         "pillCount7d" = "values.y.y.y") %>%
+  mutate(timeSinceLastSex = time - timeLastSex)
 
-id_a <- filter(attr_history_merged, uids == 4493)
-id_b <- filter(attr_history_merged, uids == 107)
-id_c <- filter(attr_history_merged, uids == 400)
-id_d <- filter(attr_history_merged, uids == 3169)
-id_e <- filter(attr_history_merged, uids == 7013)
+id_a <- filter(attr_history_merged, uids == 4560)
+id_b <- filter(attr_history_merged, uids == 6113)
+id_c <- filter(attr_history_merged, uids == 7203)
+id_d <- filter(attr_history_merged, uids == 314)
+id_e <- filter(attr_history_merged, uids == 8530)
 
-#write.csv(id_d, "id_d.csv")
+write.csv(id_a, "sample_id.csv")
 
 # Plotting PrEP adherence class over time
 
