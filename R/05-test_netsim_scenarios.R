@@ -17,7 +17,7 @@ source("R/utils-default_inputs.R") # generate `path_to_est`, `param` and `init`
 # Controls
 source("R/utils-targets.R")
 # `nsims` and `ncores` will be overridden later
-control <- control_msm(nsteps = 52 * 1)
+control <- control_msm(nsteps = 365 * 2)
 
 # See listing of modules and other control settings
 # Module function defaults defined in ?control_msm
