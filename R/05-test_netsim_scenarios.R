@@ -17,7 +17,7 @@ source("R/utils-default_inputs.R") # generate `path_to_est`, `param` and `init`
 # Controls
 source("R/utils-targets.R")
 # `nsims` and `ncores` will be overridden later
-control <- control_msm(nsteps = 365 * 2)
+control <- control_msm(nsteps = 364 * 2)
 
 # See listing of modules and other control settings
 # Module function defaults defined in ?control_msm
@@ -68,20 +68,28 @@ EpiModelHPC::netsim_scenarios(
 list.files("data/intermediate/scenario_test")
 
 # Load one of the simulation files
-sim <- readRDS("data/intermediate/scenario_test/sim__scenario_1__1.rds")
-names(sim)
+sim1 <- readRDS("data/intermediate/scenario_test/sim__scenario_1__1.rds")
+names(sim1)
 
 # Examine the model object output
-print(sim)
+print(sim1)
 
 # Plot outcomes
-plot(sim, y = "i.num")
-plot(sim, y = "ir100")
+plot(sim1, y = "i.num")
+plot(sim1, y = "ir100")
 
 # Convert to data frame
-df <- as_tibble(sim)
-head(df)
-glimpse(df)
+df1 <- as_tibble(sim1)
+head(df1)
+glimpse(df1)
+
+# Load one of the simulation files
+sim2 <- readRDS("data/intermediate/scenario_test/sim__scenario_2__1.rds")
+plot(sim2, y = "i.num")
+plot(sim2, y = "ir100")
+df2 <- as_tibble(sim2)
+head(df2)
+glimpse(df2)
 
 # Clean folder
 unlink("data/intermediate/scenario_test")
