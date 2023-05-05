@@ -56,13 +56,13 @@
     },
     "DEoptimR": {
       "Package": "DEoptimR",
-      "Version": "1.0-12",
+      "Version": "1.0-13",
       "Source": "Repository",
       "Repository": "CRAN",
       "Requirements": [
         "stats"
       ],
-      "Hash": "50c37a30c2c3f3b1e75741631cdae0c7"
+      "Hash": "8f5c81679eea074e7152f16b78d7de81"
     },
     "EpiModel": {
       "Package": "EpiModel",
@@ -103,13 +103,13 @@
       "Package": "EpiModelHIV",
       "Version": "2.6.0",
       "Source": "GitHub",
+      "Remotes": "github::EpiModel/ARTnet@main, github::EpiModel/ARTnetData@main",
       "RemoteType": "github",
       "RemoteHost": "api.github.com",
-      "RemoteUsername": "EpiModel",
       "RemoteRepo": "EpiModelHIV-p",
+      "RemoteUsername": "EpiModel",
       "RemoteRef": "EDP",
-      "RemoteSha": "fe8eef5d233353a2b9eda799e6ac4a2a995ef3ab",
-      "Remotes": "github::EpiModel/ARTnet@main, github::EpiModel/ARTnetData@main",
+      "RemoteSha": "b5e9e4b0a9a5551245dc1068ae6f95bce9e133d7",
       "Requirements": [
         "EpiModel",
         "R",
@@ -122,18 +122,18 @@
         "statnet.common",
         "tergm"
       ],
-      "Hash": "2d25dec5eec13e7a2a3531493860fead"
+      "Hash": "3b67c962de7cbd762ff2ccc3721ca1d3"
     },
     "EpiModelHPC": {
       "Package": "EpiModelHPC",
       "Version": "2.2.0",
       "Source": "GitHub",
       "RemoteType": "github",
-      "RemoteHost": "api.github.com",
       "RemoteUsername": "EpiModel",
       "RemoteRepo": "EpiModelHPC",
       "RemoteRef": "main",
-      "RemoteSha": "e9a08f1d8ed7c7ecb1abee5eaafca4726e506183",
+      "RemoteSha": "6c16b69bf182af37e8adb82c219af8b481569b34",
+      "RemoteHost": "api.github.com",
       "Remotes": "github::EpiModel/slurmworkflow",
       "Requirements": [
         "EpiModel",
@@ -149,11 +149,11 @@
         "tergm",
         "tidyr"
       ],
-      "Hash": "c39e41e14df703cdbaefb04d19083cfd"
+      "Hash": "90464b776446fef2199c4589b0d0abb7"
     },
     "MASS": {
       "Package": "MASS",
-      "Version": "7.3-59",
+      "Version": "7.3-60",
       "Source": "Repository",
       "Repository": "CRAN",
       "Requirements": [
@@ -164,7 +164,7 @@
         "stats",
         "utils"
       ],
-      "Hash": "26570ae748e78cb2b0f56019dd2ba354"
+      "Hash": "a56a6365b3fa73293ea8d084be0d9bb0"
     },
     "Matrix": {
       "Package": "Matrix",
@@ -313,14 +313,14 @@
     },
     "cachem": {
       "Package": "cachem",
-      "Version": "1.0.7",
+      "Version": "1.0.8",
       "Source": "Repository",
       "Repository": "CRAN",
       "Requirements": [
         "fastmap",
         "rlang"
       ],
-      "Hash": "cda74447c42f529de601fe4d4050daef"
+      "Hash": "c35768291560ce302c0a6589f92e837d"
     },
     "callr": {
       "Package": "callr",
@@ -631,14 +631,14 @@
     },
     "fs": {
       "Package": "fs",
-      "Version": "1.6.1",
+      "Version": "1.6.2",
       "Source": "Repository",
       "Repository": "CRAN",
       "Requirements": [
         "R",
         "methods"
       ],
-      "Hash": "f4dcd23b67e33d851d2079f703e8b985"
+      "Hash": "94af08e0aa9675a16fadbb3aaaa90d2a"
     },
     "future": {
       "Package": "future",
@@ -1263,14 +1263,14 @@
     },
     "rlang": {
       "Package": "rlang",
-      "Version": "1.1.0",
+      "Version": "1.1.1",
       "Source": "Repository",
       "Repository": "CRAN",
       "Requirements": [
         "R",
         "utils"
       ],
-      "Hash": "dc079ccd156cde8647360f473c1fa718"
+      "Hash": "a85c767b55f0bf9b7ad16c6d7baee5bb"
     },
     "rle": {
       "Package": "rle",
@@ -1334,7 +1334,7 @@
     },
     "sass": {
       "Package": "sass",
-      "Version": "0.4.5",
+      "Version": "0.4.6",
       "Source": "Repository",
       "Repository": "CRAN",
       "Requirements": [
@@ -1344,7 +1344,7 @@
         "rappdirs",
         "rlang"
       ],
-      "Hash": "2bb4371a4c80115518261866eab6ab11"
+      "Hash": "cc3ec7dd33982ef56570229b62d6388e"
     },
     "scales": {
       "Package": "scales",
@@ -1460,7 +1460,7 @@
     },
     "survey": {
       "Package": "survey",
-      "Version": "4.1-1",
+      "Version": "4.2-1",
       "Source": "Repository",
       "Repository": "CRAN",
       "Requirements": [
@@ -1477,7 +1477,7 @@
         "stats",
         "survival"
       ],
-      "Hash": "8aec2bc6533a6d1e6ef43bbf0c20205a"
+      "Hash": "03195177db81a992f22361f8f54852f4"
     },
     "survival": {
       "Package": "survival",
@@ -1653,17 +1653,17 @@
     },
     "viridisLite": {
       "Package": "viridisLite",
-      "Version": "0.4.1",
+      "Version": "0.4.2",
       "Source": "Repository",
       "Repository": "CRAN",
       "Requirements": [
         "R"
       ],
-      "Hash": "62f4b5da3e08d8e5bcba6cac15603f70"
+      "Hash": "c826c7c4241b6fc89ff55aaea3fa7491"
     },
     "vroom": {
       "Package": "vroom",
-      "Version": "1.6.1",
+      "Version": "1.6.3",
       "Source": "Repository",
       "Repository": "CRAN",
       "Requirements": [
@@ -1685,7 +1685,7 @@
         "vctrs",
         "withr"
       ],
-      "Hash": "7015a74373b83ffaef64023f4a0f5033"
+      "Hash": "8318e64ffb3a70e652494017ec455561"
     },
     "withr": {
       "Package": "withr",
