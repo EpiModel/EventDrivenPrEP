@@ -17,73 +17,12 @@ epistats <- readRDS("data/intermediate/estimates/epistats-local.rds")
 netstats <- readRDS("data/intermediate/estimates/netstats-local.rds")
 est      <- readRDS("data/intermediate/estimates/netest-local.rds")
 
-time.unit <- 1
-
-param <- param_msm(netstats = netstats,
-                   epistats = epistats,
-
-                   # Clinical
-                   hiv.test.rate = c((0.01325/7)*time.unit,
-                                     (0.0125/7)*time.unit,
-                                     (0.0124/7)*time.unit),
-                   test.window.int = 21 / time.unit,
-                   tx.init.rate = c((0.092/7)*time.unit,
-                                  (0.092/7)*time.unit,
-                                  (0.127/7)*time.unit),
-                   tx.halt.partial.rate = c((0.0102/7)*time.unit,
-                                            (0.0102/7)*time.unit,
-                                            (0.0071/7)*time.unit),
-                   tx.reinit.partial.rate = c((0.00066/7)*time.unit,
-                                              (0.00066/7)*time.unit,
-                                              (0.00291/7)*time.unit),
-
-                   # HIV natural history
-                   max.time.off.tx.full.int = (364/time.unit) * 15,
-                   max.time.on.tx.partial.int = (364/time.unit) * 10,
-                   max.time.off.tx.partial.int = (364/time.unit) * 10,
-                   vl.acute.rise.int = (3/7)*time.unit,
-                   vl.acute.fall.int = (3/7)*time.unit,
-                   vl.aids.onset.int = (520/7)*time.unit,
-                   vl.aids.int = (104/7)*time.unit,
-                   vl.tx.down.rate = (0.25/7)*time.unit,
-                   vl.tx.aids.down.rate = (0.25/7)*time.unit,
-                   vl.tx.up.rate = (0.25/7)*time.unit,
-
-                   # STI epi
-                   rgc.ntx.int = (16.8/7)*time.unit,
-                   ugc.ntx.int = (16.8/7)*time.unit,
-                   gc.tx.int = (1.4/7)*time.unit,
-                   rct.ntx.int = (32/7)*time.unit,
-                   uct.ntx.int = (32/7)*time.unit,
-                   ct.tx.int = (1.4/7)*time.unit,
-
-                   # PrEP
-                   prep.tst.int = 90 / time.unit,
-                   prep.risk.int = 182 / time.unit,
-                   prep.sti.screen.int = 182 / time.unit,
-                   prep.risk.reassess.int = 364/time.unit,
-                   prep.discont.int = c(33.42*7, 57.48*7, 57.39*7),
-                   edp.start.scenario = 1,
-                   #prep.edp.start = Inf,
-
-                   # Partner notification
-                   part.ident.main.window.int = (12/7)*time.unit,
-                   part.ident.casl.window.int = (12/7)*time.unit,
-                   part.ident.ooff.window.int = (12/7)*time.unit,
-                   part.prep.start.prob = c((0.5/7)*time.unit,
-                                            (0.5/7)*time.unit,
-                                            (0.5/7)*time.unit),
-                   part.tx.init.rate = c((0.6/7)*time.unit,
-                                         (0.6/7)*time.unit,
-                                         (0.8/7)*time.unit),
-                   part.tx.reinit.rate = c((0.5/7)*time.unit,
-                                           (0.5/7)*time.unit,
-                                           (0.5/7)*time.unit),
-
-                   # PrEP start
-                   riskh.start = 1,
-                   prep.start = 182
-
+param <- param.net(
+  data.frame.params   = read.csv("data/input/params.csv"),
+  netstats            = netstats,
+  epistats            = epistats,
+  prep.start          = 182,
+  riskh.start         = 1
 )
 
 init <- init_msm()
@@ -125,7 +64,7 @@ cum.prepEDPStart
 
 plot(x, y = cum.prepDailyStart, type = "l", col = "red", xlab = "Day", ylab = "Cumulative Number of PrEP Starters",
      main = paste("EDP Start Scenario =", sim$param$edp.start.scenario),
-     sub = paste("Total MSM starting PrEP by day 600 =", cum.prepDailyStart[600] + cum.prepEDPStart[600]))
+     sub = paste("Total MSM starting PrEP by day 728 =", cum.prepDailyStart[728] + cum.prepEDPStart[728]))
 lines(x, y = cum.prepEDPStart, type = "l", col = "blue")
 legend("topleft", legend = c("Daily PrEP", "Event-Driven PrEP"), col = c("red", "blue"), lty = 1)
 

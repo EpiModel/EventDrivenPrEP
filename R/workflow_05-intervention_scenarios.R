@@ -47,7 +47,12 @@ control <- control_msm(
   verbose             = FALSE
 )
 
-scenarios_df <- readr::read_csv("./data/input/scenarios.csv")
+#scenarios_df <- readr::read_csv("./data/input/scenarios.csv")
+scenarios_df <- tibble(
+  .scenario.id    = c("scenario_1", "scenario_2", "scenario_3", "scenario_4"),
+  .at             = 1,
+  edp.start.scenario = c(1, 2, 3, 4)
+)
 scenarios_list <- EpiModel::create_scenario_list(scenarios_df)
 
 wf <- add_workflow_step(
