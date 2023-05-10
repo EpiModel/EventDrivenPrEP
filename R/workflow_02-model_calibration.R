@@ -58,6 +58,14 @@ control <- control_msm(
 #  uct.prob = seq(0.29, 0.294, length.out = n_scenarios), # best 0.291
 #  rct.prob = plogis(qlogis(uct.prob) + log(1.25))
 #)
+param <- param.net(
+  data.frame.params   = read.csv("data/input/params.csv"),
+  netstats            = netstats,
+  epistats            = epistats,
+  prep.start          = calibration_end - (52 * 7 * 10),
+  riskh.start         = calibration_end - (52 * 7 * 11)
+)
+
 scenarios_df <- tibble(
   .scenario.id    = c("scenario_1", "scenario_2", "scenario_3", "scenario_4"),
   .at             = 1,

@@ -250,3 +250,19 @@ legend("topright", legend = c("Daily to EDP", "EDP to Daily"),
        col = c("black", "blue"), lty = 1)
 
 
+## Explore HPC results
+
+df <- readRDS("C:/Users/clchand/OneDrive - Emory University/EpiModel-repos/EventDrivenPrEP/data/intermediate/calibration/assessments_raw.rds")
+sim1 <- readRDS("C:/Users/clchand/OneDrive - Emory University/EpiModel-repos/EventDrivenPrEP/data/intermediate/calibration/sim__scenario_1__1.rds")
+
+sum(sim1$epi$incid, na.rm = T)
+sum(sim1$epi$incid.edp.1, na.rm = T)
+sum(sim1$epi$incid.edp.2, na.rm = T)
+sum(sim1$epi$incid.edp.3, na.rm = T)
+sum(sim1$epi$incid.edp.4, na.rm = T)
+
+sum(sim1$epi$edp.class.1, na.rm = T)
+sum(sim1$epi$edp.class.2, na.rm = T)
+sum(sim1$epi$edp.class.3, na.rm = T)
+sum(sim1$epi$edp.class.4, na.rm = T)
+
