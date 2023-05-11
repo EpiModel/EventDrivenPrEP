@@ -42,9 +42,9 @@ control <- control_msm(
   cumulative.edgelist = TRUE,
   truncate.el.cuml    = 0,
   .tracker.list       = calibration_trackers,
-  .checkpoint.dir     = "./temp/cp_calib",
-  .checkpoint.clear   = TRUE,
-  .checkpoint.steps   = 15 * 52 * 7,
+#  .checkpoint.dir     = "./temp/cp_calib",
+#  .checkpoint.clear   = TRUE,
+#  .checkpoint.steps   = 15 * 52 * 7,
   verbose             = FALSE
 )
 
@@ -62,8 +62,8 @@ param <- param.net(
   data.frame.params   = read.csv("data/input/params.csv"),
   netstats            = netstats,
   epistats            = epistats,
-  prep.start          = calibration_end - (52 * 7 * 10),
-  riskh.start         = calibration_end - (52 * 7 * 11)
+  prep.start          = calibration_end - (52 * 7 * 8),
+  riskh.start         = calibration_end - (52 * 7 * 9)
 )
 
 scenarios_df <- tibble(
