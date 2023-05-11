@@ -81,16 +81,16 @@ wf <- add_workflow_step(
     output_dir = "./data/intermediate/calibration",
     libraries = "EpiModelHIV",
     n_rep = 120,
-    n_cores = max_cores,
+    n_cores = 8,
     save_pattern = "simple",
     max_array_size = 999,
     setup_lines = hpc_configs$r_loader
   ),
   sbatch_opts = list(
     "mail-type" = "FAIL,TIME_LIMIT",
-    "cpus-per-task" = max_cores,
+    "cpus-per-task" = 8,
     "time" = "04:00:00",
-    "mem" = 0
+    "mem-per-cpu" = "8G"
   )
 )
 
