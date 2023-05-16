@@ -1,6 +1,6 @@
 {
   "R": {
-    "Version": "4.2.2",
+    "Version": "4.3.0",
     "Repositories": [
       {
         "Name": "CRAN",
@@ -17,16 +17,16 @@
       "RemoteUsername": "EpiModel",
       "RemoteRepo": "ARTnet",
       "RemoteRef": "HEAD",
-      "RemoteSha": "0e67b01433447d1f9dba33d3f8f5398f4345c5f7",
+      "RemoteSha": "99a5318766a3fc6eb8253755a0d378de6376b974",
       "RemoteHost": "api.github.com",
-      "Remotes": "github::EpiModel/ARTnetData@main, github::EpiModel/EpiModelHIV-p@main",
+      "Remotes": "github::EpiModel/ARTnetData@main,\r github::EpiModel/EpiModelHIV-p@main",
       "Requirements": [
         "ARTnetData",
         "EpiModel",
         "R",
         "dplyr"
       ],
-      "Hash": "831ebf6358cced7ba428c9a04ce5edd3"
+      "Hash": "44d3b42aad95b3acfb1da119d160e26b"
     },
     "ARTnetData": {
       "Package": "ARTnetData",
@@ -103,8 +103,8 @@
       "Package": "EpiModelHIV",
       "Version": "2.6.0",
       "Source": "GitHub",
-      "Remotes": "github::EpiModel/ARTnet@main, github::EpiModel/ARTnetData@main",
       "RemoteType": "github",
+      "Remotes": "github::EpiModel/ARTnet@main, github::EpiModel/ARTnetData@main",
       "RemoteHost": "api.github.com",
       "RemoteRepo": "EpiModelHIV-p",
       "RemoteUsername": "EpiModel",
@@ -569,14 +569,14 @@
     },
     "evaluate": {
       "Package": "evaluate",
-      "Version": "0.20",
+      "Version": "0.21",
       "Source": "Repository",
       "Repository": "CRAN",
       "Requirements": [
         "R",
         "methods"
       ],
-      "Hash": "4b68aa51edd89a0e044a66e75ae3cc6c"
+      "Hash": "d59f3b464e8da1aef82dc04b588b8dfb"
     },
     "fansi": {
       "Package": "fansi",
@@ -1618,14 +1618,14 @@
     },
     "tzdb": {
       "Package": "tzdb",
-      "Version": "0.3.0",
+      "Version": "0.4.0",
       "Source": "Repository",
       "Repository": "CRAN",
       "Requirements": [
         "R",
         "cpp11"
       ],
-      "Hash": "b2e1cbce7c903eaf23ec05c58e59fb5e"
+      "Hash": "f561504ec2897f4d46f0c7657e488ae1"
     },
     "utf8": {
       "Package": "utf8",
