@@ -12,7 +12,7 @@ mutate_outcomes <- function(d) {
 # make the outcomes calculated on the same year
 make_last_year_outcomes <- function(d) {
   d %>%
-    filter(time >= max(time) - 52) %>%
+    filter(time >= max(time) - 52 * 7) %>%
     group_by(scenario_name, batch_number, sim) %>%
     summarise(across(starts_with("cc.prep."), mean)) %>%
     ungroup()

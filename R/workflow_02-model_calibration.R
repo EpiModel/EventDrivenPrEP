@@ -63,13 +63,16 @@ param <- param.net(
   netstats            = netstats,
   epistats            = epistats,
   prep.start          = calibration_end - (52 * 7 * 8),
-  riskh.start         = calibration_end - (52 * 7 * 9)
+  riskh.start         = calibration_end - (52 * 7 * 9),
+  prep.edp.start      = calibration_end - (52 * 7 * 6),
+  prep.adhr.edp.dist  = c(0.25, 0.25, 0.25, 0.25),
+  prep.adhr.edp.rr    = c(1, 1, 1, 1)
 )
 
 scenarios_df <- tibble(
-  .scenario.id    = c("scenario_1", "scenario_2", "scenario_3", "scenario_4"),
+  .scenario.id    = c("EDPStart1", "EDPStart2", "EDPStart4"),
   .at             = 1,
-  edp.start.scenario = c(1, 2, 3, 4)
+  edp.start.scenario = c(1, 2, 4),
 )
 scenarios_list <- EpiModel::create_scenario_list(scenarios_df)
 
@@ -80,7 +83,7 @@ wf <- add_workflow_step(
     scenarios_list = scenarios_list,
     output_dir = "./data/intermediate/calibration",
     libraries = "EpiModelHIV",
-    n_rep = 120,
+    n_rep = 16,
     n_cores = 8,
     save_pattern = "simple",
     max_array_size = 999,
@@ -90,7 +93,7 @@ wf <- add_workflow_step(
     "mail-type" = "FAIL,TIME_LIMIT",
     "cpus-per-task" = 8,
     "time" = "04:00:00",
-    "mem-per-cpu" = "8G"
+    "mem-per-cpu" = "10G"
   )
 )
 
@@ -120,6 +123,7 @@ wf <- add_workflow_step(
 # $ scp -r ./workflows/model_calibration <HPC>:<project_dir>/workflows/
 #
 # on the HPC:
+# chmod +x workflows/model_calibration/start_workflow.sh
 # $ ./workflows/model_calibration/start_workflow.sh
 
 # Once the worfklow is finished download the data from the HPC
@@ -127,3 +131,5 @@ wf <- add_workflow_step(
 # $ scp -r <HPC>:<project_dir>/data/intermediate/calibration/assessments.rds ./data/intermediate/calibration/
 #
 # and analyse them locally using: "./R/12-calibration_eval.R"
+
+# rm -rf workflows/model_calibration temp/cp_calib data/intermediate/calibration
