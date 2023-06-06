@@ -128,13 +128,13 @@
       "Package": "EpiModelHPC",
       "Version": "2.2.0",
       "Source": "GitHub",
-      "Remotes": "github::EpiModel/slurmworkflow",
       "RemoteType": "github",
-      "RemoteHost": "api.github.com",
-      "RemoteRepo": "EpiModelHPC",
       "RemoteUsername": "EpiModel",
+      "RemoteRepo": "EpiModelHPC",
       "RemoteRef": "merges",
-      "RemoteSha": "7408b1b4563ffd7ad3eeeb45834909f9cb5eb80f",
+      "RemoteSha": "d673191fe24550de33f18327149c14c170c6fa0c",
+      "RemoteHost": "api.github.com",
+      "Remotes": "github::EpiModel/slurmworkflow",
       "Requirements": [
         "EpiModel",
         "R",
@@ -149,7 +149,7 @@
         "tergm",
         "tidyr"
       ],
-      "Hash": "be802b5a9829e770494fde057b9987f0"
+      "Hash": "3e466f4c8a96773683f59f9c35f0c7f1"
     },
     "MASS": {
       "Package": "MASS",
@@ -860,13 +860,13 @@
     },
     "jsonlite": {
       "Package": "jsonlite",
-      "Version": "1.8.4",
+      "Version": "1.8.5",
       "Source": "Repository",
       "Repository": "CRAN",
       "Requirements": [
         "methods"
       ],
-      "Hash": "a4269a09a9b865579b2635c77e572374"
+      "Hash": "3ee4d9899e4db3e976fc82b98d24a31a"
     },
     "knitr": {
       "Package": "knitr",
@@ -1100,7 +1100,7 @@
     },
     "parallelly": {
       "Package": "parallelly",
-      "Version": "1.35.0",
+      "Version": "1.36.0",
       "Source": "Repository",
       "Repository": "CRAN",
       "Requirements": [
@@ -1108,7 +1108,7 @@
         "tools",
         "utils"
       ],
-      "Hash": "1cf5a54cfc5dcb0b84037acfd93cbca7"
+      "Hash": "bca377e1c87ec89ebed77bba00635b2e"
     },
     "pillar": {
       "Package": "pillar",
@@ -1307,7 +1307,7 @@
     },
     "rmarkdown": {
       "Package": "rmarkdown",
-      "Version": "2.21",
+      "Version": "2.22",
       "Source": "Repository",
       "Repository": "CRAN",
       "Requirements": [
@@ -1327,7 +1327,7 @@
         "xfun",
         "yaml"
       ],
-      "Hash": "493df4ae51e2e984952ea4d5c75786a3"
+      "Hash": "75a01be060d800ceb14e32c666cacac9"
     },
     "robustbase": {
       "Package": "robustbase",
