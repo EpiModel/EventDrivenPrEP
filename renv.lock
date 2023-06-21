@@ -56,13 +56,13 @@
     },
     "DEoptimR": {
       "Package": "DEoptimR",
-      "Version": "1.0-13",
+      "Version": "1.0-14",
       "Source": "Repository",
       "Repository": "CRAN",
       "Requirements": [
         "stats"
       ],
-      "Hash": "8f5c81679eea074e7152f16b78d7de81"
+      "Hash": "3c6cc7c182d60d2802b5e88235c3a054"
     },
     "EpiModel": {
       "Package": "EpiModel",
@@ -109,7 +109,7 @@
       "RemoteRepo": "EpiModelHIV-p",
       "RemoteUsername": "EpiModel",
       "RemoteRef": "EDP",
-      "RemoteSha": "06c4f853a17f107e0dd7cb3c8c0e252f32be547f",
+      "RemoteSha": "51ba2bec79a029253e4fb73837c0837f51ead8e3",
       "Requirements": [
         "EpiModel",
         "R",
@@ -122,7 +122,7 @@
         "statnet.common",
         "tergm"
       ],
-      "Hash": "427f9e490d791936b47726b5659b113c"
+      "Hash": "77badf29cb88d142c792ac05c92e1b00"
     },
     "EpiModelHPC": {
       "Package": "EpiModelHPC",
@@ -1331,7 +1331,7 @@
     },
     "robustbase": {
       "Package": "robustbase",
-      "Version": "0.95-1",
+      "Version": "0.99-0",
       "Source": "Repository",
       "Repository": "CRAN",
       "Requirements": [
@@ -1342,7 +1342,7 @@
         "stats",
         "utils"
       ],
-      "Hash": "50e6b6ad7801416766716d9fa853e23d"
+      "Hash": "2af254ab59081fbde822b89d4110f24c"
     },
     "rprojroot": {
       "Package": "rprojroot",
@@ -1662,7 +1662,7 @@
     },
     "vctrs": {
       "Package": "vctrs",
-      "Version": "0.6.2",
+      "Version": "0.6.3",
       "Source": "Repository",
       "Repository": "CRAN",
       "Requirements": [
@@ -1672,7 +1672,7 @@
         "lifecycle",
         "rlang"
       ],
-      "Hash": "a745bda7aff4734c17294bb41d4e4607"
+      "Hash": "d0ef2856b83dc33ea6e255caf6229ee2"
     },
     "viridisLite": {
       "Package": "viridisLite",
