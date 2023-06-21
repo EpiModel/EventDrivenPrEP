@@ -64,15 +64,13 @@ param <- param.net(
   epistats            = epistats,
   prep.start          = calibration_end - (52 * 7 * 8),
   riskh.start         = calibration_end - (52 * 7 * 9),
-  prep.edp.start      = calibration_end - (52 * 7 * 6),
-  prep.adhr.edp.dist  = c(0.25, 0.25, 0.25, 0.25),
-  prep.adhr.edp.rr    = c(1, 1, 1, 1)
+  prep.edp.start      = calibration_end - (52 * 7 * 6)
 )
 
 scenarios_df <- tibble(
-  .scenario.id    = c("EDPStart1", "EDPStart2", "EDPStart4"),
+  .scenario.id    = c("EDPStart1", "EDPStart2", "EDPStart3", "EDPStart4"),
   .at             = 1,
-  edp.start.scenario = c(1, 2, 4),
+  edp.start.scenario = c(1, 2, 3, 4),
 )
 scenarios_list <- EpiModel::create_scenario_list(scenarios_df)
 

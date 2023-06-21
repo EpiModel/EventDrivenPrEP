@@ -4,10 +4,12 @@
 ##
 
 ## Libraries ------------------------------------------------------------------
-#pkgload::load_all("C:\\Users\\clchand\\OneDrive - Emory University\\EpiModel-repos\\EpiModelHIV-p")
+pkgload::load_all("C:\\Users\\clchand\\OneDrive - Emory University\\EpiModel-repos\\EpiModelHIV-p")
 library("EpiModelHIV")
 library(dplyr)
 library(ggplot2)
+library(EpiModel)
+library(EpiModelHPC)
 
 # Settings ---------------------------------------------------------------------
 source("R/utils-0_project_settings.R")
@@ -18,11 +20,11 @@ netstats <- readRDS("data/intermediate/estimates/netstats-local.rds")
 est      <- readRDS("data/intermediate/estimates/netest-local.rds")
 
 param <- param.net(
-  data.frame.params   = read.csv("data/input/params.csv"),
-  netstats            = netstats,
-  epistats            = epistats,
-  prep.start          = 182,
-  riskh.start         = 1
+  data.frame.params    = read.csv("data/input/params.csv"),
+  netstats             = netstats,
+  epistats             = epistats,
+  prep.start           = 182,
+  riskh.start          = 1
 )
 
 init <- init_msm()
@@ -44,14 +46,17 @@ control <- control_msm(
 sim <- netsim(est, param, init, control)
 
 # Explore sim object
+sim <- sim1_1
+nsteps <- 364 * 2
 
 ## Explore the number of people starting daily oral PrEP vs. EDP
 sim$epi$edp.starters
 sim$epi$daily.starters
 
-x <- 1:728
+x <- 1:nsteps
 
 prepDailyStart <- ifelse(is.na(sim$epi$daily.starters$sim1), 0, sim$epi$daily.starters$sim1)
+prepDailyStart
 
 cum.prepDailyStart <- cumsum(prepDailyStart)
 cum.prepDailyStart
@@ -64,9 +69,15 @@ cum.prepEDPStart
 
 plot(x, y = cum.prepDailyStart, type = "l", col = "red", xlab = "Day", ylab = "Cumulative Number of PrEP Starters",
      main = paste("EDP Start Scenario =", sim$param$edp.start.scenario),
-     sub = paste("Total MSM starting PrEP by day 728 =", cum.prepDailyStart[728] + cum.prepEDPStart[728]))
+     sub = paste("Total MSM starting PrEP by day", nsteps, "=", cum.prepDailyStart[nsteps] + cum.prepEDPStart[nsteps]))
 lines(x, y = cum.prepEDPStart, type = "l", col = "blue")
 legend("topleft", legend = c("Daily PrEP", "Event-Driven PrEP"), col = c("red", "blue"), lty = 1)
+
+plot(x, y = prepDailyStart, type = "l", col = "red", xlab = "Day", ylab = "Number of PrEP Starters",
+     main = paste("EDP Start Scenario =", sim$param$edp.start.scenario),
+     sub = paste("Number of MSM starting PrEP on day", nsteps, "=", prepDailyStart[nsteps] + prepEDPStart[nsteps]))
+lines(x, y = prepEDPStart, type = "l", col = "blue")
+legend("topright", legend = c("Daily PrEP", "Event-Driven PrEP"), col = c("red", "blue"), lty = 1)
 
 ## Explore the distribution of EDP PrEP classes among those starting PrEP
 ### set raw.output = TRUE in control settings
@@ -79,20 +90,26 @@ sim$epi$edp.class.2
 sim$epi$edp.class.3
 sim$epi$edp.class.4
 
-sum(sim$epi$edp.class.1$sim1, na.rm = TRUE)
-sum(sim$epi$edp.class.2$sim1, na.rm = TRUE)
-sum(sim$epi$edp.class.3$sim1, na.rm = TRUE)
-sum(sim$epi$edp.class.4$sim1, na.rm = TRUE)
+ec1 <- sum(sim$epi$edp.class.1[, 1], na.rm = TRUE)
+ec2 <- sum(sim$epi$edp.class.2[, 1], na.rm = TRUE)
+ec3 <- sum(sim$epi$edp.class.3[, 1], na.rm = TRUE)
+ec4 <- sum(sim$epi$edp.class.4[, 1], na.rm = TRUE)
+ec.total <- ec1 + ec2 + ec3 + ec4
+
+ec1/ec.total
+ec2/ec.total
+ec3/ec.total
+ec4/ec.total
 
 ## Explore EDP adherence class distribution over time
-plot(x, y = as.vector(unlist(sim$epi$edp.class.1)), type = "l", col = "red",
+plot(x, y = as.vector(unlist(sim$epi$edp.class.1$sim1)), type = "l", col = "red",
      xlab = "Day", ylab = "Number of EDP Users",
-     xlim = c(400, 728),
-     ylim = c(0, max(as.vector(unlist(sim$epi$edp.class.4)), na.rm = T)),
+     xlim = c(250, nsteps),
+     ylim = c(0, 1),
      main = "EDP Users by Adherence Class")
-lines(x, as.vector(unlist(sim$epi$edp.class.2)), type = "l", col = "blue")
-lines(x, as.vector(unlist(sim$epi$edp.class.3)), type = "l", col = "green")
-lines(x, as.vector(unlist(sim$epi$edp.class.4)), type = "l", col = "black")
+lines(x, as.vector(unlist(sim$epi$edp.class.2$sim1)), type = "l", col = "blue")
+lines(x, as.vector(unlist(sim$epi$edp.class.3$sim1)), type = "l", col = "green")
+lines(x, as.vector(unlist(sim$epi$edp.class.4$sim1)), type = "l", col = "black")
 legend("topleft", legend = c("None", "Bad", "Good", "Excellent"),
        col = c("red", "blue", "green", "black"), lty = 1)
 
@@ -108,12 +125,16 @@ sum(sim$epi$incid.edp.4$sim1, na.rm = T)
 
 # Pill count tracker
 summary(sim$epi$pills, na.rm = T)
-sum(sim$epi$pills, na.rm = T)
-plot(x, unlist(sim$epi$pills))
+sum(sim$epi$pills$sim1, na.rm = T)
+plot(x, unlist(sim$epi$pills$sim1))
+lines(x, as.vector(unlist(sim$epi$pills$sim2)), type = "l", col = "blue")
+lines(x, as.vector(unlist(sim$epi$pills$sim3)), type = "l", col = "green")
+lines(x, as.vector(unlist(sim$epi$pills$sim4)), type = "l", col = "black")
 
-summary(sim$epi$pillspp)
+summary(sim$epi$pillspp[,1])
 mean(sim$epi$pillspp$sim1, na.rm = T)*7
-plot(x, unlist(sim$epi$pillspp))
+sum(sim$epi$pills$sim1, na.rm = T)
+plot(x, unlist(sim$epi$pillspp$sim1))
 
 summary(sim$epi$pills7d)
 plot(x, unlist(sim$epi$pills7d))
@@ -243,26 +264,12 @@ y2 <- as.vector(sim$epi$edp.switch$sim1)
 
 plot(x, y1, type = "l",
      xlab = "Day", ylab = "PrEP Users",
-     xlim = c(400, 728),
+     xlim = c(0, nsteps),
      main = "Number of PrEP Users Switching Regimens")
 lines(x, y2, type = "l", col = "blue")
-legend("topright", legend = c("Daily to EDP", "EDP to Daily"),
+legend("topleft", legend = c("Daily to EDP", "EDP to Daily"),
        col = c("black", "blue"), lty = 1)
 
 
-## Explore HPC results
 
-df <- readRDS("C:/Users/clchand/OneDrive - Emory University/EpiModel-repos/EventDrivenPrEP/data/intermediate/calibration/assessments_raw.rds")
-sim1 <- readRDS("C:/Users/clchand/OneDrive - Emory University/EpiModel-repos/EventDrivenPrEP/data/intermediate/calibration/sim__scenario_1__1.rds")
-
-sum(sim1$epi$incid, na.rm = T)
-sum(sim1$epi$incid.edp.1, na.rm = T)
-sum(sim1$epi$incid.edp.2, na.rm = T)
-sum(sim1$epi$incid.edp.3, na.rm = T)
-sum(sim1$epi$incid.edp.4, na.rm = T)
-
-sum(sim1$epi$edp.class.1, na.rm = T)
-sum(sim1$epi$edp.class.2, na.rm = T)
-sum(sim1$epi$edp.class.3, na.rm = T)
-sum(sim1$epi$edp.class.4, na.rm = T)
 
