@@ -30,7 +30,7 @@ epistats <- build_epistats(
   geog.cat = "Atlanta",
   init.hiv.prev = c(0.33, 0.137, 0.084),
   race = TRUE,
-  time.unit = 7
+  time.unit = 1
 )
 saveRDS(epistats, paste0(est_dir, "epistats-", context, ".rds"))
 
@@ -42,7 +42,7 @@ netparams <- build_netparams(
 netstats <- build_netstats(
   epistats,
   netparams,
-  expect.mort = 0.000478213,
+  expect.mort = 0.000478213/7,
   network.size = networks_size
 )
 saveRDS(netstats, paste0(est_dir, "netstats-", context, ".rds"))
