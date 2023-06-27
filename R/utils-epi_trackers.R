@@ -145,7 +145,7 @@ epi_linked_time <- function(weeks) {
       with(get_attr_list(dat, needed_attributes), {
         sum(
           race %in% races_set &
-            tx.init.time - diag.time <= weeks,
+            tx.init.time - diag.time <= (weeks * 7),
           na.rm = TRUE
         )
       })
