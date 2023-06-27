@@ -65,7 +65,7 @@ wf <- add_workflow_step(
     "mail-type" = "FAIL,TIME_LIMIT",
     "cpus-per-task" = max_cores,
     "time" = "48:00:00",
-    "mem-per-cpu" = "10G"
+    "mem-per-cpu" = "5G"
   )
 )
 
