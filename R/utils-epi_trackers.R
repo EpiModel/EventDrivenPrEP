@@ -138,14 +138,14 @@ epi_i_sup_dur <- function(races_set) {
 }
 
 # linked in less than `weeks` step
-epi_linked_time <- function(weeks) {
+epi_linked_time <- function(steps) {
   function(races_set) {
     function(dat) {
       needed_attributes <- c("race", "tx.init.time", "diag.time")
       with(get_attr_list(dat, needed_attributes), {
         sum(
           race %in% races_set &
-            tx.init.time - diag.time <= (weeks * 7),
+            tx.init.time - diag.time <= steps,
           na.rm = TRUE
         )
       })
