@@ -1,6 +1,6 @@
 {
   "R": {
-    "Version": "4.3.0",
+    "Version": "4.3.1",
     "Repositories": [
       {
         "Name": "CRAN",
@@ -19,7 +19,7 @@
       "RemoteRef": "HEAD",
       "RemoteSha": "99a5318766a3fc6eb8253755a0d378de6376b974",
       "RemoteHost": "api.github.com",
-      "Remotes": "github::EpiModel/ARTnetData@main,\r github::EpiModel/EpiModelHIV-p@main",
+      "Remotes": "github::EpiModel/ARTnetData@main, github::EpiModel/EpiModelHIV-p@main",
       "Requirements": [
         "ARTnetData",
         "EpiModel",
@@ -34,8 +34,8 @@
       "Source": "GitHub",
       "RemoteType": "github",
       "RemoteHost": "api.github.com",
-      "RemoteUsername": "EpiModel",
       "RemoteRepo": "ARTnetData",
+      "RemoteUsername": "EpiModel",
       "RemoteRef": "main",
       "RemoteSha": "5220754935e3ddbe3a10ae5c366355d8a987f2fb",
       "Requirements": [
@@ -103,8 +103,8 @@
       "Package": "EpiModelHIV",
       "Version": "2.6.0",
       "Source": "GitHub",
-      "Remotes": "github::EpiModel/ARTnet@main, github::EpiModel/ARTnetData@main",
       "RemoteType": "github",
+      "Remotes": "github::EpiModel/ARTnet@main, github::EpiModel/ARTnetData@main",
       "RemoteHost": "api.github.com",
       "RemoteRepo": "EpiModelHIV-p",
       "RemoteUsername": "EpiModel",
@@ -131,10 +131,10 @@
       "RemoteType": "github",
       "RemoteUsername": "EpiModel",
       "RemoteRepo": "EpiModelHPC",
-      "RemoteRef": "merges",
-      "RemoteSha": "d673191fe24550de33f18327149c14c170c6fa0c",
+      "RemoteRef": "autocalib",
+      "RemoteSha": "84f39b7d2dd784a55de3fb686d33babbf864c003",
       "RemoteHost": "api.github.com",
-      "Remotes": "github::EpiModel/slurmworkflow",
+      "Remotes": "github::EpiModel/slurmworkflow, github::EpiModel/swfcalib",
       "Requirements": [
         "EpiModel",
         "R",
@@ -144,12 +144,17 @@
         "ergm",
         "foreach",
         "fs",
+        "future",
+        "future.apply",
+        "rlang",
         "slurmworkflow",
         "stringr",
+        "swfcalib",
         "tergm",
-        "tidyr"
+        "tidyr",
+        "tidyselect"
       ],
-      "Hash": "3e466f4c8a96773683f59f9c35f0c7f1"
+      "Hash": "77d8127653d918b56b165ff9076fb9a2"
     },
     "MASS": {
       "Package": "MASS",
@@ -1516,6 +1521,27 @@
         "utils"
       ],
       "Hash": "d683341b1fa2e8d817efde27d6e6d35b"
+    },
+    "swfcalib": {
+      "Package": "swfcalib",
+      "Version": "0.0.0.9000",
+      "Source": "GitHub",
+      "RemoteType": "github",
+      "RemoteHost": "api.github.com",
+      "RemoteUsername": "EpiModel",
+      "RemoteRepo": "swfcalib",
+      "RemoteRef": "main",
+      "RemoteSha": "3a61cf8e14295a13284cc907b2f3e5f01d06efc1",
+      "Remotes": "github::EpiModel/slurmworkflow",
+      "Requirements": [
+        "R",
+        "dplyr",
+        "fs",
+        "future",
+        "future.apply",
+        "slurmworkflow"
+      ],
+      "Hash": "e72edd6aff01eb0398f531a853817421"
     },
     "tergm": {
       "Package": "tergm",
