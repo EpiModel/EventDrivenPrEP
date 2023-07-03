@@ -19,9 +19,9 @@ model_fun <- function(proposal) {
     cumulative.edgelist = TRUE,
     truncate.el.cuml    = 0,
     .tracker.list       = calibration_trackers,
-    .checkpoint.dir     = "./temp/cp_calib",
-    .checkpoint.clear   = TRUE,
-    .checkpoint.steps   = 15 * 364,
+    # .checkpoint.dir     = "./temp/cp_calib",
+    # .checkpoint.clear   = TRUE,
+    # .checkpoint.steps   = 15 * 364,
     verbose             = FALSE
   )
 
