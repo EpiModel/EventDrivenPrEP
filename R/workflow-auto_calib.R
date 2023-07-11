@@ -9,9 +9,9 @@ context <- "hpc"
 
 source("./R/utils-default_inputs.R")
 
-n_sims <- 400
-step1_n_cores <- 10
-step2_n_cores <- 8
+n_sims <- 560
+step1_n_cores <- 8
+step2_n_cores <- 28
 
 source("./R/auto_cal_config.R")
 
@@ -70,7 +70,7 @@ wf <- add_workflow_step(
   sbatch_opts = list(
     "cpus-per-task" = step2_n_cores,
     "time" = "24:00:00",
-    "mem-per-cpu" = "5G",
+    "mem" = 0,
     "mail-type" = "FAIL"
   )
 )
@@ -88,7 +88,7 @@ wf <- add_workflow_step(
   sbatch_opts = list(
     "cpus-per-task" = 1,
     "time" = "00:20:00",
-    "mem-per-cpu" = "8G",
+    "mem" = 0,
     "mail-type" = "FAIL"
   )
 )

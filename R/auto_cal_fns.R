@@ -549,3 +549,69 @@ make_sti_range_proposer <- function(n_new) {
     dplyr::bind_cols(outs)
   }
 }
+
+make_range_proposer_lhs <- function(n_new) {
+  force(n_new)
+  function(calib_object, job, results) {
+    p_ranges <- swfcalib::load_sideload(calib_object, job)
+    proposals <- lhs::randomLHS(n_new, length(job$params))
+    for (i in seq_along(job$params)) {
+      spread <- p_ranges[[i]][2] - p_ranges[[i]][1]
+      rmin <- p_ranges[[i]][1]
+      proposals[, i] <- proposals[, i] * spread + rmin
+    }
+    colnames(proposals) <- job$params
+    dplyr::as_tibble(proposals)
+  }
+}
+
+determ_trans_end_rmse <- function(retain_prop = 0.2, thresholds, n_enough) {
+  force(retain_prop)
+  force(thresholds)
+  force(n_enough)
+
+  function(calib_object, job, results) {
+    # calculate new ranges if not done
+    new_ranges <- list()
+    values <- results[job$targets]
+    params <- results[job$params]
+    params[[".SE_score"]] <- 0
+    for (i in seq_along(job$targets)) {
+      t <- job$targets_val[i]
+      vs <- values[[i]]
+      params[[".SE_score"]] <- params[[".SE_score"]] +
+                              ((vs - t) / t)^2
+    }
+    params <- dplyr::arrange(params, .SE_score)
+    params <- dplyr::select(params, - .SE_score)
+    params <- head(params, ceiling(nrow(params) * retain_prop))
+
+    for (i in seq_along(job$targets)) {
+      new_ranges[[i]] <- range(params[[i]])
+    }
+    swfcalib::save_sideload(calib_object, job, new_ranges)
+
+    # Enough close enough estimates?
+    p_ok <- results[, c(job$params, job$targets)]
+    for (j in seq_along(job$targets)) {
+      values <- p_ok[[ job$targets[j] ]]
+      target <- job$targets_val[j]
+      thresh <- thresholds[j]
+
+      p_ok <- p_ok[abs(values - target) < thresh, ]
+    }
+
+    if (nrow(p_ok) > n_enough) {
+      res <- p_ok[, job$params]
+      # get the n_tuple where all values are the closest to the median
+      best <- dplyr::summarise(res, dplyr::across(
+          dplyr::everything(),
+          ~ abs(.x - median(.x)))
+      )
+      best <- which.min(rowSums(best))
+      return(res[best, ])
+    } else {
+      return(NULL)
+    }
+  }
+}
