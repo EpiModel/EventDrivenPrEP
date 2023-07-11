@@ -73,7 +73,8 @@ calib_object <- list(
           thresholds = 1.5,
           n_enough = 100
         )
-      ),
+      )
+    ),
     #   job6 = list(
     #     targets = paste0("cc.linked1m.", c("B", "H", "W")),
     #     targets_val = c(0.829, 0.898, 0.890),
@@ -100,7 +101,7 @@ calib_object <- list(
         make_next_proposals = make_ind_shrink_proposer(n_sims),
         get_result = determ_ind_poly_end(0.001, poly_n = 3)
       )
-    ) ,
+    ),
     wave3 = list(
       job1 = list(
         targets = paste0("i.prev.dx.", c("B", "H", "W")),
