@@ -9,7 +9,7 @@ context <- "hpc"
 
 source("./R/utils-default_inputs.R")
 
-n_sims <- 560
+n_sims <- 28 * 30
 step1_n_cores <- 8
 step2_n_cores <- 28
 

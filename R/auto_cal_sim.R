@@ -19,9 +19,9 @@ model_fun <- function(proposal) {
     cumulative.edgelist = TRUE,
     truncate.el.cuml    = 0,
     .tracker.list       = calibration_trackers,
-    # .checkpoint.dir     = "./temp/cp_calib",
-    # .checkpoint.clear   = TRUE,
-    # .checkpoint.steps   = 15 * 364,
+    .checkpoint.dir     = "./temp/cp_calib",
+    .checkpoint.clear   = TRUE,
+    .checkpoint.steps   = 5 * 364,
     verbose             = FALSE
   )
 
@@ -35,7 +35,16 @@ model_fun <- function(proposal) {
   scenario_df[[".iteration"]] <- NULL
   scenario <- EpiModel::create_scenario_list(scenario_df)[[1]]
 
+
+  if (!is.null(control[[".checkpoint.dir"]])) {
+    control[[".checkpoint.dir"]] <- paste0(
+      control[[".checkpoint.dir"]], "/sim__", scenario[["id"]]
+    )
+  }
+
+
   param_sc <- EpiModel::use_scenario(param, scenario)
+
 
   # Simulation and processing --------------------------------------------------
   sim <- netsim(est, param_sc, init, control)
