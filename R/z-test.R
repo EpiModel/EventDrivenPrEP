@@ -1,5 +1,6 @@
 # Scratchpad for interactive testing before integration in a script
 
+library(EpiModelHIV)
 library(dplyr)
 library(tidyr)
 source("./R/utils-targets.R")
@@ -29,3 +30,5 @@ d_tar <- mutate_calibration_targets(d) |>
   ))
 
 as.list(d_tar)
+
+ckpt <- readRDS("./1.rds")

@@ -9,9 +9,9 @@ context <- "hpc"
 
 source("./R/utils-default_inputs.R")
 
-n_sims <- 28 * 30
+n_sims <- 20 * 30
 step1_n_cores <- 8
-step2_n_cores <- 28
+step2_n_cores <- 20
 
 source("./R/auto_cal_config.R")
 
