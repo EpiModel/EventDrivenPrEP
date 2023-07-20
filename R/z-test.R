@@ -32,3 +32,5 @@ d_tar <- mutate_calibration_targets(d) |>
 as.list(d_tar)
 
 ckpt <- readRDS("./1.rds")
+names(ckpt)
+ckpt[["_timestep"]]
