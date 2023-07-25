@@ -50,7 +50,7 @@ wf <- add_workflow_step(
 )
 
 # Calibration step 2
-batch_numbers <- swfcalib:::get_batch_numbers(calib_object, step2_n_cores)
+batch_numbers <- swfcalib:::get_batch_numbers(calib_object, 7)
 wf <- add_workflow_step(
   wf_summary = wf,
   step_tmpl = step_tmpl_map_script(
