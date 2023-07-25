@@ -129,11 +129,11 @@
       "Version": "2.2.0",
       "Source": "GitHub",
       "RemoteType": "github",
+      "RemoteHost": "api.github.com",
       "RemoteUsername": "EpiModel",
       "RemoteRepo": "EpiModelHPC",
-      "RemoteRef": "autocalib",
-      "RemoteSha": "84f39b7d2dd784a55de3fb686d33babbf864c003",
-      "RemoteHost": "api.github.com",
+      "RemoteRef": "main",
+      "RemoteSha": "e48474e031afd21842f9971cd2222f427f2c9493",
       "Remotes": "github::EpiModel/slurmworkflow, github::EpiModel/swfcalib",
       "Requirements": [
         "EpiModel",
@@ -154,7 +154,7 @@
         "tidyr",
         "tidyselect"
       ],
-      "Hash": "77d8127653d918b56b165ff9076fb9a2"
+      "Hash": "f98131e0609fbbb98129fdfaad6d8ed1"
     },
     "MASS": {
       "Package": "MASS",
@@ -1422,7 +1422,7 @@
       "RemoteType": "github",
       "RemoteUsername": "EpiModel",
       "RemoteRepo": "slurmworkflow",
-      "RemoteRef": "HEAD",
+      "RemoteRef": "main",
       "RemoteSha": "69aae22df17ec93973eed9c19fe53ab3da96a50a",
       "RemoteHost": "api.github.com",
       "Requirements": [
@@ -1430,7 +1430,7 @@
         "fs",
         "yaml"
       ],
-      "Hash": "b0359774039fe24e85c4f0faeb4ad28c"
+      "Hash": "78a43b004dec2d7de24be062ea2f2c8a"
     },
     "srvyr": {
       "Package": "srvyr",
