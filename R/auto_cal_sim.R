@@ -1,4 +1,8 @@
 model_fun <- function(proposal) {
+  # Libraries ------------------------------------------------------------------
+  library("EpiModelHIV")
+  library("dplyr")
+
   # Settings -------------------------------------------------------------------
   source("./R/utils-0_project_settings.R")
   context <- "hpc"
