@@ -1,8 +1,4 @@
 model_fun <- function(proposal) {
-  # Libraries ------------------------------------------------------------------
-  library("EpiModelHIV")
-  library("dplyr")
-
   # Settings -------------------------------------------------------------------
   source("./R/utils-0_project_settings.R")
   context <- "hpc"
@@ -21,20 +17,12 @@ model_fun <- function(proposal) {
     .tracker.list       = calibration_trackers,
     .checkpoint.dir     = "./temp/cp_calib",
     .checkpoint.clear   = TRUE,
-    .checkpoint.steps   = 5 * 364,
+    .checkpoint.steps   = 10 * 52,
     verbose             = FALSE
   )
 
   # Proposal to scenario -------------------------------------------------------
-  scenario_df <- proposal
-
-  scenario_df[[".scenario.id"]] <- scenario_df[[".proposal_index"]]
-  scenario_df[[".at"]] <- 1
-  scenario_df[[".proposal_index"]] <- NULL
-  scenario_df[[".wave"]] <- NULL
-  scenario_df[[".iteration"]] <- NULL
-  scenario <- EpiModel::create_scenario_list(scenario_df)[[1]]
-
+  scenario <- EpiModelHPC::swfcalib_proposal_to_scenario(proposal)
 
   if (!is.null(control[[".checkpoint.dir"]])) {
     control[[".checkpoint.dir"]] <- paste0(
@@ -42,9 +30,10 @@ model_fun <- function(proposal) {
     )
   }
 
-
   param_sc <- EpiModel::use_scenario(param, scenario)
 
+  param_sc$rgc.prob <- plogis(qlogis(param_sc$ugc.prob) + log(1.25))
+  param_sc$rct.prob <- plogis(qlogis(param_sc$uct.prob) + log(1.25))
 
   # Simulation and processing --------------------------------------------------
   sim <- netsim(est, param_sc, init, control)
@@ -80,20 +69,33 @@ calibration2_fun <- function(proposal) {
     cumulative.edgelist = TRUE,
     truncate.el.cuml    = 0,
     .tracker.list       = calibration_trackers,
+    .checkpoint.dir     = "./temp/cp_calib",
+    .checkpoint.clear   = TRUE,
+    .checkpoint.steps   = 10 * 52,
     verbose             = FALSE
   )
 
   # Proposal to scenario -------------------------------------------------------
   scenario <- EpiModelHPC::swfcalib_proposal_to_scenario(proposal)
+
+  if (!is.null(control[[".checkpoint.dir"]])) {
+    control[[".checkpoint.dir"]] <- paste0(
+      control[[".checkpoint.dir"]], "/sim__", scenario[["id"]]
+    )
+  }
+
   param_sc <- EpiModel::use_scenario(param, scenario)
+
+  param_sc$rgc.prob <- plogis(qlogis(param_sc$ugc.prob) + log(1.25))
+  param_sc$rct.prob <- plogis(qlogis(param_sc$uct.prob) + log(1.25))
 
   # Simulation and processing --------------------------------------------------
   sim <- netsim(est, param_sc, init, control)
 
-  as_tibble(sim) %>%
-    mutate_calibration_targets() %>%
-    filter(time >= max(time) - 364) %>%
-    select(c(sim, any_of(names(targets)))) %>%
-    group_by(sim) %>%
+  as_tibble(sim) |>
+    mutate_calibration_targets() |>
+    filter(time >= max(time) - 364) |>
+    select(c(sim, any_of(names(targets)))) |>
+    group_by(sim) |>
     summarise(across(everything(), ~ mean(.x, na.rm = TRUE)))
 }

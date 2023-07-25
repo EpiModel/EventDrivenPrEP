@@ -47,32 +47,22 @@ calib_object <- list(
       job4 = list(
         targets = "ir100.gc",
         targets_val = 12.81,
-        params = c("ugc.prob", "rgc.prob"), # target:
+        params = "ugc.prob", # target:
         initial_proposals = dplyr::tibble(
-          ugc.prob = seq(0.2, 0.3, length.out = n_sims),
-          rgc.prob = plogis(qlogis(ugc.prob) + log(1.25))
+          ugc.prob = seq(0.12, 0.40, length.out = n_sims)
         ),
-        make_next_proposals = make_sti_range_proposer(n_sims),
-        get_result = determ_trans_end(
-          retain_prop = 0.3,
-          thresholds = 1.5,
-          n_enough = 100
-        )
+        make_next_proposals = make_shrink_proposer_rm0(n_sims, shrink = 3 / 2),
+        get_result = determ_poly_end_rm0(0.05, poly_n = 5)
       ),
       job5 = list(
         targets = "ir100.ct",
         targets_val = 14.59,
-        params = c("uct.prob", "rct.prob"), # target:
+        params = "uct.prob", # target:
         initial_proposals = dplyr::tibble(
-          uct.prob = seq(0.15, 0.25, length.out = n_sims),
-          rct.prob = plogis(qlogis(uct.prob) + log(1.25))
+          uct.prob = seq(0.12, 0.40, length.out = n_sims)
         ),
-        make_next_proposals = make_sti_range_proposer(n_sims),
-        get_result = determ_trans_end(
-          retain_prop = 0.3,
-          thresholds = 1.5,
-          n_enough = 100
-        )
+        make_next_proposals = make_shrink_proposer_rm0(n_sims, shrink = 3 / 2),
+        get_result = determ_poly_end_rm0(0.05, poly_n = 5)
       )
     ),
     #   job6 = list(
@@ -145,9 +135,7 @@ calib_object <- list(
       tx.init.rate_2 = 0.0747,
       tx.init.rate_3 = 0.0726,
       ugc.prob = 0.01,
-      rgc.prob = plogis(qlogis(ugc.prob) + log(1.25)),
       uct.prob = 0.01,
-      rct.prob = plogis(qlogis(uct.prob) + log(1.25)),
       tx.halt.partial.rate_1 = 0.0007740,
       tx.halt.partial.rate_2 = 0.0007167,
       tx.halt.partial.rate_3 = 0.0004727,
