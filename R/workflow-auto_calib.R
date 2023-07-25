@@ -36,7 +36,7 @@ wf <- add_workflow_step(
   step_tmpl = step_tmpl_do_call_script(
     r_script = "R/wf_step1.R",
     args = list(
-      n_cores = step1_n_cores,
+      n_cores = 8,
       calib_object = calib_object
     ),
     setup_lines = hpc_configs$r_loader
