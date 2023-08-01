@@ -64,3 +64,12 @@ p_ok <- res_fmt %>%
     i.prev.dx.H < 0.02,
     i.prev.dx.W < 0.02
   )
+
+results |>
+  select(.iteration, starts_with("ir100.ct")) |>
+  group_by(.iteration) |>
+  summarise(across(everything(), list(
+    min = min,
+    mean = mean,
+    max = max
+  )))

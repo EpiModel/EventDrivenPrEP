@@ -3,68 +3,68 @@ source("R/auto_cal_sim.R")
 
 calib_object <- list(
   waves = list(
-    wave1 = list(
-      job0 = list(
-        targets = "disease.mr100",
-        targets_val = 0.273,
-        params = c("aids.off.tx.mort.rate"), # target: 0.00385
-        initial_proposals = dplyr::tibble(
-          aids.off.tx.mort.rate = seq(0.0002, 0.0007, length.out = n_sims),
-        ),
-        make_next_proposals = make_shrink_proposer(n_sims),
-        get_result = determ_poly_end(0.001, poly_n = 5)
-      ),
-      # job1 = list(
-      #   targets = "cc.dx.B",
-      #   targets_val = 0.847,
-      #   params = c("hiv.test.rate_1"), # target: 0.00385
-      #   initial_proposals = dplyr::tibble(
-      #     hiv.test.rate_1 = seq(0.0004, 0.001, length.out = n_sims),
-      #     ),
-      #   make_next_proposals = make_shrink_proposer(n_sims),
-      #   get_result = determ_poly_end(0.001, poly_n = 5)
-      # ),
-      # job2 = list(
-      #   targets = "cc.dx.H",
-      #   targets_val = 0.818,
-      #   params = c("hiv.test.rate_2"), # target: 0.0038
-      #   initial_proposals = dplyr::tibble(
-      #     hiv.test.rate_2 = seq(0.0004, 0.001, length.out = n_sims),
-      #     ),
-      #   make_next_proposals = make_shrink_proposer(n_sims),
-      #   get_result = determ_poly_end(0.001, poly_n = 5)
-      #   ),
-      # job3 = list(
-      #   targets = "cc.dx.W",
-      #   targets_val = 0.862,
-      #   params = c("hiv.test.rate_3"), # target: 0.0069
-      #   initial_proposals = dplyr::tibble(
-      #     hiv.test.rate_3 = seq(0.0005, 0.0012, length.out = n_sims),
-      #   ),
-      #   make_next_proposals = make_shrink_proposer(n_sims),
-      #   get_result = determ_poly_end(0.001, poly_n = 5)
-      #   ),
-      job4 = list(
-        targets = "ir100.gc",
-        targets_val = 12.81,
-        params = "ugc.prob", # target:
-        initial_proposals = dplyr::tibble(
-          ugc.prob = seq(0.12, 0.40, length.out = n_sims)
-        ),
-        make_next_proposals = make_shrink_proposer_rm0(n_sims, shrink = 3 / 2),
-        get_result = determ_poly_end_rm0(0.05, poly_n = 5)
-      ),
-      job5 = list(
-        targets = "ir100.ct",
-        targets_val = 14.59,
-        params = "uct.prob", # target:
-        initial_proposals = dplyr::tibble(
-          uct.prob = seq(0.12, 0.40, length.out = n_sims)
-        ),
-        make_next_proposals = make_shrink_proposer_rm0(n_sims, shrink = 3 / 2),
-        get_result = determ_poly_end_rm0(0.05, poly_n = 5)
-      )
-    ),
+    # wave1 = list(
+    #   job0 = list(
+    #     targets = "disease.mr100",
+    #     targets_val = 0.273,
+    #     params = c("aids.off.tx.mort.rate"), # target: 0.00385
+    #     initial_proposals = dplyr::tibble(
+    #       aids.off.tx.mort.rate = seq(0.00002, 0.0001 length.out = n_sims),
+    #     ),
+    #     make_next_proposals = make_shrink_proposer(n_sims),
+    #     get_result = determ_poly_end(0.001, poly_n = 5)
+    #   ),
+    #   job1 = list(
+    #     targets = "cc.dx.B",
+    #     targets_val = 0.847,
+    #     params = c("hiv.test.rate_1"), # target: 0.00385
+    #     initial_proposals = dplyr::tibble(
+    #       hiv.test.rate_1 = seq(0.0004, 0.001, length.out = n_sims),
+    #       ),
+    #     make_next_proposals = make_shrink_proposer(n_sims),
+    #     get_result = determ_poly_end(0.001, poly_n = 5)
+    #   ),
+    #   job2 = list(
+    #     targets = "cc.dx.H",
+    #     targets_val = 0.818,
+    #     params = c("hiv.test.rate_2"), # target: 0.0038
+    #     initial_proposals = dplyr::tibble(
+    #       hiv.test.rate_2 = seq(0.0004, 0.001, length.out = n_sims),
+    #       ),
+    #     make_next_proposals = make_shrink_proposer(n_sims),
+    #     get_result = determ_poly_end(0.001, poly_n = 5)
+    #     ),
+    #   job3 = list(
+    #     targets = "cc.dx.W",
+    #     targets_val = 0.862,
+    #     params = c("hiv.test.rate_3"), # target: 0.0069
+    #     initial_proposals = dplyr::tibble(
+    #       hiv.test.rate_3 = seq(0.0005, 0.0012, length.out = n_sims),
+    #     ),
+    #     make_next_proposals = make_shrink_proposer(n_sims),
+    #     get_result = determ_poly_end(0.001, poly_n = 5)
+    #     ),
+    #   job4 = list(
+    #     targets = "ir100.gc",
+    #     targets_val = 12.81,
+    #     params = "ugc.prob", # target:
+    #     initial_proposals = dplyr::tibble(
+    #       ugc.prob = seq(0.12, 0.40, length.out = n_sims)
+    #     ),
+    #     make_next_proposals = make_shrink_proposer_rm0(n_sims, shrink = 3 / 2),
+    #     get_result = determ_poly_end_rm0(0.05, poly_n = 5)
+    #   ),
+    #   job5 = list(
+    #     targets = "ir100.ct",
+    #     targets_val = 14.59,
+    #     params = "uct.prob", # target:
+    #     initial_proposals = dplyr::tibble(
+    #       uct.prob = seq(0.12, 0.40, length.out = n_sims)
+    #     ),
+    #     make_next_proposals = make_shrink_proposer_rm0(n_sims, shrink = 3 / 2),
+    #     get_result = determ_poly_end_rm0(0.05, poly_n = 5)
+    #   )
+    # ),
     #   job6 = list(
     #     targets = paste0("cc.linked1m.", c("B", "H", "W")),
     #     targets_val = c(0.829, 0.898, 0.890),
@@ -134,15 +134,15 @@ calib_object <- list(
       tx.init.rate_1 = 0.0600,
       tx.init.rate_2 = 0.0747,
       tx.init.rate_3 = 0.0726,
-      ugc.prob = 0.01,
-      uct.prob = 0.01,
+      ugc.prob = 0.2822787,
+      uct.prob = 0.2703707,
       tx.halt.partial.rate_1 = 0.0007740,
       tx.halt.partial.rate_2 = 0.0007167,
       tx.halt.partial.rate_3 = 0.0004727,
       hiv.trans.scale_1 = 2.5,
       hiv.trans.scale_2 = 0.5,
       hiv.trans.scale_3 = 0.3,
-      aids.off.tx.mort.rate = 0.0006
+      aids.off.tx.mort.rate = 0.00008
     ),
     root_directory = "data/calib",
     max_iteration = 100,
