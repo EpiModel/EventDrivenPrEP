@@ -63,8 +63,7 @@ calib_object <- list(
     #     ),
     #     make_next_proposals = make_shrink_proposer_rm0(n_sims, shrink = 3 / 2),
     #     get_result = determ_poly_end_rm0(0.05, poly_n = 5)
-    #   )
-    # ),
+    #   ),
     #   job6 = list(
     #     targets = paste0("cc.linked1m.", c("B", "H", "W")),
     #     targets_val = c(0.829, 0.898, 0.890),
