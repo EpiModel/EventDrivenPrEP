@@ -10,7 +10,7 @@ library("EpiModelHIV")
 # Settings ---------------------------------------------------------------------
 source("./R/utils-0_project_settings.R")
 context <- "hpc"
-max_cores <- 30
+max_cores <- 8
 
 source("./R/utils-default_inputs.R") # make `path_to_est`, `param` and `init`
 source("./R/utils-hpc_configs.R") # creates `hpc_configs`
@@ -19,7 +19,7 @@ source("./R/utils-hpc_configs.R") # creates `hpc_configs`
 
 # Workflow creation
 wf <- create_workflow(
-  wf_name = "restart_point",
+  wf_name = "EDP_restart_point",
   default_sbatch_opts = hpc_configs$default_sbatch_opts
 )
 
@@ -54,8 +54,8 @@ wf <- add_workflow_step(
   step_tmpl = step_tmpl_netsim_scenarios(
     path_to_est, param, init, control,
     scenarios_list = NULL,
-    n_rep = 120,
-    n_cores = max_cores,
+    n_rep = 256,
+    n_cores = 7,
     libraries = c("EpiModelHIV", "networkLite"),
     output_dir = "data/intermediate/calibration",
     save_pattern = "restart", # more data is required to allow restarting
@@ -63,10 +63,10 @@ wf <- add_workflow_step(
     setup_lines = hpc_configs$r_loader
   ),
   sbatch_opts = list(
-    "mail-type" = "FAIL,TIME_LIMIT",
-    "cpus-per-task" = max_cores,
-    "time" = "04:00:00",
-    "mem" = 0
+    "cpus-per-task" = 8,
+    "time" = "24:00:00",
+    "mem-per-cpu" = "5G",
+    "mail-type" = "FAIL"
   )
 )
 
@@ -78,14 +78,14 @@ wf <- add_workflow_step(
     r_script = "./R/11-calibration_process.R",
     args = list(
       context = "hpc",
-      ncores = 15
+      ncores = 8
     ),
     setup_lines = hpc_configs$r_loader
   ),
   sbatch_opts = list(
     "cpus-per-task" = max_cores,
     "time" = "04:00:00",
-    "mem-per-cpu" = "4G"
+    "mem-per-cpu" = "5G"
   )
 )
 
@@ -96,14 +96,14 @@ wf <- add_workflow_step(
     r_script = "./R/23-restart_point_process_plots.R",
     args = list(
       context = "hpc",
-      ncores = 10
+      ncores = 8
     ),
     setup_lines = hpc_configs$r_loader
   ),
   sbatch_opts = list(
     "cpus-per-task" = max_cores,
     "time" = "04:00:00",
-    "mem-per-cpu" = "4G",
+    "mem-per-cpu" = "5G",
     "mail-type" = "END"
   )
 )

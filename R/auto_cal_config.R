@@ -133,11 +133,11 @@ calib_object <- list(
       tx.init.rate_1 = 0.0600,
       tx.init.rate_2 = 0.0747,
       tx.init.rate_3 = 0.0726,
-      ugc.prob = 0.2822787,
-      uct.prob = 0.2703707,
-      tx.halt.partial.rate_1 = 0.0007740,
-      tx.halt.partial.rate_2 = 0.0007167,
-      tx.halt.partial.rate_3 = 0.0004727,
+      ugc.prob = 0.2822787, # rgc: 0.3295894
+      uct.prob = 0.2703707, # rct: 0.3165658
+      tx.halt.partial.rate_1 = 0.0007045466,
+      tx.halt.partial.rate_2 = 0.0006549444,
+      tx.halt.partial.rate_3 = 0.0004429950,
       hiv.trans.scale_1 = 2.5,
       hiv.trans.scale_2 = 0.5,
       hiv.trans.scale_3 = 0.3,
@@ -149,3 +149,6 @@ calib_object <- list(
   )
   # state = list() # managed internally
 )
+
+# plogis(qlogis(0.2703707) + log(1.25))
+
