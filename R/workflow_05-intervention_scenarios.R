@@ -47,12 +47,12 @@ control <- control_msm(
   verbose             = FALSE
 )
 
-#scenarios_df <- readr::read_csv("./data/input/scenarios.csv")
-scenarios_df <- tibble(
-  .scenario.id    = c("scenario_1", "scenario_2", "scenario_3", "scenario_4"),
-  .at             = 1,
-  edp.start.scenario = c(1, 2, 3, 4)
-)
+scenarios_df <- readr::read_csv("./data/input/scenarios.csv")
+#scenarios_df <- tibble(
+#  .scenario.id    = c("scenario_1", "scenario_2", "scenario_3", "scenario_4"),
+#  .at             = 1,
+#  edp.start.scenario = c(1, 2, 3, 4)
+#)
 scenarios_list <- EpiModel::create_scenario_list(scenarios_df)
 
 wf <- add_workflow_step(
@@ -63,7 +63,7 @@ wf <- add_workflow_step(
     output_dir = "./data/intermediate/scenarios",
     libraries = "EpiModelHIV",
     save_pattern = "simple",
-    n_rep = 120,
+    n_rep = 100,
     n_cores = max_cores,
     max_array_size = 500,
     setup_lines = hpc_configs$r_loader
@@ -92,7 +92,7 @@ wf <- add_workflow_step(
   sbatch_opts = list(
     "cpus-per-task" = max_cores,
     "time" = "04:00:00",
-    "mem-per-cpu" = "4G",
+    "mem-per-cpu" = "10G",
     "mail-type" = "END"
   )
 )

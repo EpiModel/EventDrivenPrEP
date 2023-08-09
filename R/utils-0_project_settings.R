@@ -12,8 +12,8 @@ current_git_branch <- "main"
 mail_user <- "clchand@emory.edu" # or any other mail provider
 
 # Relevant time steps for the simulation
-calibration_end    <- 364 * 10
+calibration_end    <- 364 * 60
 restart_time       <- calibration_end + 1
-prep_start         <- restart_time + 364 * 2
-intervention_start <- prep_start + 364 * 2
+prep_start         <- restart_time + 364 * 5
+intervention_start <- prep_start + 364 * 10
 intervention_end   <- intervention_start + 364 * 10
