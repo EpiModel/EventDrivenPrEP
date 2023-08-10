@@ -97,3 +97,15 @@ wf <- add_workflow_step(
   )
 )
 
+# rm -rf workflows/intervention_scenarios
+
+# Send the workflow folder to the <HPC> and run it
+#
+# $ scp -r ./workflows/intervention_scenarios <HPC>:<project_dir>/workflows/
+#
+# on the HPC:
+# chmod +x workflows/intervention_scenarios/start_workflow.sh
+# $ ./workflows/intervention_scenarios/start_workflow.sh
+
+
+
