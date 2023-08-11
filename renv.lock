@@ -19,7 +19,7 @@
       "RemoteRef": "HEAD",
       "RemoteSha": "99a5318766a3fc6eb8253755a0d378de6376b974",
       "RemoteHost": "api.github.com",
-      "Remotes": "github::EpiModel/ARTnetData@main, github::EpiModel/EpiModelHIV-p@main",
+      "Remotes": "github::EpiModel/ARTnetData@main,\r github::EpiModel/EpiModelHIV-p@main",
       "Requirements": [
         "ARTnetData",
         "EpiModel",
@@ -34,8 +34,8 @@
       "Source": "GitHub",
       "RemoteType": "github",
       "RemoteHost": "api.github.com",
-      "RemoteRepo": "ARTnetData",
       "RemoteUsername": "EpiModel",
+      "RemoteRepo": "ARTnetData",
       "RemoteRef": "main",
       "RemoteSha": "5220754935e3ddbe3a10ae5c366355d8a987f2fb",
       "Requirements": [
@@ -133,7 +133,7 @@
       "RemoteUsername": "EpiModel",
       "RemoteRepo": "EpiModelHPC",
       "RemoteRef": "main",
-      "RemoteSha": "e48474e031afd21842f9971cd2222f427f2c9493",
+      "RemoteSha": "f7fbe13a1e96e61eb74f2272a4da2bb9a81d66cc",
       "Remotes": "github::EpiModel/slurmworkflow, github::EpiModel/swfcalib",
       "Requirements": [
         "EpiModel",
@@ -154,7 +154,7 @@
         "tidyr",
         "tidyselect"
       ],
-      "Hash": "f98131e0609fbbb98129fdfaad6d8ed1"
+      "Hash": "3f4f5dff059616cca89d52f7cd6a4871"
     },
     "MASS": {
       "Package": "MASS",
@@ -924,17 +924,6 @@
         "R"
       ],
       "Hash": "d908914ae53b04d4c0c0fd72ecc35370"
-    },
-    "lhs": {
-      "Package": "lhs",
-      "Version": "1.1.6",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Requirements": [
-        "R",
-        "Rcpp"
-      ],
-      "Hash": "a007ff66aa9d478e220bf0493a7b1d95"
     },
     "lifecycle": {
       "Package": "lifecycle",
