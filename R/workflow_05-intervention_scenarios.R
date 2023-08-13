@@ -91,7 +91,7 @@ wf <- add_workflow_step(
   ),
   sbatch_opts = list(
     "cpus-per-task" = max_cores,
-    "time" = "04:00:00",
+    "time" = "24:00:00",
     "mem-per-cpu" = "10G",
     "mail-type" = "END"
   )
