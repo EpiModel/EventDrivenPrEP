@@ -15,5 +15,6 @@ mail_user <- "clchand@emory.edu" # or any other mail provider
 calibration_end    <- 364 * 60
 restart_time       <- calibration_end + 1
 prep_start         <- restart_time + 364 * 5
+edp_start          <- prep_start + 364 * 10
 intervention_start <- prep_start + 364 * 10
 intervention_end   <- intervention_start + 364 * 10

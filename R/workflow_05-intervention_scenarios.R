@@ -107,5 +107,8 @@ wf <- add_workflow_step(
 # chmod +x workflows/intervention_scenarios/start_workflow.sh
 # $ ./workflows/intervention_scenarios/start_workflow.sh
 
+# download the data
+# scp -r <HPC>:<project_dir>/data/intermediate/scenarios ./data/intermediate/
+
 
 

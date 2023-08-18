@@ -13,7 +13,8 @@ param <- param.net(
   netstats            = netstats,
   epistats            = epistats,
   prep.start          = prep_start,
-  riskh.start         = prep_start - 53 * 7
+  riskh.start         = prep_start - 53 * 7,
+  edp.start           = edp_start
 )
 
 # Initial conditions (default prevalence initialized in epistats)
