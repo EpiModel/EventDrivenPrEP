@@ -24,6 +24,7 @@ param <- param.net(
   netstats             = netstats,
   epistats             = epistats,
   prep.start           = 182,
+  prep.edp.start       = 400,
   riskh.start          = 1
 )
 
