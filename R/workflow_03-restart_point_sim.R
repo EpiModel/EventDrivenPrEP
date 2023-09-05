@@ -10,7 +10,7 @@ library("EpiModelHIV")
 # Settings ---------------------------------------------------------------------
 source("./R/utils-0_project_settings.R")
 context <- "hpc"
-max_cores <- 8
+max_cores <- 28
 
 source("./R/utils-default_inputs.R") # make `path_to_est`, `param` and `init`
 source("./R/utils-hpc_configs.R") # creates `hpc_configs`
@@ -55,7 +55,7 @@ wf <- add_workflow_step(
     path_to_est, param, init, control,
     scenarios_list = NULL,
     n_rep = 256,
-    n_cores = 7,
+    n_cores = 20,
     libraries = c("EpiModelHIV", "networkLite"),
     output_dir = "data/intermediate/calibration",
     save_pattern = "restart", # more data is required to allow restarting
@@ -63,9 +63,10 @@ wf <- add_workflow_step(
     setup_lines = hpc_configs$r_loader
   ),
   sbatch_opts = list(
-    "cpus-per-task" = 8,
+    "cpus-per-task" = 20,
     "time" = "24:00:00",
-    "mem-per-cpu" = "5G",
+    # "mem-per-cpu" = "5G",
+    "mem" = 0,
     "mail-type" = "FAIL"
   )
 )
