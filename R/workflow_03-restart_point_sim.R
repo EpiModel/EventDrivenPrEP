@@ -42,10 +42,9 @@ control <- control_msm(
   cumulative.edgelist = TRUE,
   truncate.el.cuml    = 0,
   .tracker.list       = calibration_trackers,
-  # .tracker.list       = calibration_trackers,
-  # .checkpoint.dir     = "temp/cp_calib",
-  # .checkpoint.clear   = TRUE,
-  # .checkpoint.steps   = 15 * 52,
+  .checkpoint.dir     = "temp/cp_calib",
+  .checkpoint.clear   = TRUE,
+  .checkpoint.steps   = 364 * 4,
   verbose             = FALSE
 )
 
