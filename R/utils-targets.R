@@ -26,9 +26,9 @@ targets <- c(
   cc.prep.ind.H                           = 0.379,
   cc.prep.ind.W                           = 0.407,
   cc.prep.ind                             = 0.402,
-  cc.prep.B                               = 0.206,
-  cc.prep.H                               = 0.237,
-  cc.prep.W                               = 0.332,
+  cc.prep.B                               = 0.199,
+  cc.prep.H                               = 0.229,
+  cc.prep.W                               = 0.321,
   cc.prep                                 = 0.203,
   prep_prop_ret1y                         = 0.56, # DOI: 10.1002/jia2.25252 and 10.1093/cid/ciaa037 (54%)
   prep_prop_ret2y                         = 0.41,

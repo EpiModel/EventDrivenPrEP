@@ -9,7 +9,7 @@ calib_object <- list(
         targets_val = 0.199,
         params = c("prep.start.prob_1"),
         initial_proposals = dplyr::tibble(
-          prep.start.prob_1 = seq(0.001, 0.01, length.out = n_sims),
+          prep.start.prob_1 = seq(0.0001, 0.005, length.out = n_sims),
         ),
         make_next_proposals = make_shrink_proposer(n_sims),
         get_result = determ_poly_end(0.001, poly_n = 5)
@@ -19,7 +19,7 @@ calib_object <- list(
         targets_val = 0.229,
         params = c("prep.start.prob_2"),
         initial_proposals = dplyr::tibble(
-          prep.start.prob_2 = seq(0.001, 0.01, length.out = n_sims),
+          prep.start.prob_2 = seq(0.0001, 0.005, length.out = n_sims),
         ),
         make_next_proposals = make_shrink_proposer(n_sims),
         get_result = determ_poly_end(0.001, poly_n = 5)
@@ -29,7 +29,7 @@ calib_object <- list(
         targets_val = 0.321,
         params = c("prep.start.prob_3"),
         initial_proposals = dplyr::tibble(
-          prep.start.prob_3 = seq(0.001, 0.01, length.out = n_sims),
+          prep.start.prob_3 = seq(0.0001, 0.005, length.out = n_sims),
         ),
         make_next_proposals = make_shrink_proposer(n_sims),
         get_result = determ_poly_end(0.001, poly_n = 5)
@@ -39,32 +39,22 @@ calib_object <- list(
       job1 = list(
         targets = "ir100.gc",
         targets_val = 12.81,
-        params = c("ugc.prob", "rgc.prob"), # target:
+        params = "ugc.prob", # target:
         initial_proposals = dplyr::tibble(
-          ugc.prob = seq(0.15, 0.45, length.out = n_sims),
-          rgc.prob = plogis(qlogis(ugc.prob) + log(1.25))
+          ugc.prob = seq(0.15, 0.45, length.out = n_sims)
         ),
-        make_next_proposals = make_sti_range_proposer(n_sims),
-        get_result = determ_trans_end(
-          retain_prop = 0.3,
-          thresholds = 1,
-          n_enough = 300
-        )
+        make_next_proposals = make_shrink_proposer_rm0(n_sims, shrink = 3 / 2),
+        get_result = determ_poly_end_rm0(0.05, poly_n = 5)
       ),
-      job2 = list(
+      job1 = list(
         targets = "ir100.ct",
         targets_val = 14.59,
-        params = c("uct.prob", "rct.prob"), # target:
+        params = "uct.prob", # target:
         initial_proposals = dplyr::tibble(
-          uct.prob = seq(0.15, 0.45, length.out = n_sims),
-          rct.prob = plogis(qlogis(uct.prob) + log(1.25))
+          uct.prob = seq(0.15, 0.45, length.out = n_sims)
         ),
-        make_next_proposals = make_sti_range_proposer(n_sims),
-        get_result = determ_trans_end(
-          retain_prop = 0.3,
-          thresholds = 1,
-          n_enough = 300
-        )
+        make_next_proposals = make_shrink_proposer_rm0(n_sims, shrink = 3 / 2),
+        get_result = determ_poly_end_rm0(0.05, poly_n = 5)
       )
     )
   ),
@@ -75,10 +65,8 @@ calib_object <- list(
       prep.start.prob_2 = 0.006,
       prep.start.prob_3 = 0.006,
       # remove after
-      ugc.prob = 0.1902003,
-      rgc.prob = plogis(qlogis(ugc.prob) + log(1.25)),
-      uct.prob = 0.1714429,
-      rct.prob = plogis(qlogis(uct.prob) + log(1.25)),
+      ugc.prob = 0.2822787,
+      uct.prob = 0.2703707
     ),
     root_directory = "data/calib",
     max_iteration = 100,
