@@ -1,7 +1,7 @@
 library("ggplot2")
 
 # Settings ---------------------------------------------------------------------
-context <- c("local", "hpc")[1]
+context <- c("local", "hpc")[2]
 
 source("R/utils-0_project_settings.R")
 
