@@ -1,5 +1,6 @@
 library(dplyr)
 library(tidyr)
+library(ggplot2)
 
 results <- readRDS("./results.rds")
 
@@ -9,6 +10,11 @@ results |>
         min = ~min(.x),
         max = ~max(.x)
         ))) |> print(n = 100)
+
+results |>
+  ggplot(aes(x = prep.start.prob_3, y = cc.prep.W)) +
+  geom_smooth() +
+  geom_point()
 
 # targets_val = c(0.33, 0.127, 0.09),
 
