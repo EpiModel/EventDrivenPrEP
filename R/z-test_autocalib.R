@@ -6,13 +6,13 @@ results <- readRDS("./results.rds")
 
 results |>
   group_by(.iteration) |>
-  summarize(across(starts_with("prep.start.prob_2"), list(
+  summarize(across(starts_with("prep.start.prob_1"), list(
         min = ~min(.x),
         max = ~max(.x)
         ))) |> print(n = 100)
 
 results |>
-  ggplot(aes(x = prep.start.prob_3, y = cc.prep.W)) +
+  ggplot(aes(x = prep.start.prob_2, y = cc.prep.H)) +
   geom_smooth() +
   geom_point()
 
