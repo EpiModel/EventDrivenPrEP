@@ -105,7 +105,7 @@ rmse <- function(values, targets) {
 determ_noisy_end <- function(threshold, n_needed) {
   force(threshold)
   force(n_needed)
-  function(job, results) {
+  function(calib_object, job, results) {
     values <- results[[job$targets]]
     target <- job$targets_val
     dist <- vapply(values, mae, target = target, numeric(1))
