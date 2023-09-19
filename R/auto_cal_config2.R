@@ -11,8 +11,10 @@ calib_object <- list(
         initial_proposals = dplyr::tibble(
           prep.start.prob_1 = seq(1e-8, 1e-2, length.out = n_sims),
         ),
-        make_next_proposals = make_shrink_proposer(n_sims),
-        get_result = determ_poly_end(0.001, poly_n = 5)
+        make_next_proposals = make_noisy_proposer(n_sims, floor(n_sims / 3)),
+        get_result = determ_noisy_end(0.01, 100)
+        # make_next_proposals = make_shrink_proposer(n_sims),
+        # get_result = determ_poly_end(0.001, poly_n = 5)
       ),
       job2 = list(
         targets = "cc.prep.H",
@@ -21,8 +23,10 @@ calib_object <- list(
         initial_proposals = dplyr::tibble(
           prep.start.prob_2 = seq(1e-8, 1e-2, length.out = n_sims),
         ),
-        make_next_proposals = make_shrink_proposer(n_sims),
-        get_result = determ_poly_end(0.001, poly_n = 5)
+        make_next_proposals = make_noisy_proposer(n_sims, floor(n_sims / 3)),
+        get_result = determ_noisy_end(0.01, 100)
+        # make_next_proposals = make_shrink_proposer(n_sims),
+        # get_result = determ_poly_end(0.001, poly_n = 5)
       ),
       job3 = list(
         targets = "cc.prep.W",
@@ -31,8 +35,10 @@ calib_object <- list(
         initial_proposals = dplyr::tibble(
           prep.start.prob_3 = seq(1e-8, 1e-2, length.out = n_sims),
         ),
-        make_next_proposals = make_shrink_proposer(n_sims),
-        get_result = determ_poly_end(0.001, poly_n = 5)
+        make_next_proposals = make_noisy_proposer(n_sims, floor(n_sims / 3)),
+        get_result = determ_noisy_end(0.01, 100)
+        # make_next_proposals = make_shrink_proposer(n_sims),
+        # get_result = determ_poly_end(0.001, poly_n = 5)
       )
     ),
     wave2 = list(
