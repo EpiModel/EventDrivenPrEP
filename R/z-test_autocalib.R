@@ -12,10 +12,22 @@ results |>
         ))) |> print(n = 100)
 
 results |>
+  ggplot(aes(x = prep.start.prob_1, y = cc.prep.B)) +
+  geom_smooth() +
+  geom_point() +
+  geom_hline(yintercept = 0.199)
+
+results |>
   ggplot(aes(x = prep.start.prob_2, y = cc.prep.H)) +
   geom_smooth() +
   geom_point() +
   geom_hline(yintercept = 0.229)
+
+results |>
+  ggplot(aes(x = prep.start.prob_3, y = cc.prep.W)) +
+  geom_smooth() +
+  geom_point() +
+  geom_hline(yintercept = 0.321)
 
 # targets_val = c(0.33, 0.127, 0.09),
 
