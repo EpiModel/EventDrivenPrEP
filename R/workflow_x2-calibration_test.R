@@ -44,7 +44,7 @@ control <- control_msm(
   .tracker.list       = calibration_trackers,
  .checkpoint.dir     = "./temp/cp_calib",
  .checkpoint.clear   = TRUE,
- .checkpoint.steps   = 5 * 52 * 7,
+ .checkpoint.steps   = 10 * 52 * 7,
   verbose             = FALSE
 )
 

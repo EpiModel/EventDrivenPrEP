@@ -34,3 +34,6 @@ as.list(d_tar)
 ckpt <- readRDS("./1.rds")
 names(ckpt)
 ckpt[["_timestep"]]
+
+         ugc.prob :  0.3004986
+         uct.prob :  0.2988576
