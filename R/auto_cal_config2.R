@@ -71,8 +71,8 @@ calib_object <- list(
       prep.start.prob_2 = 1e-4,
       prep.start.prob_3 = 0.0007918135,
       # remove after
-      ugc.prob = 0.3004986,
-      uct.prob = 0.2988576
+      ugc.prob = 0.3004986, # rgc: 0.3493765
+      uct.prob = 0.2988576 # rct: 0.3476012
     ),
     root_directory = "data/calib",
     max_iteration = 100,
