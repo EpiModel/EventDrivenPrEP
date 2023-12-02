@@ -4,8 +4,8 @@ renv::install(c(
   "EpiModel/EpiModelHPC"
 ))
 
-# This code finds and install the libraries used by the project (CRAN version)
-renv::hydrate()
+# Updates EpiModelHIV after pushing code to Github
+renv::update("EpiModelHIV")
 
 # Force `renv` to discover the following packages
 if (FALSE) {

@@ -108,30 +108,15 @@ outcome_fun <- function(simulation) {
               do.disc.ll = round(quantile(do.covered.disc, 0.025, names = FALSE)*100, 2),
               do.disc.ul = round(quantile(do.covered.disc, 0.975, names = FALSE)*100, 2),
 
-              # Number eligible for DO PrEP
-              do.elig = round(median(prepEligible)),
-              do.elig.ll = round(quantile(prepEligible, 0.025, names = FALSE)),
-              do.elig.ul = round(quantile(prepEligible, 0.975, names = FALSE)),
-
-              # Proportion of those eligible on EDP
-              edp.med = round(median(edp.prop)*100, 2),
-              edp.ll = round(quantile(edp.prop, 0.025, na.rm = TRUE, names = FALSE)*100, 2),
-              edp.ul = round(quantile(edp.prop, 0.975, na.rm = TRUE, names = FALSE)*100, 2),
-
-              # Number eligible for EDP
-              edp.elig = round(median(edp.prepEligible)),
-              edp.elig.ll = round(quantile(edp.prepEligible, 0.025, na.rm = TRUE, names = FALSE)),
-              edp.elig.ul = round(quantile(edp.prepEligible, 0.975, na.rm = TRUE, names = FALSE)),
-
               # Proportion of sex acts covered by EDP
               edp.sex.med = round(median(edp.covered.avg)*100, 2),
               edp.sex.ll = round(quantile(edp.covered.avg, 0.025, na.rm = TRUE, names = FALSE)*100, 2),
               edp.sex.ul = round(quantile(edp.covered.avg, 0.975, na.rm = TRUE, names = FALSE)*100, 2),
 
               # Proportion of discordant sex acts covered by EDP
-              edp.disc.med = round(median(edp.covered.disc), 2),
-              edp.disc.ll = round(quantile(edp.covered.disc, 0.025, na.rm = TRUE, names = FALSE), 2),
-              edp.disc.ul = round(quantile(edp.covered.disc, 0.975, na.rm = TRUE, names = FALSE), 2))
+              edp.disc.med = round(median(edp.covered.disc)*100, 2),
+              edp.disc.ll = round(quantile(edp.covered.disc, 0.025, na.rm = TRUE, names = FALSE)*100, 2),
+              edp.disc.ul = round(quantile(edp.covered.disc, 0.975, na.rm = TRUE, names = FALSE)*100, 2))
 
   # Total PrEP users by end of simulation
   df1 <- simulation %>%
@@ -150,7 +135,22 @@ outcome_fun <- function(simulation) {
               # Total PrEP users
               total.prep.med = round(median(total.prep)),
               total.prep.ll = round(quantile(total.prep, 0.025, names = FALSE)),
-              total.prep.ul = round(quantile(total.prep, 0.975, names = FALSE)))
+              total.prep.ul = round(quantile(total.prep, 0.975, names = FALSE)),
+
+              # Number eligible for DO PrEP
+              do.elig = round(median(prepEligible)),
+              do.elig.ll = round(quantile(prepEligible, 0.025, names = FALSE)),
+              do.elig.ul = round(quantile(prepEligible, 0.975, names = FALSE)),
+
+              # Proportion of those eligible on EDP
+              edp.med = round(median(edp.prop)*100, 2),
+              edp.ll = round(quantile(edp.prop, 0.025, na.rm = TRUE, names = FALSE)*100, 2),
+              edp.ul = round(quantile(edp.prop, 0.975, na.rm = TRUE, names = FALSE)*100, 2),
+
+              # Number eligible for EDP
+              edp.elig = round(median(edp.prepEligible)),
+              edp.elig.ll = round(quantile(edp.prepEligible, 0.025, na.rm = TRUE, names = FALSE)),
+              edp.elig.ul = round(quantile(edp.prepEligible, 0.975, na.rm = TRUE, names = FALSE)))
 
   # Percent infections averted
   base <- df_baseline %>%

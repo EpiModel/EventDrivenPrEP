@@ -25,7 +25,8 @@ param <- param.net(
   epistats             = epistats,
   prep.start           = 182,
   prep.edp.start       = 400,
-  riskh.start          = 1
+  riskh.start          = 1,
+  prep.adhr.edp.dist   = reallocate_pcp(reall = 0.26)
 )
 
 init <- init_msm()
