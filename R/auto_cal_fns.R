@@ -373,8 +373,8 @@ make_ind_shrink_proposer <- function(n_new, shrink = 2) {
     centers <- swfcalib::load_sideload(calib_object, job)
     if (is.null(centers)) {
       stop(
-        "While making shrinked proposals: \n",
-        "Sideload file with ID: `", job$targets, "` does not exist"
+        "while making shrinked proposals: \n",
+        "sideload file with id: `", job$targets, "` does not exist"
       )
     }
 
