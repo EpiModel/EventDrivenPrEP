@@ -228,7 +228,7 @@ sc_contour_plots <- tibble(
   .at = 1,
   # contour plot specific
   daily.switch.prob = s$daily,
-  edp.swith.prob = s$edp,
+  edp.switch.prob = s$edp,
   # shared
   edp.start.scenario = 1
 )
@@ -239,7 +239,7 @@ wf <- add_workflow_step(
   wf_summary = wf,
   step_tmpl = step_tmpl_netsim_scenarios(
     path_to_restart, param, init, control,
-    scenarios_list = sc_contour_plots,
+    scenarios_list = sc_contour_plots_list,
     output_dir = "./data/intermediate/scenarios/contourplots2",
     libraries = "EpiModelHIV",
     save_pattern = "simple",
