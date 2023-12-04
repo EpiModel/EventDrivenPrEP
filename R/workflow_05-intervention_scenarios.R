@@ -137,7 +137,7 @@ sc_contour_plots <- tibble(
   .scenario.id = paste0("daily_switch_", s$daily, "_edp_switch_", s$edp),
   .at = 1,
   # contour plot specific
-  daily.switch.prob = s$daily,
+  prep.switch.prob = s$daily,
   edp.swith.prob = s$edp,
   # shared
   edp.start.scenario = 1
@@ -227,7 +227,7 @@ sc_contour_plots <- tibble(
   .scenario.id = paste0("daily_switch_", s$daily, "_edp_switch_", s$edp),
   .at = 1,
   # contour plot specific
-  daily.switch.prob = s$daily,
+  prep.switch.prob = s$daily,
   edp.switch.prob = s$edp,
   # shared
   edp.start.scenario = 1
