@@ -1,6 +1,6 @@
 {
   "R": {
-    "Version": "4.3.1",
+    "Version": "4.3.2",
     "Repositories": [
       {
         "Name": "CRAN",
@@ -56,13 +56,8 @@
     },
     "DEoptimR": {
       "Package": "DEoptimR",
-      "Version": "1.1-1",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Requirements": [
-        "stats"
-      ],
-      "Hash": "ea5248ea4b419362ec031b9433c7ff45"
+      "Version": "1.1-3",
+      "Source": "Repository"
     },
     "EpiModel": {
       "Package": "EpiModel",
@@ -178,19 +173,8 @@
     },
     "Matrix": {
       "Package": "Matrix",
-      "Version": "1.5-4.1",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Requirements": [
-        "R",
-        "graphics",
-        "grid",
-        "lattice",
-        "methods",
-        "stats",
-        "utils"
-      ],
-      "Hash": "38082d362d317745fb932e13956dccbb"
+      "Version": "1.6-4",
+      "Source": "Repository"
     },
     "R6": {
       "Package": "R6",
@@ -215,13 +199,7 @@
     "Rcpp": {
       "Package": "Rcpp",
       "Version": "1.0.11",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Requirements": [
-        "methods",
-        "utils"
-      ],
-      "Hash": "ae6cbbe1492f4de79c45fce06f967ce8"
+      "Source": "Repository"
     },
     "RcppRoll": {
       "Package": "RcppRoll",
@@ -472,17 +450,8 @@
     },
     "deSolve": {
       "Package": "deSolve",
-      "Version": "1.36",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Requirements": [
-        "R",
-        "grDevices",
-        "graphics",
-        "methods",
-        "stats"
-      ],
-      "Hash": "43f32f3a2406397aab76f9b0bcb153db"
+      "Version": "1.40",
+      "Source": "Repository"
     },
     "desc": {
       "Package": "desc",
@@ -1072,10 +1041,8 @@
     },
     "lpSolveAPI": {
       "Package": "lpSolveAPI",
-      "Version": "5.5.2.0-17.9",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "376c613e5f6a11e0facb5b9fbe6a004f"
+      "Version": "5.5.2.0-17.11",
+      "Source": "Repository"
     },
     "magrittr": {
       "Package": "magrittr",
@@ -1113,20 +1080,8 @@
     },
     "mgcv": {
       "Package": "mgcv",
-      "Version": "1.8-42",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Requirements": [
-        "Matrix",
-        "R",
-        "graphics",
-        "methods",
-        "nlme",
-        "splines",
-        "stats",
-        "utils"
-      ],
-      "Hash": "3460beba7ccc8946249ba35327ba902a"
+      "Version": "1.9-0",
+      "Source": "Repository"
     },
     "mime": {
       "Package": "mime",
@@ -1140,13 +1095,8 @@
     },
     "minqa": {
       "Package": "minqa",
-      "Version": "1.2.5",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Requirements": [
-        "Rcpp"
-      ],
-      "Hash": "587ce77fd3c7bada7eadb2d18b62930d"
+      "Version": "1.2.6",
+      "Source": "Repository"
     },
     "mitools": {
       "Package": "mitools",
@@ -1216,17 +1166,8 @@
     },
     "nlme": {
       "Package": "nlme",
-      "Version": "3.1-162",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Requirements": [
-        "R",
-        "graphics",
-        "lattice",
-        "stats",
-        "utils"
-      ],
-      "Hash": "0984ce8da8da9ead8643c5cbbb60f83e"
+      "Version": "3.1-164",
+      "Source": "Repository"
     },
     "numDeriv": {
       "Package": "numDeriv",
@@ -1496,18 +1437,8 @@
     },
     "robustbase": {
       "Package": "robustbase",
-      "Version": "0.99-0",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Requirements": [
-        "DEoptimR",
-        "R",
-        "graphics",
-        "methods",
-        "stats",
-        "utils"
-      ],
-      "Hash": "2af254ab59081fbde822b89d4110f24c"
+      "Version": "0.99-1",
+      "Source": "Repository"
     },
     "rprojroot": {
       "Package": "rprojroot",
