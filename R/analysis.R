@@ -13,8 +13,8 @@ library(writexl)
 # Process Data ----------------------------------------------------------------
 ## Merge files as tibbles
 merge_netsim_scenarios_tibble(
-  "data/intermediate/scenarios",
-  "test_tibble", # saves dataframes in folder called "test_tibble"
+  "data/intermediate/contourplots2",
+  "cp2_tibble", # saves dataframes in folder called "test_tibble"
   3640 # only includes the last 3640 time steps / 10 years
 )
 
