@@ -1,5 +1,5 @@
 ##
-## Epidemic Model Parameter Calibration, HPC setup
+## Epidemic Model Intervention Scenarios, HPC setup
 ##
 
 # Libraries --------------------------------------------------------------------
@@ -219,6 +219,28 @@ wf <- add_workflow_step(
   )
 )
 
+# output one data file per scenario
+wf <- add_workflow_step(
+  wf_summary = wf,
+  step_tmpl = step_tmpl_do_call(
+    what = EpiModelHPC::merge_netsim_scenarios_tibble,
+    args = list(
+      sim_dir = "data/intermediate/scenarios/contourplots1",
+      output_dir = "adhr_sens_output",
+      steps_to_keep = 364 * 10,
+      cols = rlang::quo(dplyr::matches("^doxy")) # rlang::quo required for lazy eval
+    ),
+    setup_lines = hpc_configs$r_loader
+  ),
+  sbatch_opts = list(
+    "mail-type" = "END",
+    "cpus-per-task" = 1,
+    "time" = "02:00:00",
+    "mem" = "15G"
+  )
+)
+
+
 
 # Contour plot scenarios: Adherence vs. Coverage--------------------------------
 # Workflow creation
@@ -343,6 +365,27 @@ wf <- add_workflow_step(
     "time" = "04:00:00",
     "mem-per-cpu" = "4G",
     "mail-type" = "END"
+  )
+)
+
+# output one datafile per scenario
+wf <- add_workflow_step(
+  wf_summary = wf,
+  step_tmpl = step_tmpl_do_call(
+    what = EpiModelHPC::merge_netsim_scenarios_tibble,
+    args = list(
+      sim_dir = "data/intermediate/scenarios/contourplots1",
+      output_dir = "contourplots1_output",
+      steps_to_keep = 364 * 10,
+      cols = rlang::quo(dplyr::matches("^doxy")) # rlang::quo required for lazy eval
+    ),
+    setup_lines = hpc_configs$r_loader
+  ),
+  sbatch_opts = list(
+    "mail-type" = "END",
+    "cpus-per-task" = 1,
+    "time" = "02:00:00",
+    "mem" = "15G"
   )
 )
 
