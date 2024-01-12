@@ -2,6 +2,40 @@
 library(dplyr)
 library(tidyr)
 
+var_labels <- c(
+  "total.proportion_ly"       = "Overall PrEP Coverage",
+  "do.proportion_ly"          = "DO-PrEP Coverage",
+  "edp.proportion_ly"         = "EDP Coverage",
+  "do.prep_ly"                = "% DO-PrEP (proportion of all PrEP users using DO-PrEP",
+  "edp.prep_ly"               = "% EDP (proportion of all PrEP users using DO-PrEP",
+  "total.users_ly"            = "Total PrEP Users",
+  "prev_ly"                   = "HIV Prevalence",
+  "ir100_ly"                  = "HIV Cumulative Incidence",
+  "pia"                       = "Percent Infections Averted (PIA)",
+  "nnt"                       = "Number Needed to Treat (NNT)",
+  "pills.perc.diff"           = "Percent Difference in Total Pills Taken",
+  "do.covered.sex_ly"         = "% of Acts Covered Under DO-PrEP",
+  "edp.covered.sex_ly"        = "% of Acts Covered Under EDP",
+  "do.covered.discordant_ly"  = "% of Discordant Acts Covered Under DO-PrEP",
+  "edp.covered.discordant_ly" = "% of Discordant Acts Covered Under EDP"
+)
+
+format_patterns <- list(
+  small_num = list(
+    patterns = c("^ir100"),
+    fun = scales::label_number(0.01)
+  ),
+  perc = list(
+    patterns = c("^prev", "pia", "^do.covered", "^edp.covered", ".proportion_ly", ".prep_ly", "^pills."),
+    fun = scales::label_percent(0.01)
+  ),
+  # formatter with a catch all pattern. Must be last.
+  default = list(
+    patterns = ".*",
+    fun = scales::label_number(1)
+  )
+)
+
 format_table <- function(d, var_labels, format_patterns) {
   formatters <- make_formatters(var_labels, format_patterns)
 
