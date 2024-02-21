@@ -27,7 +27,7 @@ format_patterns <- list(
   ),
   perc = list(
     patterns = c("^prev", "pia", "^do.covered", "^edp.covered", ".proportion_ly", ".prep_ly", "^pills."),
-    fun = scales::label_percent(0.01)
+    fun = scales::label_percent(0.1)
   ),
   # formatter with a catch all pattern. Must be last.
   default = list(

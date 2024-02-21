@@ -182,7 +182,7 @@ wf <- add_workflow_step(
   step_tmpl = step_tmpl_netsim_scenarios(
     path_to_restart, param, init, control,
     scenarios_list = scenarios_list,
-    output_dir = "./data/intermediate/scenarios/contourplots2",
+    output_dir = "./data/intermediate/scenarios/adhr_sens",
     libraries = "EpiModelHIV",
     save_pattern = "simple",
     n_rep = 120,

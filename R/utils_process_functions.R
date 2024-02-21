@@ -5,7 +5,7 @@
 process_one_scenario_tibble <- function(sc_info) {
   # loading the file
   d_sc <- readRDS(sc_info$file_path)
-  d_sc <- mutate(d_sc, scenario_name = sc_info$scenario_name) |>
+  d_sc <- mutate(d_sc, scenario_name = sc_info  $scenario_name) |>
     select(scenario_name, batch_number, sim, time, everything())
 
   # global mutate
@@ -16,7 +16,6 @@ process_one_scenario_tibble <- function(sc_info) {
       edp.prepCurr = coalesce(edp.prepCurr, 0),
       do.proportion = prepCurr/prepElig,
       edp.proportion = edp.prepCurr/edp.prepElig,
-      total.proportion = (prepCurr + edp.prepCurr)/(prepElig + edp.prepElig),
       total.users = prepCurr + edp.prepCurr,
       do.covered.sex = sex.do.hi/sex.do,
       do.covered.discordant = sex.do.disc.hi/sex.do.disc,
@@ -25,6 +24,20 @@ process_one_scenario_tibble <- function(sc_info) {
       do.prep = prepCurr/(prepCurr + edp.prepCurr),
       edp.prep = edp.prepCurr/(prepCurr + edp.prepCurr)
     )
+
+  d_sc_baseline <- d_sc |>
+    filter(grepl("baseline", scenario_name)) |>
+    mutate(total.proportion = prepCurr/prepElig)
+
+  d_sc_2_3 <- d_sc |>
+    filter(grepl("scenario_2|scenario_3", scenario_name)) |>
+    mutate(total.proportion = (prepCurr + edp.prepCurr)/(prepElig + edp.prepElig))
+
+  d_sc_1_4 <- d_sc |>
+    filter(!grepl("scenario_2|scenario_3|baseline", scenario_name)) |>
+    mutate(total.proportion = (prepCurr + edp.prepCurr)/prepElig)
+
+  d_sc <- rbind(d_sc_baseline, d_sc_2_3, d_sc_1_4)
 
   # last year summaries
   d_sc_ly <- d_sc |>
