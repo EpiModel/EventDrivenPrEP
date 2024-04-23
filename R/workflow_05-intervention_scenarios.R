@@ -48,6 +48,15 @@ control <- control_msm(
   verbose             = FALSE
 )
 
+# Intervention scenarios
+
+sc_no_list <- list()
+sc_no_list[["no_edp_sc"]] <- tibble(
+  .scenario.id = "0_no_edp",
+  .at = 1,
+  edp.start = intervention_end + 1
+)
+
 edp.prep.start.prob <- c(9.78E-05, 0.0001, 0.000791814)
 
 prop_change <- c(0.2, 0.4, 0.6, 0.8, 1, 1.2, 1.4, 1.6, 1.8, 2.0)
@@ -87,7 +96,8 @@ df <- rbind(df, df.elig)
 df <- df |>
   arrange(elig_scenario, prop_change)
 
-table3 <- tibble(
+sc_interv_list <- list()
+sc_interv_list[["adhr_sens"]] <- tibble(
   .scenario.id = paste0("scenario_", df$elig_scenario, "_prop_change_", df$prop_change),
   .at = 1,
   prep.start = intervention_start,
@@ -98,13 +108,22 @@ table3 <- tibble(
   edp.start.scenario = df$elig_scenario
 )
 
-sc_list <- EpiModel::create_scenario_list(table3)
+sc_df_list <- c(
+  sc_no_list,
+  sc_interv_list
+)
+
+scenarios_list <- purrr::reduce(
+  sc_df_list,
+  \(out, d_sc) c(out, EpiModel::create_scenario_list(d_sc)),
+  .init =
+)
 
 wf <- add_workflow_step(
   wf_summary = wf,
   step_tmpl = step_tmpl_netsim_scenarios(
     path_to_restart, param, init, control,
-    scenarios_list = sc_list,
+    scenarios_list = scenarios_list,
     output_dir = "./data/intermediate/scenarios",
     libraries = "EpiModelHIV",
     save_pattern = "simple",
@@ -142,7 +161,7 @@ wf <- add_workflow_step(
   )
 )
 
-# Sensitivity analysis: EDP adherence --------------------------------
+# Sensitivity analysis: EDP adherence (Table 4) --------------------------------
 # Workflow creation
 wf <- create_workflow(
   wf_name = "adhr_sens",
@@ -264,33 +283,10 @@ wf <- add_workflow_step(
   )
 )
 
-# output one data file per scenario
-#wf <- add_workflow_step(
-#  wf_summary = wf,
-#  step_tmpl = step_tmpl_do_call(
-#    what = EpiModelHPC::merge_netsim_scenarios_tibble,
-#    args = list(
-#      sim_dir = "data/intermediate/scenarios/contourplots1",
-#      output_dir = "adhr_sens_output",
-#      steps_to_keep = 364 * 10,
-#      cols = rlang::quo(dplyr::matches("^doxy")) # rlang::quo required for lazy eval
-#    ),
-#    setup_lines = hpc_configs$r_loader
-#  ),
-#  sbatch_opts = list(
-#    "mail-type" = "END",
-#    "cpus-per-task" = 1,
-#    "time" = "02:00:00",
-#    "mem" = "15G"
-#  )
-#)
-
-
-
-# Contour plot scenarios: Adherence vs. Coverage--------------------------------
+# Contour plot scenarios: Adherence vs. Coverage (Figure 2) --------------------------------
 # Workflow creation
 wf <- create_workflow(
-  wf_name = "contour_plots1",
+  wf_name = "figure2",
   default_sbatch_opts = hpc_configs$default_sbatch_opts
 )
 
@@ -317,7 +313,6 @@ control <- control_msm(
   .tracker.list       = calibration_trackers,
   verbose             = FALSE
 )
-
 
 hi_adhr <- c(seq(-0.74, 0.26, 0.1), 0)
 
@@ -598,7 +593,7 @@ control <- control_msm(
   verbose             = FALSE
 )
 
-prep.start.prob <- c(.000827328, 0.000636321, 0.000995523)
+prep.start.prob <- c(9.78E-05, 0.0001, 0.000791814)
 
 prop_change <- c(0.1, 0.3, 0.5, 0.7, 0.9, 1, 1.2, 1.4, 1.6, 1.8, 2.0)
 do_prop_change <- seq(1,2, 0.1)
@@ -636,9 +631,9 @@ contour_plots3 <- tibble(
   edp.prep.start.prob_1 = df.merge$edp.prep.start.prob_1,
   edp.prep.start.prob_2 = df.merge$edp.prep.start.prob_2,
   edp.prep.start.prob_3 = df.merge$edp.prep.start.prob_3,
-  do.prep.start.prob_1 = df.merge$do.prep.start.prob_1,
-  do.prep.start.prob_2 = df.merge$do.prep.start.prob_2,
-  do.prep.start.prob_3 = df.merge$do.prep.start.prob_3,
+  prep.start.prob_1 = df.merge$do.prep.start.prob_1,
+  prep.start.prob_2 = df.merge$do.prep.start.prob_2,
+  prep.start.prob_3 = df.merge$do.prep.start.prob_3,
   edp.start.scenario = 1
 )
 
