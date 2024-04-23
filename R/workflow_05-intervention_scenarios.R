@@ -6,6 +6,7 @@
 library("slurmworkflow")
 library("EpiModelHPC")
 library("EpiModelHIV")
+library("dplyr")
 
 # Settings ---------------------------------------------------------------------
 source("./R/utils-0_project_settings.R")
@@ -15,11 +16,11 @@ max_cores <- 30
 source("./R/utils-default_inputs.R") # make `path_to_est`, `param` and `init`
 source("./R/utils-hpc_configs.R") # creates `hpc_configs`
 
-# ------------------------------------------------------------------------------
+# Main analysis (Table 3) ------------------------------------------------------------------------------
 
 # Workflow creation
 wf <- create_workflow(
-  wf_name = "intervention_scenarios",
+  wf_name = "table3",
   default_sbatch_opts = hpc_configs$default_sbatch_opts
 )
 
@@ -47,19 +48,63 @@ control <- control_msm(
   verbose             = FALSE
 )
 
-scenarios_df <- readr::read_csv("./data/input/scenarios.csv")
-#scenarios_df <- tibble(
-#  .scenario.id    = c("scenario_1", "scenario_2", "scenario_3", "scenario_4"),
-#  .at             = 1,
-#  edp.start.scenario = c(1, 2, 3, 4)
-#)
-scenarios_list <- EpiModel::create_scenario_list(scenarios_df)
+edp.prep.start.prob <- c(9.78E-05, 0.0001, 0.000791814)
+
+prop_change <- c(0.2, 0.4, 0.6, 0.8, 1, 1.2, 1.4, 1.6, 1.8, 2.0)
+
+df <- data.frame(rep(NA, length(prop_change)))
+
+for (j in edp.prep.start.prob) {
+  edp.prep.start <- j*prop_change
+
+  df <- cbind(df, edp.prep.start)
+}
+
+names(df) <- make.unique(names(df))
+
+df <- df |>
+  select(-1) |>
+  rename(edp.prep.start.prob_1 = 1,
+         edp.prep.start.prob_2 = 2,
+         edp.prep.start.prob_3 = 3) |>
+  slice(rep(1:n(), each = 2)) |>
+  mutate(
+    prop_change = rep(prop_change, 2),
+    elig_scenario = rep(c(1,4), each = 10, length.out = length(prop_change))
+  ) |>
+  filter(!(elig_scenario == 4 & prop_change < 1))
+
+df.elig <- data.frame(
+  elig_scenario = 2:3,
+  prop_change = rep(1,2),
+  edp.prep.start.prob_1 = rep(edp.prep.start.prob[1], 2),
+  edp.prep.start.prob_2 = rep(edp.prep.start.prob[2], 2),
+  edp.prep.start.prob_3 = rep(edp.prep.start.prob[3], 2)
+)
+
+df <- rbind(df, df.elig)
+
+df <- df |>
+  arrange(elig_scenario, prop_change)
+
+table3 <- tibble(
+  .scenario.id = paste0("scenario_", df$elig_scenario, "_prop_change_", df$prop_change),
+  .at = 1,
+  prep.start = intervention_start,
+  prep.edp.start = intervention_start,
+  edp.prep.start.prob_1 = df$edp.prep.start.prob_1,
+  edp.prep.start.prob_2 = df$edp.prep.start.prob_2,
+  edp.prep.start.prob_3 = df$edp.prep.start.prob_3,
+  edp.start.scenario = df$elig_scenario
+)
+
+sc_list <- EpiModel::create_scenario_list(table3)
 
 wf <- add_workflow_step(
   wf_summary = wf,
   step_tmpl = step_tmpl_netsim_scenarios(
     path_to_restart, param, init, control,
-    scenarios_list = scenarios_list,
+    scenarios_list = sc_list,
     output_dir = "./data/intermediate/scenarios",
     libraries = "EpiModelHIV",
     save_pattern = "simple",
@@ -289,7 +334,7 @@ names(df)[2] <- "prep.adhr.edp.dist_2"
 names(df)[3] <- "prep.adhr.edp.dist_3"
 names(df)[4] <- "prep.adhr.edp.dist_4"
 
-edp.prep.start.prob <- c(.000827328, 0.000636321, 0.000995523)
+edp.prep.start.prob <- c(9.78E-05, 0.0001, 0.000791814)
 
 prop_change <- c(0.1, 0.3, 0.5, 0.7, 0.9, 1, 1.2, 1.4, 1.6, 1.8, 2.0)
 
@@ -521,6 +566,149 @@ wf <- add_workflow_step(
     "mem" = "15G"
   )
 )
+
+# Contour plot scenarios: EDP vs. Daily PrEP--------------------------------
+# Workflow creation
+wf <- create_workflow(
+  wf_name = "contour_plots3",
+  default_sbatch_opts = hpc_configs$default_sbatch_opts
+)
+
+# Update RENV on the HPC
+wf <- add_workflow_step(
+  wf_summary = wf,
+  step_tmpl = step_tmpl_renv_restore(
+    git_branch = current_git_branch,
+    setup_lines = hpc_configs$r_loader
+  ),
+  sbatch_opts = hpc_configs$renv_sbatch_opts
+)
+
+# Controls
+source("./R/utils-targets.R")
+control <- control_msm(
+  start               = restart_time,
+  nsteps              = intervention_end,
+  nsims               = 1,
+  ncores              = 1,
+  initialize.FUN      = reinit_msm,
+  cumulative.edgelist = TRUE,
+  truncate.el.cuml    = 0,
+  .tracker.list       = calibration_trackers,
+  verbose             = FALSE
+)
+
+prep.start.prob <- c(.000827328, 0.000636321, 0.000995523)
+
+prop_change <- c(0.1, 0.3, 0.5, 0.7, 0.9, 1, 1.2, 1.4, 1.6, 1.8, 2.0)
+do_prop_change <- seq(1,2, 0.1)
+
+df.edp.cov <- data.frame(rep(NA, length(prop_change)))
+df.do.cov <- data.frame(rep(NA, length(do_prop_change)))
+
+for (j in prep.start.prob) {
+  edp.prep.start <- j*prop_change
+  do.prep.start <- j*do_prop_change
+
+  df.edp.cov <- cbind(df.edp.cov, edp.prep.start)
+  df.do.cov <- cbind(df.do.cov, edp.prep.start)
+}
+
+df.edp.cov <- df.edp.cov[,-1]
+names(df.edp.cov)[1] <- "edp.prep.start.prob_1"
+names(df.edp.cov)[2] <- "edp.prep.start.prob_2"
+names(df.edp.cov)[3] <- "edp.prep.start.prob_3"
+df.edp.cov$edp_prop_change <- prop_change
+
+df.do.cov <- df.do.cov[,-1]
+names(df.do.cov)[1] <- "do.prep.start.prob_1"
+names(df.do.cov)[2] <- "do.prep.start.prob_2"
+names(df.do.cov)[3] <- "do.prep.start.prob_3"
+df.do.cov$do_prop_change <- do_prop_change
+
+df.merge <- merge(df.edp.cov, df.do.cov)
+
+contour_plots3 <- tibble(
+  .scenario.id = paste0("edp_startprob_", df.merge$edp_prop_change, "_do_startprob_", df.merge$do_prop_change),
+  .at = 1,
+  prep.start = intervention_start,
+  prep.edp.start = intervention_start,
+  edp.prep.start.prob_1 = df.merge$edp.prep.start.prob_1,
+  edp.prep.start.prob_2 = df.merge$edp.prep.start.prob_2,
+  edp.prep.start.prob_3 = df.merge$edp.prep.start.prob_3,
+  do.prep.start.prob_1 = df.merge$do.prep.start.prob_1,
+  do.prep.start.prob_2 = df.merge$do.prep.start.prob_2,
+  do.prep.start.prob_3 = df.merge$do.prep.start.prob_3,
+  edp.start.scenario = 1
+)
+
+sc_contour_plots_list <- EpiModel::create_scenario_list(contour_plots3)
+
+wf <- add_workflow_step(
+  wf_summary = wf,
+  step_tmpl = step_tmpl_netsim_scenarios(
+    path_to_restart, param, init, control,
+    scenarios_list = sc_contour_plots_list,
+    output_dir = "./data/intermediate/scenarios/contourplots3",
+    libraries = "EpiModelHIV",
+    save_pattern = "simple",
+    n_rep = 120,
+    n_cores = max_cores,
+    max_array_size = 500,
+    setup_lines = hpc_configs$r_loader
+  ),
+  sbatch_opts = list(
+    "mail-type" = "FAIL,TIME_LIMIT",
+    "cpus-per-task" = max_cores,
+    "time" = "24:00:00",
+    "mem" = 0
+  )
+)
+
+# Process calibrations
+#
+# produce a data frame with the calibration targets for each scenario
+wf <- add_workflow_step(
+  wf_summary = wf,
+  step_tmpl = step_tmpl_do_call_script(
+    r_script = "./R/41-intervention_scenarios_process.R",
+    args = list(
+      context = "hpc",
+      ncores = 15
+    ),
+    setup_lines = hpc_configs$r_loader
+  ),
+  sbatch_opts = list(
+    "cpus-per-task" = max_cores,
+    "time" = "04:00:00",
+    "mem-per-cpu" = "4G",
+    "mail-type" = "END"
+  )
+)
+
+# output one datafile per scenario
+wf <- add_workflow_step(
+  wf_summary = wf,
+  step_tmpl = step_tmpl_do_call(
+    what = EpiModelHPC::merge_netsim_scenarios_tibble,
+    args = list(
+      sim_dir = "data/intermediate/scenarios/contourplots3",
+      output_dir = "contourplots3_output",
+      steps_to_keep = 364 * 10,
+      cols = rlang::quo(dplyr::matches("^doxy")) # rlang::quo required for lazy eval
+    ),
+    setup_lines = hpc_configs$r_loader
+  ),
+  sbatch_opts = list(
+    "mail-type" = "END",
+    "cpus-per-task" = 1,
+    "time" = "02:00:00",
+    "mem" = "15G"
+  )
+)
+
+## Test workflow ----------------------------------------------------------------------------------------
+
 
 
 # rm -rf workflows/intervention_scenarios
