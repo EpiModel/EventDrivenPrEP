@@ -4,16 +4,21 @@ library(tidyr)
 
 var_labels <- c(
   "total.proportion_ly"       = "Overall PrEP Coverage",
+  "total.prop.neg_ly"         = "Overall PrEP Coverage (among HIV negative)",
   "do.proportion_ly"          = "DO-PrEP Coverage",
+  "do.prop.neg_ly"            = "DO-PrEP Coverage (among HIV negative)",
   "edp.proportion_ly"         = "EDP Coverage",
-  "do.prep_ly"                = "% DO-PrEP (proportion of all PrEP users using DO-PrEP",
-  "edp.prep_ly"               = "% EDP (proportion of all PrEP users using DO-PrEP",
+  "edp.prop.neg_ly"           = "EDP Coverage (among HIV negative)",
+  "do.prep_ly"                = "% DO-PrEP (proportion of all PrEP users using DO-PrEP)",
+  "edp.prep_ly"               = "% EDP (proportion of all PrEP users using DO-PrEP)",
   "total.users_ly"            = "Total PrEP Users",
+  "users.perc.diff"           = "Percent Difference in Total PrEP Users",
   "prev_ly"                   = "HIV Prevalence",
   "ir100_ly"                  = "HIV Cumulative Incidence",
   "pia"                       = "Percent Infections Averted (PIA)",
-  "nnt"                       = "Number Needed to Treat (NNT)",
+  "nnt"                       = "Number of Pills Needed to Prevent One Infections (NPNT)",
   "pills.perc.diff"           = "Percent Difference in Total Pills Taken",
+  "pills_pp"                  = "Number of Pills Needed to Prevent Per PrEP User",
   "do.covered.sex_ly"         = "% of Acts Covered Under DO-PrEP",
   "edp.covered.sex_ly"        = "% of Acts Covered Under EDP",
   "do.covered.discordant_ly"  = "% of Discordant Acts Covered Under DO-PrEP",
@@ -26,7 +31,8 @@ format_patterns <- list(
     fun = scales::label_number(0.01)
   ),
   perc = list(
-    patterns = c("^prev", "pia", "^do.covered", "^edp.covered", ".proportion_ly", ".prep_ly", "^pills."),
+    patterns = c("^prev", "pia", "^do.covered", "^edp.covered", ".proportion_ly",
+                 ".prep_ly", ".neg_ly", ".perc.diff"),
     fun = scales::label_percent(0.1)
   ),
   # formatter with a catch all pattern. Must be last.

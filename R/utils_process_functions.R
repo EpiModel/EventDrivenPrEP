@@ -22,7 +22,11 @@ process_one_scenario_tibble <- function(sc_info) {
       edp.covered.sex = sex.edp.4/sex.edp,
       edp.covered.discordant = sex.edp.disc.4/sex.edp.disc,
       do.prep = prepCurr/(prepCurr + edp.prepCurr),
-      edp.prep = edp.prepCurr/(prepCurr + edp.prepCurr)
+      edp.prep = edp.prepCurr/(prepCurr + edp.prepCurr),
+      hiv.neg = num - i.num,
+      do.prop.neg = prepCurr/hiv.neg,
+      edp.prop.neg = edp.prepCurr/hiv.neg,
+      total.prop.neg = (prepCurr + edp.prepCurr)/hiv.neg
     )
 
   d_sc_baseline <- d_sc |>
@@ -48,7 +52,8 @@ process_one_scenario_tibble <- function(sc_info) {
         c(prev, disease.mr100, do.proportion, do.covered.sex,
           do.covered.discordant, prepElig, edp.prepElig,
           edp.covered.sex, edp.covered.discordant, edp.proportion,
-          edp.prepCurr, prepCurr, do.prep, edp.prep, total.users, total.proportion),
+          edp.prepCurr, prepCurr, do.prep, edp.prep, total.users, total.proportion,
+          do.prop.neg, edp.prop.neg, total.prop.neg),
         ~ mean(.x, na.rm = TRUE),
         .names = "{.col}_ly"
       ),
@@ -95,6 +100,8 @@ process_one_scenario_tibble <- function(sc_info) {
   return(d_cmb)
 }
 
+no_scenarios = 24
+
 # Function for calculating PIA and NNT
 pia_nnt_calc <- function(d_sc_raw, no_scenarios) {
   # Calculate PIA
@@ -116,13 +123,21 @@ pia_nnt_calc <- function(d_sc_raw, no_scenarios) {
     mutate(nnt = total.pills/nia)
 
   # Percent pills difference
-  total.pills.tbl <- d_sc_raw |>
+  pills.base.tbl <- d_sc_raw |>
     filter(scenario_name == "baseline")
-  total.pills.base <- as.vector(total.pills.tbl$total.pills)
+
+  total.pills.base <- as.vector(pills.base.tbl$total.pills)
 
   d_sc_raw$total.pills.base <- rep(total.pills.base, no_scenarios)
   d_sc_raw <- d_sc_raw |>
     mutate(pills.perc.diff = (total.pills - total.pills.base)/total.pills.base)
+
+  # Calculate percent difference in total PrEP users
+  total.users.base <- as.vector(pills.base.tbl$total.users_ly)
+  d_sc_raw$total.users.base <- rep(total.users.base, no_scenarios)
+  d_sc_raw <- d_sc_raw |>
+    mutate(users.perc.diff = (total.users_ly - total.users.base)/total.users.base,
+           pills_pp = nnt/total.users_ly)
 
   return(d_sc_raw)
 }

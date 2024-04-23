@@ -15,16 +15,17 @@ library(metR)
 library(viridis)
 library(stringr)
 library(patchwork)
+library(scales)
 
 # Table 3 ---------------------------------------------------------------------
 
 # Process Data
 ## Merge files as tibbles
-merge_netsim_scenarios_tibble(
-  "data/intermediate/scenarios",
-  "test_tibble", # saves dataframes in folder called "test_tibble"
-  3640 # only includes the last 3640 time steps / 10 years
-)
+#merge_netsim_scenarios_tibble(
+#  "data/intermediate/scenarios",
+#  "test_tibble", # saves dataframes in folder called "test_tibble"
+#  3640 # only includes the last 3640 time steps / 10 years
+#)
 
 ## Read in files
 sc_dir <- "test_tibble"
@@ -48,11 +49,11 @@ readr::write_csv(table3, "table3.csv")
 
 # Process Data
 ## Merge files as tibbles
-merge_netsim_scenarios_tibble(
-  "data/intermediate/adhr_sens",
-  "adhr_sens_tibble", # saves dataframes in folder called "adhr_sens_tibble"
-  3640 # only includes the last 3640 time steps / 10 years
-)
+#merge_netsim_scenarios_tibble(
+#  "data/intermediate/adhr_sens",
+#  "adhr_sens_tibble", # saves dataframes in folder called "adhr_sens_tibble"
+#  3640 # only includes the last 3640 time steps / 10 years
+#)
 
 ## Read in files
 sc_dir <- "adhr_sens_tibble"
@@ -81,11 +82,11 @@ readr::write_csv(table4, "table4.csv")
 
 ## Process Data
 ### Merge files as tibbles
-merge_netsim_scenarios_tibble(
-  "data/intermediate/contourplots1",
-  "cp1_tibble", # saves dataframes in folder called "adhr_sens_tibble"
-  3640 # only includes the last 3640 time steps / 10 years
-)
+#merge_netsim_scenarios_tibble(
+#  "data/intermediate/contourplots1",
+#  "cp1_tibble", # saves dataframes in folder called "adhr_sens_tibble"
+#  3640 # only includes the last 3640 time steps / 10 years
+#)
 
 sc_dir <- "cp1_tibble"
 sc_infos_tbl <- EpiModelHPC::get_scenarios_tibble_infos(sc_dir)
@@ -105,6 +106,13 @@ d_sc_raw <- pia_nnt_calc(d_sc_raw, 133)
 
 readr::write_csv(d_sc_raw, "contourplot1.csv")
 
+## Create table output
+table5 <- format_table(d_sc_raw, var_labels, format_patterns)
+readr::write_csv(table5, "table5.csv")
+
+## Read in .csv file
+d_sc_raw <- read.csv("contourplot1.csv")
+
 ## Dfs for loess model
 out.pia <- d_sc_raw |>
   filter(scenario_name != "baseline") |>
@@ -122,6 +130,10 @@ out.nnt <- d_sc_raw |>
          nnt = ifelse(is.infinite(nnt), 0, nnt)) |>
   select(!scenario_name) |>
   select(c(edp.prep.start.prob, hi.adhr.prob, nnt))
+
+test <- out.nnt |>
+  group_by(edp.prep.start.prob, hi.adhr.prob) |>
+  summarise(average_nnt = mean(nnt, na.rm = TRUE))
 
 summary(out.nnt)
 
@@ -153,12 +165,27 @@ nnt <- ggplot(fit_nnt, aes(edp.prep.start.prob, hi.adhr.prob)) +
   theme_minimal() +
   scale_y_continuous(expand = c(0, 0)) +
   scale_x_continuous(expand = c(0, 0)) +
-  labs(y = "Probability of Excellent EDP Adherence", x = "EDP Initiation Probability", fill = "NNT") +
-  scale_fill_viridis(discrete = FALSE, alpha = 1, option = "B", direction = 1)
+  labs(y = "Probability of Excellent EDP Adherence", x = "EDP Initiation Probability", fill = "NPNT") +
+  scale_fill_viridis(discrete = FALSE, alpha = 1, option = "B", direction = 1,
+                     labels = label_number())
+
+nnt
 
 nested <- (pia|nnt) +
   plot_annotation(tag_levels = 'A')
 nested
+
+png('pia.png', width=2732, height=2048, res=300)
+ggplot(fit_pia, aes(edp.prep.start.prob, hi.adhr.prob)) +
+  geom_raster(aes(fill = pia), interpolate = TRUE) +
+  geom_contour(aes(z = pia), col = "white", alpha = 0.5, lwd = 0.5) +
+  theme_minimal(base_size = 23) +
+  scale_y_continuous(expand = c(0, 0)) +
+  scale_x_continuous(expand = c(0, 0)) +
+  labs(y = "Probability of Excellent EDP Adherence", x = "EDP Initiation Probability", fill = "PIA") +
+  scale_fill_viridis(discrete = FALSE, alpha = 1, option = "B", direction = 1,
+                     labels = scales::label_percent())
+dev.off()
 
 
 # Contour plot 2 --------------------------------------------------------------
@@ -224,7 +251,9 @@ pia <- ggplot(fit_pia, aes(daily.switch, edp.switch)) +
   theme_minimal() +
   scale_y_continuous(expand = c(0, 0)) +
   scale_x_continuous(expand = c(0, 0)) +
-  labs(y = "Event-Driven PrEP to Daily PrEP Switch (Probability)", x = "Daily PrEP to Event-Driven PrEP Switch (Probability)", fill = "PIA") +
+  labs(y = "Event-Driven PrEP to Daily PrEP Switch (Probability)",
+       x = "Daily PrEP to Event-Driven PrEP Switch (Probability)",
+       fill = "PIA") +
   scale_fill_viridis(discrete = FALSE, alpha = 1, option = "B", direction = 1,
                      labels = scales::label_percent())
 
@@ -234,7 +263,9 @@ nnt <- ggplot(fit_nnt, aes(daily.switch, edp.switch)) +
   theme_minimal() +
   scale_y_continuous(expand = c(0, 0)) +
   scale_x_continuous(expand = c(0, 0)) +
-  labs(y = "Event-Driven PrEP to Daily PrEP Switch (Probability)", x = "Daily PrEP to Event-Driven PrEP Switch (Probability)", fill = "NNT") +
+  labs(y = "Event-Driven PrEP to Daily PrEP Switch (Probability)",
+       x = "Daily PrEP to Event-Driven PrEP Switch (Probability)",
+       fill = "NPNT") +
   scale_fill_viridis(discrete = FALSE, alpha = 1, option = "B", direction = 1)
 
 nested <- (pia|nnt) +
