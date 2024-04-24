@@ -96,6 +96,8 @@ df <- rbind(df, df.elig)
 df <- df |>
   arrange(elig_scenario, prop_change)
 
+df1 <- df
+
 sc_interv_list <- list()
 sc_interv_list[["table3"]] <- tibble(
   .scenario.id = paste0("scenario_", df$elig_scenario, "_prop_change_", df$prop_change),
@@ -116,7 +118,7 @@ sc_df_list <- c(
 scenarios_list <- purrr::reduce(
   sc_df_list,
   \(out, d_sc) c(out, EpiModel::create_scenario_list(d_sc)),
-  .init =
+  .init = list()
 )
 
 wf <- add_workflow_step(
@@ -242,6 +244,8 @@ df <- df |>
   mutate(edp.start.scenario = rep(1:4, 12)) |>
   arrange(edp.start.scenario, prep.adhr.edp.dist_4)
 
+df2 <- df
+
 sc_interv_list <- list()
 sc_interv_list[["adhr_sens"]] <- tibble(
   .scenario.id = paste0("hi_adhr_", df$prep.adhr.edp.dist_4, "_scenario_", df$edp.start.scenario),
@@ -263,7 +267,7 @@ sc_df_list <- c(
 scenarios_list <- purrr::reduce(
   sc_df_list,
   \(out, d_sc) c(out, EpiModel::create_scenario_list(d_sc)),
-  .init =
+  .init = list()
 )
 
 wf <- add_workflow_step(
@@ -394,6 +398,7 @@ names(df.cov)[3] <- "edp.prep.start.prob_3"
 df.cov$prop_change <- prop_change
 
 df.merge <- merge(df, df.cov)
+df3 <- df.merge
 
 contour_plots1 <- tibble(
   .scenario.id = paste0("edp_startprob_", df.merge$prop_change, "_hi_adhr_", df.merge$prep.adhr.edp.dist_4),
@@ -591,7 +596,7 @@ wf <- add_workflow_step(
 ############################# Contour plot scenarios: EDP vs. Daily PrEP ################################
 # Workflow creation
 wf <- create_workflow(
-  wf_name = "contour_plots3",
+  wf_name = "figure4",
   default_sbatch_opts = hpc_configs$default_sbatch_opts
 )
 
@@ -670,7 +675,7 @@ wf <- add_workflow_step(
   step_tmpl = step_tmpl_netsim_scenarios(
     path_to_restart, param, init, control,
     scenarios_list = sc_contour_plots_list,
-    output_dir = "./data/intermediate/scenarios/contourplots3",
+    output_dir = "./data/intermediate/scenarios/figure4",
     libraries = "EpiModelHIV",
     save_pattern = "simple",
     n_rep = 120,
@@ -769,6 +774,16 @@ sc_no_list[["no_edp_sc"]] <- tibble(
   edp.start = intervention_end + 1
 )
 
+df1 <- rename(df1, edp.start.scenario = "elig_scenario")
+df_test <- bind_rows(df1, df2)
+df_test <- df_test |>
+  filter(
+    edp.start.scenario == 1,
+    prop_change == 1 |
+      prep.adhr.edp.dist_4 == 0.74 |
+      prep.adhr.edp.dist_4 == 0 |
+      prep.adhr.edp.dist_4 == 1)
+
 sc_interv_list <- list()
 sc_interv_list[["test"]] <- tibble(
   .scenario.id = paste0("scenario_", df_test$edp.start.scenario, "_prop_change_", df_test$prep.adhr.edp.dist_4),
@@ -800,7 +815,7 @@ sc_df_list <- c(
 scenarios_list <- purrr::reduce(
   sc_df_list,
   \(out, d_sc) c(out, EpiModel::create_scenario_list(d_sc)),
-  .init =
+  .init = list()
 )
 
 wf <- add_workflow_step(
