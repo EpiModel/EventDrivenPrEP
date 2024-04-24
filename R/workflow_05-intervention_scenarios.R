@@ -16,7 +16,7 @@ max_cores <- 30
 source("./R/utils-default_inputs.R") # make `path_to_est`, `param` and `init`
 source("./R/utils-hpc_configs.R") # creates `hpc_configs`
 
-# Main analysis (Table 3) ------------------------------------------------------------------------------
+#################################### Main analysis (Table 3) ######################################
 
 # Workflow creation
 wf <- create_workflow(
@@ -76,7 +76,7 @@ df <- df |>
   rename(edp.prep.start.prob_1 = 1,
          edp.prep.start.prob_2 = 2,
          edp.prep.start.prob_3 = 3) |>
-  slice(rep(1:n(), each = 2)) |>
+  slice(rep(1:n(), 2)) |>
   mutate(
     prop_change = rep(prop_change, 2),
     elig_scenario = rep(c(1,4), each = 10, length.out = length(prop_change))
@@ -97,7 +97,7 @@ df <- df |>
   arrange(elig_scenario, prop_change)
 
 sc_interv_list <- list()
-sc_interv_list[["adhr_sens"]] <- tibble(
+sc_interv_list[["table3"]] <- tibble(
   .scenario.id = paste0("scenario_", df$elig_scenario, "_prop_change_", df$prop_change),
   .at = 1,
   prep.start = intervention_start,
@@ -124,7 +124,7 @@ wf <- add_workflow_step(
   step_tmpl = step_tmpl_netsim_scenarios(
     path_to_restart, param, init, control,
     scenarios_list = scenarios_list,
-    output_dir = "./data/intermediate/scenarios",
+    output_dir = "./data/intermediate/scenarios/table3",
     libraries = "EpiModelHIV",
     save_pattern = "simple",
     n_rep = 120,
@@ -161,10 +161,32 @@ wf <- add_workflow_step(
   )
 )
 
-# Sensitivity analysis: EDP adherence (Table 4) --------------------------------
+# output one datafile per scenario
+wf <- add_workflow_step(
+  wf_summary = wf,
+  step_tmpl = step_tmpl_do_call(
+    what = EpiModelHPC::merge_netsim_scenarios_tibble,
+    args = list(
+      sim_dir = "data/intermediate/scenarios/table3",
+      output_dir = "data/output/table3",
+      steps_to_keep = 364 * 10,
+      cols = rlang::quo(dplyr::matches("^doxy")) # rlang::quo required for lazy eval
+    ),
+    setup_lines = hpc_configs$r_loader
+  ),
+  sbatch_opts = list(
+    "mail-type" = "END",
+    "cpus-per-task" = 1,
+    "time" = "02:00:00",
+    "mem" = "15G"
+  )
+)
+
+######################## Sensitivity analysis: EDP adherence (Table 4) ##############################
 # Workflow creation
+
 wf <- create_workflow(
-  wf_name = "adhr_sens",
+  wf_name = "table4",
   default_sbatch_opts = hpc_configs$default_sbatch_opts
 )
 
@@ -209,13 +231,16 @@ for (i in hi_adhr) {
   df <- rbind(df, prep.adhr.edp.dist)
 }
 
-names(df)[1] <- "prep.adhr.edp.dist_1"
-names(df)[2] <- "prep.adhr.edp.dist_2"
-names(df)[3] <- "prep.adhr.edp.dist_3"
-names(df)[4] <- "prep.adhr.edp.dist_4"
-
-df <- df[rep(seq_len(nrow(df)), each = 4), ]
-df$edp.start.scenario <- rep(1:4, 12)
+df <- df |>
+  rename(
+    prep.adhr.edp.dist_1 = 1,
+    prep.adhr.edp.dist_2 = 2,
+    prep.adhr.edp.dist_3 = 3,
+    prep.adhr.edp.dist_4 = 4
+  ) |>
+  slice(rep(1:n(), each = 4)) |>
+  mutate(edp.start.scenario = rep(1:4, 12)) |>
+  arrange(edp.start.scenario, prep.adhr.edp.dist_4)
 
 sc_interv_list <- list()
 sc_interv_list[["adhr_sens"]] <- tibble(
@@ -246,7 +271,7 @@ wf <- add_workflow_step(
   step_tmpl = step_tmpl_netsim_scenarios(
     path_to_restart, param, init, control,
     scenarios_list = scenarios_list,
-    output_dir = "./data/intermediate/scenarios/adhr_sens",
+    output_dir = "./data/intermediate/scenarios/table4",
     libraries = "EpiModelHIV",
     save_pattern = "simple",
     n_rep = 120,
@@ -280,6 +305,27 @@ wf <- add_workflow_step(
     "time" = "04:00:00",
     "mem-per-cpu" = "4G",
     "mail-type" = "END"
+  )
+)
+
+# output one datafile per scenario
+wf <- add_workflow_step(
+  wf_summary = wf,
+  step_tmpl = step_tmpl_do_call(
+    what = EpiModelHPC::merge_netsim_scenarios_tibble,
+    args = list(
+      sim_dir = "data/intermediate/scenarios/table4",
+      output_dir = "data/output/table4",
+      steps_to_keep = 364 * 10,
+      cols = rlang::quo(dplyr::matches("^doxy")) # rlang::quo required for lazy eval
+    ),
+    setup_lines = hpc_configs$r_loader
+  ),
+  sbatch_opts = list(
+    "mail-type" = "END",
+    "cpus-per-task" = 1,
+    "time" = "02:00:00",
+    "mem" = "15G"
   )
 )
 
@@ -371,7 +417,7 @@ wf <- add_workflow_step(
   step_tmpl = step_tmpl_netsim_scenarios(
     path_to_restart, param, init, control,
     scenarios_list = sc_contour_plots_list,
-    output_dir = "./data/intermediate/scenarios/contourplots1",
+    output_dir = "./data/intermediate/scenarios/figure2",
     libraries = "EpiModelHIV",
     save_pattern = "simple",
     n_rep = 120,
@@ -414,8 +460,8 @@ wf <- add_workflow_step(
   step_tmpl = step_tmpl_do_call(
     what = EpiModelHPC::merge_netsim_scenarios_tibble,
     args = list(
-      sim_dir = "data/intermediate/scenarios/contourplots1",
-      output_dir = "contourplots1_output",
+      sim_dir = "data/intermediate/scenarios/figure2",
+      output_dir = "data/output/figure2",
       steps_to_keep = 364 * 10,
       cols = rlang::quo(dplyr::matches("^doxy")) # rlang::quo required for lazy eval
     ),
@@ -429,10 +475,10 @@ wf <- add_workflow_step(
   )
 )
 
-# Contour plot scenarios: PrEP switching --------------------------------------
+################################### Contour plot scenarios: PrEP switching ####################################
 # Workflow creation
 wf <- create_workflow(
-  wf_name = "contour_plots2",
+  wf_name = "figure3",
   default_sbatch_opts = hpc_configs$default_sbatch_opts
 )
 
@@ -484,7 +530,7 @@ wf <- add_workflow_step(
   step_tmpl = step_tmpl_netsim_scenarios(
     path_to_restart, param, init, control,
     scenarios_list = sc_contour_plots_list,
-    output_dir = "./data/intermediate/scenarios/contourplots2",
+    output_dir = "./data/intermediate/scenarios/figure3",
     libraries = "EpiModelHIV",
     save_pattern = "simple",
     n_rep = 120,
@@ -521,34 +567,14 @@ wf <- add_workflow_step(
   )
 )
 
-
-
-### Workflow for just renv and merge steps
-
-# Workflow creation
-wf <- create_workflow(
-  wf_name = "cp1_tibbles",
-  default_sbatch_opts = hpc_configs$default_sbatch_opts
-)
-
-# Update RENV on the HPC
-wf <- add_workflow_step(
-  wf_summary = wf,
-  step_tmpl = step_tmpl_renv_restore(
-    git_branch = current_git_branch,
-    setup_lines = hpc_configs$r_loader
-  ),
-  sbatch_opts = hpc_configs$renv_sbatch_opts
-)
-
 # output one datafile per scenario
 wf <- add_workflow_step(
   wf_summary = wf,
   step_tmpl = step_tmpl_do_call(
     what = EpiModelHPC::merge_netsim_scenarios_tibble,
     args = list(
-      sim_dir = "data/intermediate/scenarios/contourplots1",
-      output_dir = "contourplots1_output",
+      sim_dir = "data/intermediate/scenarios/figure3",
+      output_dir = "data/output/figure3",
       steps_to_keep = 364 * 10,
       cols = rlang::quo(dplyr::matches("^doxy")) # rlang::quo required for lazy eval
     ),
@@ -562,7 +588,7 @@ wf <- add_workflow_step(
   )
 )
 
-# Contour plot scenarios: EDP vs. Daily PrEP--------------------------------
+############################# Contour plot scenarios: EDP vs. Daily PrEP ################################
 # Workflow creation
 wf <- create_workflow(
   wf_name = "contour_plots3",
@@ -688,7 +714,7 @@ wf <- add_workflow_step(
     what = EpiModelHPC::merge_netsim_scenarios_tibble,
     args = list(
       sim_dir = "data/intermediate/scenarios/contourplots3",
-      output_dir = "contourplots3_output",
+      output_dir = "data/output/contourplots3",
       steps_to_keep = 364 * 10,
       cols = rlang::quo(dplyr::matches("^doxy")) # rlang::quo required for lazy eval
     ),
@@ -704,7 +730,141 @@ wf <- add_workflow_step(
 
 ## Test workflow ----------------------------------------------------------------------------------------
 
+# Workflow creation
+wf <- create_workflow(
+  wf_name = "test",
+  default_sbatch_opts = hpc_configs$default_sbatch_opts
+)
 
+# Update RENV on the HPC
+wf <- add_workflow_step(
+  wf_summary = wf,
+  step_tmpl = step_tmpl_renv_restore(
+    git_branch = current_git_branch,
+    setup_lines = hpc_configs$r_loader
+  ),
+  sbatch_opts = hpc_configs$renv_sbatch_opts
+)
+
+# Controls
+source("./R/utils-targets.R")
+control <- control_msm(
+  start               = restart_time,
+  nsteps              = intervention_end,
+  nsims               = 1,
+  ncores              = 1,
+  initialize.FUN      = reinit_msm,
+  cumulative.edgelist = TRUE,
+  truncate.el.cuml    = 0,
+  .tracker.list       = calibration_trackers,
+  verbose             = FALSE
+)
+
+# Intervention scenarios
+
+sc_no_list <- list()
+sc_no_list[["no_edp_sc"]] <- tibble(
+  .scenario.id = "0_no_edp",
+  .at = 1,
+  edp.start = intervention_end + 1
+)
+
+sc_interv_list <- list()
+sc_interv_list[["test"]] <- tibble(
+  .scenario.id = paste0("scenario_", df_test$edp.start.scenario, "_prop_change_", df_test$prep.adhr.edp.dist_4),
+  .at = 1,
+  prep.start = intervention_start,
+  prep.edp.start = intervention_start,
+  edp.prep.start.prob_1 = ifelse(is.na(df_test$edp.prep.start.prob_1), param$edp.prep.start.prob[1],
+                                 df_test$edp.prep.start.prob_1),
+  edp.prep.start.prob_2 = ifelse(is.na(df_test$edp.prep.start.prob_2), param$edp.prep.start.prob[2],
+                                 df_test$edp.prep.start.prob_2),
+  edp.prep.start.prob_3 = ifelse(is.na(df_test$edp.prep.start.prob_3), param$edp.prep.start.prob[3],
+                                 df_test$edp.prep.start.prob_3),
+  edp.start.scenario = 1,
+  prep.adhr.edp.dist_1 = ifelse(is.na(df_test$prep.adhr.edp.dist_1), param$prep.adhr.edp.dist[1],
+                                 df_test$prep.adhr.edp.dist_1),
+  prep.adhr.edp.dist_2 = ifelse(is.na(df_test$prep.adhr.edp.dist_2), param$prep.adhr.edp.dist[2],
+                                 df_test$prep.adhr.edp.dist_2),
+  prep.adhr.edp.dist_3 = ifelse(is.na(df_test$prep.adhr.edp.dist_3), param$prep.adhr.edp.dist[3],
+                                 df_test$prep.adhr.edp.dist_3),
+  prep.adhr.edp.dist_4 = ifelse(is.na(df_test$prep.adhr.edp.dist_4), param$prep.adhr.edp.dist[4],
+                                df_test$prep.adhr.edp.dist_4),
+)
+
+sc_df_list <- c(
+  sc_no_list,
+  sc_interv_list
+)
+
+scenarios_list <- purrr::reduce(
+  sc_df_list,
+  \(out, d_sc) c(out, EpiModel::create_scenario_list(d_sc)),
+  .init =
+)
+
+wf <- add_workflow_step(
+  wf_summary = wf,
+  step_tmpl = step_tmpl_netsim_scenarios(
+    path_to_restart, param, init, control,
+    scenarios_list = scenarios_list,
+    output_dir = "./data/intermediate/scenarios",
+    libraries = "EpiModelHIV",
+    save_pattern = "simple",
+    n_rep = 120,
+    n_cores = max_cores,
+    max_array_size = 500,
+    setup_lines = hpc_configs$r_loader
+  ),
+  sbatch_opts = list(
+    "mail-type" = "FAIL,TIME_LIMIT",
+    "cpus-per-task" = max_cores,
+    "time" = "24:00:00",
+    "mem" = 0
+  )
+)
+
+# Process calibrations
+#
+# produce a data frame with the calibration targets for each scenario
+wf <- add_workflow_step(
+  wf_summary = wf,
+  step_tmpl = step_tmpl_do_call_script(
+    r_script = "./R/41-intervention_scenarios_process.R",
+    args = list(
+      context = "hpc",
+      ncores = 15
+    ),
+    setup_lines = hpc_configs$r_loader
+  ),
+  sbatch_opts = list(
+    "cpus-per-task" = max_cores,
+    "time" = "04:00:00",
+    "mem-per-cpu" = "4G",
+    "mail-type" = "END"
+  )
+)
+
+# output one datafile per scenario
+wf <- add_workflow_step(
+  wf_summary = wf,
+  step_tmpl = step_tmpl_do_call(
+    what = EpiModelHPC::merge_netsim_scenarios_tibble,
+    args = list(
+      sim_dir = "data/intermediate/scenarios/test",
+      output_dir = "output/test",
+      steps_to_keep = 364 * 10,
+      cols = rlang::quo(dplyr::matches("^doxy")) # rlang::quo required for lazy eval
+    ),
+    setup_lines = hpc_configs$r_loader
+  ),
+  sbatch_opts = list(
+    "mail-type" = "END",
+    "cpus-per-task" = 1,
+    "time" = "02:00:00",
+    "mem" = "15G"
+  )
+)
 
 # rm -rf workflows/intervention_scenarios
 
