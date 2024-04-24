@@ -271,3 +271,30 @@ nnt <- ggplot(fit_nnt, aes(daily.switch, edp.switch)) +
 nested <- (pia|nnt) +
   plot_annotation(tag_levels = 'A')
 nested
+
+# Test --------------------------------------------------------------
+
+# Process Data
+## Merge files as tibbles
+merge_netsim_scenarios_tibble(
+  "data/intermediate/test",
+  "data/output/test_tibble", # saves dataframes in folder called "test_tibble"
+  3640 # only includes the last 3640 time steps / 10 years
+)
+
+## Read in files
+sc_dir <- "data/output/test_tibble"
+sc_infos_tbl <- EpiModelHPC::get_scenarios_tibble_infos(sc_dir)
+
+## Process each scenario
+d_ls <- lapply(
+  seq_len(nrow(sc_infos_tbl)),
+  \(i) process_one_scenario_tibble(sc_infos_tbl[i, ])
+)
+
+# Create df and calculate PIA and NNT
+d_sc_raw <- bind_rows(d_ls)
+d_sc_raw <- pia_nnt_calc(d_sc_raw, no_scenarios = 4)
+
+table3 <- format_table(d_sc_raw, var_labels, format_patterns)
+readr::write_csv(table3, "test.csv")
