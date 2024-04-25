@@ -54,7 +54,7 @@ sc_no_list <- list()
 sc_no_list[["no_edp_sc"]] <- tibble(
   .scenario.id = "0_no_edp",
   .at = 1,
-  edp.start = intervention_end + 1
+  prep.edp.start = intervention_end + 1
 )
 
 edp.prep.start.prob <- c(9.78E-05, 0.0001, 0.000791814)
@@ -220,7 +220,7 @@ sc_no_list <- list()
 sc_no_list[["no_edp_sc"]] <- tibble(
   .scenario.id = "0_no_edp",
   .at = 1,
-  edp.start = intervention_end + 1
+  prep.edp.start = intervention_end + 1
 )
 
 hi_adhr <- c(seq(-0.74, 0.26, 0.1), 0)
@@ -771,7 +771,7 @@ sc_no_list <- list()
 sc_no_list[["no_edp_sc"]] <- tibble(
   .scenario.id = "0_no_edp",
   .at = 1,
-  edp.start = intervention_end + 1
+  prep.edp.start = intervention_end + 1
 )
 
 df1 <- rename(df1, edp.start.scenario = "elig_scenario")
