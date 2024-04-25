@@ -100,9 +100,8 @@ process_one_scenario_tibble <- function(sc_info) {
   return(d_cmb)
 }
 
-no_scenarios = 24
-
 # Function for calculating PIA and NNT
+
 pia_nnt_calc <- function(d_sc_raw, no_scenarios) {
   # Calculate PIA
   incid.base.tbl <- d_sc_raw |>
