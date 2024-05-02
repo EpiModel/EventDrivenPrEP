@@ -361,7 +361,9 @@ control <- control_msm(
   cumulative.edgelist = TRUE,
   truncate.el.cuml    = 0,
   .tracker.list       = calibration_trackers,
-  verbose             = FALSE
+  verbose             = FALSE,
+  .checkpoint.steps   = 728,
+  .checkpoint.dir     = "data/intermediate/temp/figure2"
 )
 
 hi_adhr <- c(seq(-0.74, 0.26, 0.1), 0)
@@ -433,7 +435,7 @@ wf <- add_workflow_step(
   sbatch_opts = list(
     "mail-type" = "FAIL,TIME_LIMIT",
     "cpus-per-task" = max_cores,
-    "time" = "24:00:00",
+    "time" = "12:00:00",
     "mem" = 0
   )
 )
@@ -733,7 +735,7 @@ wf <- add_workflow_step(
   )
 )
 
-## Test workflow ----------------------------------------------------------------------------------------
+# Test workflow ----------------------------------------------------------------------------------------
 
 # Workflow creation
 wf <- create_workflow(
@@ -774,7 +776,6 @@ sc_no_list[["no_edp_sc"]] <- tibble(
   prep.edp.start = intervention_end + 1
 )
 
-df1 <- rename(df1, edp.start.scenario = "elig_scenario")
 df_test <- bind_rows(df1, df2)
 df_test <- df_test |>
   filter(
@@ -834,7 +835,7 @@ wf <- add_workflow_step(
   sbatch_opts = list(
     "mail-type" = "FAIL,TIME_LIMIT",
     "cpus-per-task" = max_cores,
-    "time" = "24:00:00",
+    "time" = "12:00:00",
     "mem" = 0
   )
 )
@@ -878,6 +879,118 @@ wf <- add_workflow_step(
     "cpus-per-task" = 1,
     "time" = "02:00:00",
     "mem" = "15G"
+  )
+)
+
+# Test 2 workflow
+
+# Test 3 workflow ----------------------------------------------------------------------------------------
+
+# Workflow creation
+wf <- create_workflow(
+  wf_name = "test5",
+  default_sbatch_opts = hpc_configs$default_sbatch_opts
+)
+
+# Update RENV on the HPC
+wf <- add_workflow_step(
+  wf_summary = wf,
+  step_tmpl = step_tmpl_renv_restore(
+    git_branch = current_git_branch,
+    setup_lines = hpc_configs$r_loader
+  ),
+  sbatch_opts = hpc_configs$renv_sbatch_opts
+)
+
+# Controls
+source("./R/utils-targets.R")
+control <- control_msm(
+  start               = restart_time,
+  nsteps              = intervention_end,
+  nsims               = 1,
+  ncores              = 1,
+  initialize.FUN      = reinit_msm,
+  cumulative.edgelist = TRUE,
+  truncate.el.cuml    = 0,
+  .tracker.list       = calibration_trackers,
+  verbose             = FALSE
+)
+
+# Intervention scenarios
+sc_no_list <- list()
+sc_no_list[["no_edp_sc"]] <- tibble(
+  .scenario.id = "0_no_edp",
+  .at = 1,
+  prep.edp.start = intervention_end + 1
+)
+
+edp.prep.start.prob <- c(9.78E-04, 0.0001, 0.000791814)
+
+sc_interv_list <- list()
+sc_interv_list[["test4"]] <- tibble(
+  .scenario.id = "test",
+  .at = 1,
+  prep.start = intervention_start,
+  prep.edp.start = intervention_start,
+  prep.start.prob_1 = edp.prep.start.prob[1],
+  prep.start.prob_2 = edp.prep.start.prob[2],
+  prep.start.prob_3 = edp.prep.start.prob[3],
+  edp.prep.start.prob_1 = edp.prep.start.prob[1],
+  edp.prep.start.prob_2 = edp.prep.start.prob[2],
+  edp.prep.start.prob_3 = edp.prep.start.prob[3]
+)
+
+sc_df_list <- c(
+  sc_no_list,
+  sc_interv_list
+)
+
+scenarios_list <- purrr::reduce(
+  sc_df_list,
+  \(out, d_sc) c(out, EpiModel::create_scenario_list(d_sc)),
+  .init = list()
+)
+
+
+wf <- add_workflow_step(
+  wf_summary = wf,
+  step_tmpl = step_tmpl_netsim_scenarios(
+    path_to_restart, param, init, control,
+    scenarios_list = scenarios_list,
+    output_dir = "./data/intermediate/test5",
+    libraries = "EpiModelHIV",
+    save_pattern = "simple",
+    n_rep = 5,
+    n_cores = max_cores,
+    max_array_size = 500,
+    setup_lines = hpc_configs$r_loader
+  ),
+  sbatch_opts = list(
+    "mail-type" = "FAIL,TIME_LIMIT",
+    "cpus-per-task" = max_cores,
+    "time" = "12:00:00",
+    "mem" = 0
+  )
+)
+
+# Process calibrations
+#
+# produce a data frame with the calibration targets for each scenario
+wf <- add_workflow_step(
+  wf_summary = wf,
+  step_tmpl = step_tmpl_do_call_script(
+    r_script = "./R/41-intervention_scenarios_process.R",
+    args = list(
+      context = "hpc",
+      ncores = 15
+    ),
+    setup_lines = hpc_configs$r_loader
+  ),
+  sbatch_opts = list(
+    "cpus-per-task" = max_cores,
+    "time" = "04:00:00",
+    "mem-per-cpu" = "4G",
+    "mail-type" = "END"
   )
 )
 

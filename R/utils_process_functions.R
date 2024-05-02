@@ -105,7 +105,7 @@ process_one_scenario_tibble <- function(sc_info) {
 pia_nnt_calc <- function(d_sc_raw, no_scenarios) {
   # Calculate PIA
   incid.base.tbl <- d_sc_raw |>
-    filter(scenario_name == "baseline")
+    filter(scenario_name == "0_no_edp")
   incid.base <- as.vector(incid.base.tbl$incid_cml)
 
   d_sc_raw$incid.base <- rep(incid.base, no_scenarios)
@@ -123,7 +123,7 @@ pia_nnt_calc <- function(d_sc_raw, no_scenarios) {
 
   # Percent pills difference
   pills.base.tbl <- d_sc_raw |>
-    filter(scenario_name == "baseline")
+    filter(scenario_name == "0_no_edp")
 
   total.pills.base <- as.vector(pills.base.tbl$total.pills)
 
