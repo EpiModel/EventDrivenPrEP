@@ -34,7 +34,7 @@ make_cumulative_outcomes <- function(d) {
 # each simulation can be uniquely identified with `scenario_name`,
 # `batch_number` and `sim` (all 3 are needed)
 process_one_scenario_batch <- function(scenario_infos) {
-  sim <- readRDS(scenario_infos$file_name)
+  sim <- readRDS(scenario_infos$file_path)
   d_sim <- as_tibble(sim)
   d_sim <- mutate_outcomes(d_sim)
   d_sim <- mutate(
