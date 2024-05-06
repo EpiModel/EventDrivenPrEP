@@ -31,7 +31,7 @@ outcomes_raw <- future_lapply(
 # bind all rows into 1 data frame with 1 row per unique simulation
 outcomes_raw <- bind_rows(outcomes_raw)
 head(outcomes_raw)
-saveRDS(outcomes_raw, "./data/intermediate/scenarios/outcomes_raw.rds")
+saveRDS(outcomes_raw, file_raw)
 
 # summarise the results into a data frame with one row per scenario
 #   here we present each outcome with q1, median, q3
@@ -51,5 +51,5 @@ outcomes <- outcomes_raw %>%
 head(outcomes)
 
 # Save the result --------------------------------------------------------------
-saveRDS(outcomes, "./data/intermediate/scenarios/outcomes.rds")
-readr::write_csv(outcomes, "./data/intermediate/scenarios/outcomes.csv")
+saveRDS(outcomes, file_rds)
+readr::write_csv(outcomes, file_csv)
