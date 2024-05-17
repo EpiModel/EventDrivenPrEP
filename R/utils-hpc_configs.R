@@ -1,10 +1,11 @@
 # Must be sourced **AFTER** "./R/utils-0_project_settings.R"
 
 hpc_configs <- EpiModelHPC::swf_configs_rsph(
-  partition = "epimodel",
+  partition = "preemptable",
   r_version = "4.3.0",
   mail_user = mail_user
 )
+
 #
 # hpc_configs <- EpiModelHPC::swf_configs_hyak(
 #   hpc = "mox",

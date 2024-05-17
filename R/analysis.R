@@ -21,14 +21,14 @@ library(scales)
 
 # Process Data
 ## Merge files as tibbles
-#merge_netsim_scenarios_tibble(
-#  "data/intermediate/scenarios",
-#  "test_tibble", # saves dataframes in folder called "test_tibble"
-#  3640 # only includes the last 3640 time steps / 10 years
-#)
+merge_netsim_scenarios_tibble(
+  "data/intermediate/table3",
+  "data/output/table3", # saves dataframes in folder called "test_tibble"
+  3640 # only includes the last 3640 time steps / 10 years
+)
 
 ## Read in files
-sc_dir <- "test_tibble"
+sc_dir <- "data/output/table3"
 sc_infos_tbl <- EpiModelHPC::get_scenarios_tibble_infos(sc_dir)
 
 ## Process each scenario
@@ -39,10 +39,9 @@ d_ls <- lapply(
 
 # Create df and calculate PIA and NNT
 d_sc_raw <- bind_rows(d_ls)
-d_sc_raw <- pia_nnt_calc(d_sc_raw, no_scenarios = 24)
+d_sc_raw <- pia_nnt_calc(d_sc_raw, no_scenarios = 19)
 
-table3 <- format_table(d_sc_raw, var_labels, format_patterns) |>
-  slice(1, 14:6, 2, 15, 17:24, 16, 3:5)
+table3 <- format_table(d_sc_raw, var_labels, format_patterns)
 readr::write_csv(table3, "table3.csv")
 
 # Table 4 ---------------------------------------------------------------------
@@ -56,10 +55,10 @@ merge_netsim_scenarios_tibble(
 )
 
 ## Read in files
-sc_dir <- "data/output/table4_output"
+sc_dir <- "adhr_sens_tibble"
 sc_infos_tbl <- EpiModelHPC::get_scenarios_tibble_infos(sc_dir)
-#sc_infos_tbl_baseline <- EpiModelHPC::get_scenarios_tibble_infos("test_tibble")
-#sc_infos_tbl <- rbind(sc_infos_tbl, sc_infos_tbl_baseline[1, ])
+sc_infos_tbl_baseline <- EpiModelHPC::get_scenarios_tibble_infos("data/output/table3")
+sc_infos_tbl <- rbind(sc_infos_tbl_baseline[1, ], sc_infos_tbl)
 
 ## Process each scenario
 d_ls <- lapply(
@@ -74,7 +73,7 @@ d_sc_raw <- pia_nnt_calc(d_sc_raw, 49)
 table4 <- format_table(d_sc_raw, var_labels, format_patterns)
 table4 <- table4[order(as.integer(str_sub(table4$scenario_name, -1, -1))), ]
 table4 <- table4 |>
-  slice(49, 11, 1:10, 12, 23, 13:22, 24, 35, 25:34, 36, 47, 37:46, 48)
+  slice(49, 1:48)
 
 readr::write_csv(table4, "table4.csv")
 
@@ -277,13 +276,13 @@ nested
 # Process Data
 ## Merge files as tibbles
 merge_netsim_scenarios_tibble(
-  "data/intermediate/test4",
-  "data/output/test_tibble4", # saves dataframes in folder called "test_tibble"
+  "data/intermediate/test6",
+  "data/output/test_tibble6", # saves dataframes in folder called "test_tibble"
   3640 # only includes the last 3640 time steps / 10 years
 )
 
 ## Read in files
-sc_dir <- "data/output/test_tibble4"
+sc_dir <- "data/output/test_tibble2"
 sc_infos_tbl <- EpiModelHPC::get_scenarios_tibble_infos(sc_dir)
 
 ## Process each scenario
@@ -294,7 +293,7 @@ d_ls <- lapply(
 
 # Create df and calculate PIA and NNT
 d_sc_raw <- bind_rows(d_ls)
-d_sc_raw <- pia_nnt_calc(d_sc_raw, no_scenarios = 1)
+d_sc_raw <- pia_nnt_calc(d_sc_raw, no_scenarios = 4)
 
-table4 <- format_table(d_sc_raw, var_labels, format_patterns)
-readr::write_csv(table3, "test.csv")
+table_test2 <- format_table(d_sc_raw, var_labels, format_patterns)
+readr::write_csv(test5, "test.csv")
