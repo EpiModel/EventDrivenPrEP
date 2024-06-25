@@ -23,7 +23,7 @@ param <- param.net(
   data.frame.params    = read.csv("data/input/params.csv"),
   netstats             = netstats,
   epistats             = epistats,
-  prep.start           = 182,
+  prep.start           = 0,
   prep.edp.start       = 400,
   riskh.start          = 1,
   prep.adhr.edp.dist   = reallocate_pcp(reall = 0.26)
@@ -33,7 +33,7 @@ init <- init_msm()
 
 control <- control_msm(
   simno = 1,
-  nsteps = 364*2,
+  nsteps = 364 * 2,
   nsims = 1,
   ncores = 1,
   verbose = TRUE,

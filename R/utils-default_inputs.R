@@ -12,8 +12,8 @@ param <- param.net(
   data.frame.params   = read.csv("data/input/params.csv"),
   netstats            = netstats,
   epistats            = epistats,
-  prep.start          = prep_start,
-  riskh.start         = prep_start - 53 * 7,
+  prep.start          = 0,
+  riskh.start         = 0,
   prep.edp.start      = edp_start
 )
 

@@ -32,7 +32,6 @@ epistats <- build_epistats(
   race = TRUE,
   time.unit = 1
 )
-saveRDS(epistats, paste0(est_dir, "epistats-", context, ".rds"))
 
 netparams <- build_netparams(
   epistats = epistats,
@@ -45,7 +44,6 @@ netstats <- build_netstats(
   expect.mort = 0.000478213/7,
   network.size = networks_size
 )
-saveRDS(netstats, paste0(est_dir, "netstats-", context, ".rds"))
 
 num <- netstats$demog$num
 nw <- EpiModel::network_initialize(num)
@@ -194,5 +192,10 @@ fit_inst <- netest(
 fit_inst <- trim_netest(fit_inst)
 
 # 4. Save Data -----------------------------------------------------------------
+netstats <- ARTnet::trim_netstats(netstats)
+epistats <- ARTnet::trim_epistats(epistats)
+saveRDS(netstats, fs::path(est_dir, paste0("netstats-", context, ".rds")))
+saveRDS(epistats, fs::path(est_dir, paste0("epistats-", context, ".rds")))
+
 out <- list(fit_main = fit_main, fit_casl = fit_casl, fit_inst = fit_inst)
 saveRDS(out, paste0(est_dir, "netest-", context, ".rds"))
