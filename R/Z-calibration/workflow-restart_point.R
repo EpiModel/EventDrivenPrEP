@@ -13,8 +13,8 @@ library(dplyr)
 
 context <- "hpc"
 source("./R/hpc_configs.R")
-source("./R/utils-0_project_settings.R")
-source("./R/utils-default_inputs.R")
+source("R/shared_variables.R", local = TRUE)
+source("./R/netsim_settings.R")
 source("./R/utils-targets.R")
 max_cores <- 8
 
@@ -36,7 +36,7 @@ wf <- add_workflow_step(
     scenarios_list = NULL,
     output_dir = calib_dir,
     save_pattern = "all",
-    n_rep = 128,
+    n_rep = 64,
     n_cores = max_cores,
     max_array_size = 500,
     setup_lines = hpc_node_setup
@@ -67,19 +67,19 @@ wf <- add_workflow_step(
   )
 )
 
-wf <- add_workflow_step(
-  wf_summary = wf,
-  step_tmpl = step_tmpl_do_call_script(
-    r_script = "R/Z-calibration/choose_restart.R",
-    args = list(hpc_context = TRUE),
-    setup_lines = hpc_node_setup
-  ),
-  sbatch_opts = list(
-    "cpus-per-task" = max_cores,
-    "time" = "02:00:00",
-    "mem-per-cpu" = "5G"
-  )
-)
+# wf <- add_workflow_step(
+#   wf_summary = wf,
+#   step_tmpl = step_tmpl_do_call_script(
+#     r_script = "R/Z-calibration/choose_restart.R",
+#     args = list(hpc_context = TRUE),
+#     setup_lines = hpc_node_setup
+#   ),
+#   sbatch_opts = list(
+#     "cpus-per-task" = max_cores,
+#     "time" = "02:00:00",
+#     "mem-per-cpu" = "5G"
+#   )
+# )
 
 wf <- add_workflow_step(
   wf_summary = wf,
