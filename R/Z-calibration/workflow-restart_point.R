@@ -20,6 +20,8 @@ max_cores <- 8
 
 est <- readRDS(path_to_est)
 control <- control_msm(
+  .checkpoint.dir = "tmp/ckpt/",
+  .checkpoint.step = 364,
   nsteps              = calibration_end,
   .tracker.list       = calibration_trackers,
   verbose             = FALSE
@@ -42,7 +44,7 @@ wf <- add_workflow_step(
   sbatch_opts = list(
     "mail-type" = "FAIL",
     "cpus-per-task" = max_cores,
-    "time" = "08:00:00",
+    "time" = "24:00:00",
     "mem-per-cpu" = "5G"
   )
 )
