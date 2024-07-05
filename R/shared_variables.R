@@ -14,7 +14,7 @@ intervention_end   <- intervention_start + 10 * year_steps
 
 # Paths to files and directories
 input_dir      <- "data/input/"
-run_dir        <- "data/run/"
+run_dir        <- "data/intermediate/"
 output_dir     <- "data/output/"
 
 est_dir        <- paste0(run_dir, "estimates/")
