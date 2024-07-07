@@ -14,17 +14,19 @@ make_model_fn <- function(calib_steps) {
     library("dplyr")
 
     # Inputs ---------------------------------------------------------------------
-    source("./R/utils-0_project_settings.R")
+    source("R/shared_variables.R", local = TRUE)
     context <- "hpc"
-    source("./R/utils-default_inputs.R")
+    source("./R/netsim_settings.R")
     source("./R/utils-targets.R")
 
     est <- readRDS(path_to_est)
     control <- control_msm(
+      .checkpoint.dir = "tmp/ckpt/",
+      .checkpoint.step = 364,
       nsteps              = calibration_end,
       .tracker.list       = calibration_trackers,
       verbose             = FALSE
-    )
+)
 
     # init$init_attr <- readRDS("./d_init_attr.rds")
 

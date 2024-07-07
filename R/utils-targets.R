@@ -5,15 +5,15 @@ targets <- c(
   # 1st calibration set (all independant)
   cc.dx.B                                 = 0.847,
   cc.dx.H                                 = 0.818,
-  cc.dx.W                                 = 0.873,
+  cc.dx.W                                 = 0.862,
   cc.linked1m.B                           = 0.829,
   cc.linked1m.H                           = 0.898,
-  cc.linked1m.W                           = 0.890,
+  cc.linked1m.W                           = 0.881,
   # CombPrev appendix 8.2.2
   # 2nd calibration set (all independant)
   cc.vsupp.B                              = 0.602,
   cc.vsupp.H                              = 0.620,
-  cc.vsupp.W                              = 0.710,
+  cc.vsupp.W                              = 0.712,
   # STIs
   ir100.gc                                = 12.81,
   ir100.ct                                = 14.59,
@@ -26,9 +26,9 @@ targets <- c(
   cc.prep.ind.H                           = 0.379,
   cc.prep.ind.W                           = 0.407,
   cc.prep.ind                             = 0.402,
-  cc.prep.B                               = 0.206,
-  cc.prep.H                               = 0.237,
-  cc.prep.W                               = 0.332,
+  cc.prep.B                               = 0.199,
+  cc.prep.H                               = 0.229,
+  cc.prep.W                               = 0.321,
   cc.prep                                 = 0.203,
   prep_prop_ret1y                         = 0.56, # DOI: 10.1002/jia2.25252 and 10.1093/cid/ciaa037 (54%)
   prep_prop_ret2y                         = 0.41,
@@ -149,9 +149,9 @@ calibration_trackers <- list(
   i_sup__B       = epi_i_sup(1),
   i_sup__H       = epi_i_sup(2),
   i_sup__W       = epi_i_sup(3),
-  linked1m__B    = epi_linked_time(4)(1),
-  linked1m__H    = epi_linked_time(4)(2),
-  linked1m__W    = epi_linked_time(4)(3),
+  linked1m__B    = epi_linked_time(30)(1),
+  linked1m__H    = epi_linked_time(30)(2),
+  linked1m__W    = epi_linked_time(30)(3),
   gc_s__B        = epi_gc_s(c(0, 1))(1), # gc susceptible HIV+ and -
   gc_s__H        = epi_gc_s(c(0, 1))(2),
   gc_s__W        = epi_gc_s(c(0, 1))(3),
