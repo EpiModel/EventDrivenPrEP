@@ -20,6 +20,8 @@ make_model_fn <- function(calib_steps) {
     # Inputs ---------------------------------------------------------------------
     source("R/netsim_settings.R", local = TRUE)
 
+    source("./R/utils-targets.R", local = TRUE)
+
     est <- readRDS(path_to_est)
     control <- control_msm(
       .checkpoint.dir = "tmp/ckpt/",
@@ -27,7 +29,7 @@ make_model_fn <- function(calib_steps) {
       nsteps              = calibration_end,
       .tracker.list       = calibration_trackers,
       verbose             = FALSE
-)
+    )
 
     # init$init_attr <- readRDS("./d_init_attr.rds")
 
@@ -41,7 +43,6 @@ make_model_fn <- function(calib_steps) {
     # Simulation and processing --------------------------------------------------
     sim <- netsim(est, param_sc, init, control)
 
-    source("./R/utils-targets.R", local = TRUE)
 
     as_tibble(sim) |>
       mutate_calibration_targets() |>
