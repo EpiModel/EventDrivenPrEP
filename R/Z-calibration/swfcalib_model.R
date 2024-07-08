@@ -13,11 +13,12 @@ make_model_fn <- function(calib_steps) {
     library("EpiModelHIV")
     library("dplyr")
 
-    # Inputs ---------------------------------------------------------------------
     source("R/shared_variables.R", local = TRUE)
-    context <- "hpc"
-    source("./R/netsim_settings.R")
-    source("./R/utils-targets.R")
+    hpc_context <- TRUE
+    source("R/Z-calibration/z-context.R", local = TRUE)
+
+    # Inputs ---------------------------------------------------------------------
+    source("R/netsim_settings.R", local = TRUE)
 
     est <- readRDS(path_to_est)
     control <- control_msm(
@@ -39,6 +40,8 @@ make_model_fn <- function(calib_steps) {
 
     # Simulation and processing --------------------------------------------------
     sim <- netsim(est, param_sc, init, control)
+
+    source("./R/utils-targets.R", local = TRUE)
 
     as_tibble(sim) |>
       mutate_calibration_targets() |>
