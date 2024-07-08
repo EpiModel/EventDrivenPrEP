@@ -24,9 +24,7 @@ make_model_fn <- function(calib_steps) {
 
     est <- readRDS(path_to_est)
     control <- control_msm(
-      .checkpoint.dir = "tmp/ckpt/",
-      .checkpoint.step = 364,
-      nsteps              = calibration_end,
+      nsteps              = year_steps * 2, # calibration_end,
       .tracker.list       = calibration_trackers,
       verbose             = FALSE
     )
