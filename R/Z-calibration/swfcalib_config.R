@@ -15,7 +15,7 @@ params_df <- readr::read_csv("data/input/params.csv") |>
   dplyr::mutate(value = as.numeric(value)) |>
   tidyr::pivot_wider(names_from = param)
 
-n_sims <- 512
+n_sims <- 32 * 12
 
 calib_object <- list(
   # state = list() # managed internally
