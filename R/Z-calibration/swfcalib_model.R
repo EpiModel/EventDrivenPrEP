@@ -24,7 +24,7 @@ make_model_fn <- function(calib_steps) {
 
     est <- readRDS(path_to_est)
     control <- control_msm(
-      nsteps              = year_steps * 2, # calibration_end,
+      nsteps              = calibration_end,
       .tracker.list       = calibration_trackers,
       verbose             = FALSE
     )
