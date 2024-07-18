@@ -69,10 +69,10 @@ hiv.circ.prob_3,0.918,numeric,
 acts.aids.vl,5.75,numeric,
 acts.scale,1,numeric,
 cond.scale,1,numeric,
-rgc.prob,0.3295894,numeric, CPN-plogis(qlogis(0.19) + log(1.25))
-ugc.prob,0.2822787,numeric,CPN-gaps appendix 9.4 | calibrated
-rct.prob,0.3165658,numeric, CPN-plogis(qlogis(0.17) + log(1.25))
-uct.prob,0.2703707,numeric, CPN-gaps appendix 9.3 | calibrated
+rgc.prob,0.337903,numeric, CPN-plogis(qlogis(0.19) + log(1.25))
+ugc.prob,0.2899150,numeric,CPN-gaps appendix 9.4 | calibrated
+rct.prob,0.3297671,numeric, CPN-plogis(qlogis(0.17) + log(1.25))
+uct.prob,0.2824417,numeric, CPN-gaps appendix 9.3 | calibrated
 rgc.sympt.prob,0.1,numeric, CPN-aps 9.3
 ugc.sympt.prob,0.9333,numeric, CPN-Gaps10.3
 rct.sympt.prob,0.1,numeric, CPN- gaps 10.2
