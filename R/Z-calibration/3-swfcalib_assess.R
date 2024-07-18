@@ -24,11 +24,36 @@ theme_set(theme_light())
 swfcalib::render_assessment(fs::path(swfcalib_dir, "assessments.rds"))
 
 # Results ----------------------------------------------------------------------
-# results <- readRDS(fs::path(swfcalib_dir, "results.rds"))
-targets <- EpiModelHIV::get_calibration_targets()
+    source("./R/utils-targets.R", local = TRUE)
+# targets <- EpiModelHIV::get_calibration_targets()
 
 results <- readRDS(fs::path(swfcalib_dir, "results.rds"))
-proposals <- readRDS(fs::path(swfcalib_dir, "proposals.rds"))
+
+# IR100 STIs plots -------------------------------------------------------------
+ggplot(results, aes(
+    x = uct.prob,
+    y = ir100.ct,
+    col = as.factor(.iteration)
+  )) +
+  geom_point() +
+  geom_hline(yintercept = c(targets[["ir100.ct"]]))
+
+ggplot(results, aes(
+    x = ugc.prob,
+    y = ir100.gc,
+    col = as.factor(.iteration)
+  )) +
+  geom_point() +
+  geom_hline(yintercept = c(targets[["ir100.gc"]]))
+
+
+
+
+
+
+
+
+
 
 pu <- results |>
   filter(abs(ir100.gc - 12.81) < 0.1) |>
@@ -48,13 +73,6 @@ results |>
 # targets = paste0("cc.linked1m.", c("B", "H", "W")),
 # targets_val = c(0.829, 0.898, 0.881),
 # params = paste0("tx.init.rate_", 1:3),
-ggplot(results, aes(
-    x = uct.prob,
-    y = ir100.ct,
-    col = as.factor(.iteration)
-  )) +
-  geom_point() +
-  geom_hline(yintercept = c(targets[["ir100.ct"]]))
 
 
 ggplot(results, aes(
