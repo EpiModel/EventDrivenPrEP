@@ -52,9 +52,6 @@ ggplot(results, aes(
 
 
 
-
-
-
 pu <- results |>
   filter(abs(ir100.gc - 12.81) < 0.1) |>
   pull(ugc.prob) |> median()
