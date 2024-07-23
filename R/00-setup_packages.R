@@ -1,6 +1,6 @@
 # This code installs the packages only available on GitHub (not on CRAN)
 renv::install(c(
-  "EpiModel/EpiModelHIV-p@EDP",
+  "EpiModel/EpiModelHIV-p@EDP_overwrite",
   "EpiModel/EpiModelHPC"
 ))
 

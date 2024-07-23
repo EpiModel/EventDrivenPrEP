@@ -25,6 +25,7 @@ param <- param.net(
 # For models without bacterial STIs, these must be initialized here
 # with non-zero values
 init <- init_msm(
+  init_attr = readRDS("./d_init_attr.rds"),
   prev.ugc = 0.1,
   prev.rct = 0.1,
   prev.rgc = 0.1,
