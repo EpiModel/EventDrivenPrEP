@@ -884,6 +884,167 @@ wf <- add_workflow_step(
   )
 )
 
+#################################### Sensitivity analysis: Main scenario 4 ######################################
+
+# Workflow creation
+wf <- create_workflow(
+  wf_name = "table3_sens",
+  default_sbatch_opts = hpc_configs$default_sbatch_opts
+)
+
+# Update RENV on the HPC
+wf <- add_workflow_step(
+  wf_summary = wf,
+  step_tmpl = step_tmpl_renv_restore(
+    git_branch = current_git_branch,
+    setup_lines = hpc_configs$r_loader
+  ),
+  sbatch_opts = hpc_configs$renv_sbatch_opts
+)
+
+# Controls
+source("./R/utils-targets.R")
+control <- control_msm(
+  start               = restart_time,
+  nsteps              = intervention_end,
+  nsims               = 1,
+  ncores              = 1,
+  initialize.FUN      = reinit_msm,
+  cumulative.edgelist = TRUE,
+  truncate.el.cuml    = 0,
+  .tracker.list       = calibration_trackers,
+  verbose             = FALSE
+)
+
+# Intervention scenarios
+
+sc_no_list <- list()
+sc_no_list[["no_edp_sc"]] <- tibble(
+  .scenario.id = "0_no_edp",
+  .at = 1,
+  prep.edp.start = intervention_end + 1
+)
+
+edp.prep.start.prob <- c(0.000827328, 0.000636321, 0.000995523)
+
+prop_change <- c(10.0, 100.0)
+
+df <- data.frame(rep(NA, length(prop_change)))
+
+for (j in edp.prep.start.prob) {
+  edp.prep.start <- j*prop_change
+
+  df <- cbind(df, edp.prep.start)
+}
+
+names(df) <- make.unique(names(df))
+
+df <- df |>
+  select(-1) |>
+  rename(edp.prep.start.prob_1 = 1,
+         edp.prep.start.prob_2 = 2,
+         edp.prep.start.prob_3 = 3) |>
+  cbind(prop_change) |>
+  mutate(
+    elig_scenario = rep(4, length.out = length(prop_change))
+  )
+
+df_sens <- data.frame(
+  edp.prep.start.prob_1 = c(0.25, 0.50, 1),
+  edp.prep.start.prob_2 = c(0.25, 0.50, 1),
+  edp.prep.start.prob_3 = c(0.25, 0.50, 1),
+  prop_change = c(0.25, 0.50, 1),
+  elig_scenario = rep(4, 3)
+)
+
+df <- rbind(df, df_sens)
+
+sc_interv_list <- list()
+sc_interv_list[["table3_sens"]] <- tibble(
+  .scenario.id = paste0("scenario_", df$elig_scenario, "_prop_change_", df$prop_change),
+  .at = 1,
+  prep.start = intervention_start,
+  prep.edp.start = intervention_start,
+  edp.prep.start.prob_1 = df$edp.prep.start.prob_1,
+  edp.prep.start.prob_2 = df$edp.prep.start.prob_2,
+  edp.prep.start.prob_3 = df$edp.prep.start.prob_3,
+  edp.start.scenario = df$elig_scenario
+)
+
+sc_df_list <- c(
+  sc_no_list,
+  sc_interv_list
+)
+
+scenarios_list <- purrr::reduce(
+  sc_df_list,
+  \(out, d_sc) c(out, EpiModel::create_scenario_list(d_sc)),
+  .init = list()
+)
+
+wf <- add_workflow_step(
+  wf_summary = wf,
+  step_tmpl = step_tmpl_netsim_scenarios(
+    path_to_restart, param, init, control,
+    scenarios_list = scenarios_list,
+    output_dir = "./data/intermediate/scenarios/table3",
+    libraries = "EpiModelHIV",
+    save_pattern = "simple",
+    n_rep = 120,
+    n_cores = max_cores,
+    max_array_size = 500,
+    setup_lines = hpc_configs$r_loader
+  ),
+  sbatch_opts = list(
+    "mail-type" = "FAIL,TIME_LIMIT",
+    "cpus-per-task" = max_cores,
+    "time" = "24:00:00",
+    "mem" = 0
+  )
+)
+
+# Process calibrations
+#
+# produce a data frame with the calibration targets for each scenario
+wf <- add_workflow_step(
+  wf_summary = wf,
+  step_tmpl = step_tmpl_do_call_script(
+    r_script = "./R/41-intervention_scenarios_process.R",
+    args = list(
+      context = "hpc",
+      ncores = 15,
+      scenarios_dir = "./data/intermediate/scenarios/table3",
+      file_raw = "./data/intermediate/scenarios/table3/outcomes_raw.rds",
+      file_csv = "./data/intermediate/scenarios/table3/outcomes.csv",
+      file_rds = "./data/intermediate/scenarios/outcomes.rds"
+    ),
+    setup_lines = hpc_configs$r_loader
+  ),
+  sbatch_opts = list(
+    "cpus-per-task" = max_cores,
+    "time" = "04:00:00",
+    "mem-per-cpu" = "4G",
+    "mail-type" = "END"
+  )
+)
+
+# output one datafile per scenario
+wf <- add_workflow_step(
+  wf_summary = wf,
+  step_tmpl = step_tmpl_merge_netsim_scenarios_tibble(
+    sim_dir = "./data/intermediate/scenarios/table3",
+    output_dir = "./data/output/table3",
+    steps_to_keep = 3640,
+    cols = dplyr::everything(),
+    n_cores = max_cores,
+    setup_lines = hpc_configs$r_loader
+  ),
+  sbatch_opts = list(
+    "cpus-per-task" = max_cores,
+    "time" = "02:00:00",
+    "mem-per-cpu" = "5G"
+  )
+)
 
 # rm -rf workflows/intervention_scenarios
 
