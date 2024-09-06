@@ -21,11 +21,11 @@ library(scales)
 
 # Process Data
 ## Merge files as tibbles
-merge_netsim_scenarios_tibble(
-  "data/intermediate/table3",
-  "data/output/table3", # saves dataframes in folder called "test_tibble"
-  3640 # only includes the last 3640 time steps / 10 years
-)
+#merge_netsim_scenarios_tibble(
+#  "data/intermediate/table3",
+#  "data/output/table3", # saves dataframes in folder called "test_tibble"
+#  3640 # only includes the last 3640 time steps / 10 years
+#)
 
 ## Read in files
 sc_dir <- "data/output/table3"
@@ -44,6 +44,43 @@ d_sc_raw <- pia_nnt_calc(d_sc_raw, no_scenarios = 19)
 table3 <- format_table(d_sc_raw, var_labels, format_patterns)
 readr::write_csv(table3, "table3.csv")
 
+# Table 3 Sensitivity Analysis ---------------------------------------------------------------------
+
+# Process Data
+## Merge files as tibbles
+#merge_netsim_scenarios_tibble(
+#  "data/intermediate/table3_sens",
+#  "data/output/table3_sens", # saves dataframes in folder called "table3_sens"
+#  3640 # only includes the last 3640 time steps / 10 years
+#)
+
+## Read in files
+sc_dir <- "data/output/table3_sens"
+sc_infos_tbl <- EpiModelHPC::get_scenarios_tibble_infos(sc_dir)
+sc_infos_tbl_baseline <- EpiModelHPC::get_scenarios_tibble_infos("data/output/table3")
+sc_infos_tbl <- rbind(sc_infos_tbl_baseline[1, ], sc_infos_tbl[-1,])
+
+## Process each scenario
+d_ls <- lapply(
+  seq_len(nrow(sc_infos_tbl)),
+  \(i) process_one_scenario_tibble(sc_infos_tbl[i, ])
+)
+
+# Create df and calculate PIA and NNT
+d_sc_raw <- bind_rows(d_ls)
+d_sc_raw <- pia_nnt_calc(d_sc_raw, no_scenarios = 6)
+
+table3_sens <- format_table(d_sc_raw, var_labels, format_patterns)
+readr::write_csv(table3_sens, "table3_sens.csv")
+
+## Explore HIV incidence by PrEP regimen
+d_sc_raw2 <- d_sc_raw |>
+  mutate(do.incid.user.ratio = incid.daily_ly/prepCurr_ly,
+         edp.incid.user.ratio = incid.edp_ly/edp.prepCurr_ly)
+
+table3_sens <- format_table(d_sc_raw2, var_labels, format_patterns)
+
+
 # Table 4 ---------------------------------------------------------------------
 
 # Process Data
@@ -55,10 +92,14 @@ merge_netsim_scenarios_tibble(
 )
 
 ## Read in files
-sc_dir <- "adhr_sens_tibble"
+sc_dir <- "data/output/table4"
 sc_infos_tbl <- EpiModelHPC::get_scenarios_tibble_infos(sc_dir)
 sc_infos_tbl_baseline <- EpiModelHPC::get_scenarios_tibble_infos("data/output/table3")
-sc_infos_tbl <- rbind(sc_infos_tbl_baseline[1, ], sc_infos_tbl)
+sc_infos_tbl <- rbind(sc_infos_tbl_baseline[1, ], sc_infos_tbl[-1,])
+
+## Read in files
+sc_dir <- "data/output/table4"
+sc_infos_tbl <- EpiModelHPC::get_scenarios_tibble_infos(sc_dir)
 
 ## Process each scenario
 d_ls <- lapply(
@@ -87,10 +128,10 @@ readr::write_csv(table4, "table4.csv")
 #  3640 # only includes the last 3640 time steps / 10 years
 #)
 
-sc_dir <- "cp1_tibble"
+sc_dir <- "data/output/figure2"
 sc_infos_tbl <- EpiModelHPC::get_scenarios_tibble_infos(sc_dir)
-sc_infos_tbl_baseline <- EpiModelHPC::get_scenarios_tibble_infos("test_tibble")
-sc_infos_tbl <- rbind(sc_infos_tbl, sc_infos_tbl_baseline[1, ])
+sc_infos_tbl_baseline <- EpiModelHPC::get_scenarios_tibble_infos("data/output/table3")
+sc_infos_tbl <- rbind(sc_infos_tbl_baseline[1, ], sc_infos_tbl)
 
 sc_info <- sc_infos_tbl[1, ]
 
@@ -101,20 +142,30 @@ d_ls <- lapply(
 
 ## Create df and calculate PIA and NNT
 d_sc_raw <- bind_rows(d_ls)
+
+new_rows <- data.frame(
+  scenario_name = rep("edp_startprob_1.4_hi_adhr_0.6", 30)
+)
+d_sc_raw <- bind_rows(d_sc_raw, new_rows)
+d_sc_raw <- sort(d_sc_raw)
+
 d_sc_raw <- pia_nnt_calc(d_sc_raw, 133)
 
-readr::write_csv(d_sc_raw, "contourplot1.csv")
+d_sc_raw <- d_sc_raw |>
+  filter(!is.na(batch_number))
+
+readr::write_csv(d_sc_raw, "figure2_raw.csv")
 
 ## Create table output
-table5 <- format_table(d_sc_raw, var_labels, format_patterns)
-readr::write_csv(table5, "table5.csv")
+figure2 <- format_table(d_sc_raw, var_labels, format_patterns)
+readr::write_csv(figure2, "figure2.csv")
 
-## Read in .csv file
-d_sc_raw <- read.csv("contourplot1.csv")
+## Use table output for editing
+d_sc_raw <- read.csv("figure2.csv")
 
 ## Dfs for loess model
 out.pia <- d_sc_raw |>
-  filter(scenario_name != "baseline") |>
+  filter(scenario_name != "0_no_edp") |>
   mutate(edp.prep.start.prob = as.numeric(str_match(scenario_name, "edp_startprob_(.*?)_hi_adhr")[,2]),
          hi.adhr.prob = as.numeric(str_replace(scenario_name, '(.*?)hi_adhr_(.*?)', ''))) |>
   select(!scenario_name) |>
@@ -123,7 +174,7 @@ out.pia <- d_sc_raw |>
 summary(out.pia)
 
 out.nnt <- d_sc_raw |>
-  filter(scenario_name != "baseline") |>
+  filter(scenario_name != "0_no_edp") |>
   mutate(edp.prep.start.prob = as.numeric(str_match(scenario_name, "edp_startprob_(.*?)_hi_adhr")[,2]),
          hi.adhr.prob = as.numeric(str_replace(scenario_name, '(.*?)hi_adhr_(.*?)', '')),
          nnt = ifelse(is.infinite(nnt), 0, nnt)) |>
@@ -158,6 +209,11 @@ pia <- ggplot(fit_pia, aes(edp.prep.start.prob, hi.adhr.prob)) +
   scale_fill_viridis(discrete = FALSE, alpha = 1, option = "B", direction = 1,
                      labels = scales::label_percent())
 
+pia
+
+fit_nnt <- fit_nnt |>
+  filter(edp.prep.start.prob >= 1)
+
 nnt <- ggplot(fit_nnt, aes(edp.prep.start.prob, hi.adhr.prob)) +
   geom_raster(aes(fill = nnt), interpolate = TRUE) +
   geom_contour(aes(z = nnt), col = "white", alpha = 0.5, lwd = 0.5) +
@@ -174,16 +230,8 @@ nested <- (pia|nnt) +
   plot_annotation(tag_levels = 'A')
 nested
 
-png('pia.png', width=2732, height=2048, res=300)
-ggplot(fit_pia, aes(edp.prep.start.prob, hi.adhr.prob)) +
-  geom_raster(aes(fill = pia), interpolate = TRUE) +
-  geom_contour(aes(z = pia), col = "white", alpha = 0.5, lwd = 0.5) +
-  theme_minimal(base_size = 23) +
-  scale_y_continuous(expand = c(0, 0)) +
-  scale_x_continuous(expand = c(0, 0)) +
-  labs(y = "Probability of Excellent EDP Adherence", x = "EDP Initiation Probability", fill = "PIA") +
-  scale_fill_viridis(discrete = FALSE, alpha = 1, option = "B", direction = 1,
-                     labels = scales::label_percent())
+png('figure2.png', width=3600, height=2048, res=300)
+nested
 dev.off()
 
 
@@ -191,18 +239,16 @@ dev.off()
 
 # Process Data
 ## Merge files as tibbles
-merge_netsim_scenarios_tibble(
-  "data/intermediate/contourplots2",
-  "cp2_tibble", # saves dataframes in folder called "adhr_sens_tibble"
-  3640 # only includes the last 3640 time steps / 10 years
-)
+#merge_netsim_scenarios_tibble(
+#  "data/intermediate/contourplots2",
+#  "cp2_tibble", # saves dataframes in folder called "adhr_sens_tibble"
+#  3640 # only includes the last 3640 time steps / 10 years
+#)
 
-sc_dir <- "cp2_tibble"
+sc_dir <- "data/output/figure3"
 sc_infos_tbl <- EpiModelHPC::get_scenarios_tibble_infos(sc_dir)
-sc_infos_tbl_baseline <- EpiModelHPC::get_scenarios_tibble_infos("test_tibble")
-sc_infos_tbl <- rbind(sc_infos_tbl, sc_infos_tbl_baseline[1, ])
-
-sc_info <- sc_infos_tbl[1, ]
+sc_infos_tbl_baseline <- EpiModelHPC::get_scenarios_tibble_infos("data/output/table3")
+sc_infos_tbl <- rbind(sc_infos_tbl_baseline[1, ], sc_infos_tbl)
 
 d_ls <- lapply(
   seq_len(nrow(sc_infos_tbl)),
@@ -213,10 +259,10 @@ d_ls <- lapply(
 d_sc_raw <- bind_rows(d_ls)
 
 d_sc_raw <- pia_nnt_calc(d_sc_raw, 101)
-readr::write_csv(d_sc_raw, "contourplot2.csv")
+readr::write_csv(d_sc_raw, "figure3_raw.csv")
 
 out.pia <- d_sc_raw |>
-  filter(scenario_name != "baseline") |>
+  filter(scenario_name != "0_no_edp") |>
   mutate(daily.switch = as.numeric(str_match(scenario_name, "daily_switch_(.*?)_edp_switch")[,2]),
          edp.switch = as.numeric(str_replace(scenario_name, '(.*?)edp_switch_(.*?)', ''))) |>
   select(!scenario_name) |>
@@ -225,7 +271,7 @@ out.pia <- d_sc_raw |>
 summary(out.pia)
 
 out.nnt <- d_sc_raw |>
-  filter(scenario_name != "baseline") |>
+  filter(scenario_name != "0_no_edp") |>
   mutate(daily.switch = as.numeric(str_match(scenario_name, "daily_switch_(.*?)_edp_switch")[,2]),
          edp.switch = as.numeric(str_replace(scenario_name, '(.*?)edp_switch_(.*?)', ''))) |>
   select(!scenario_name) |>
@@ -270,6 +316,10 @@ nnt <- ggplot(fit_nnt, aes(daily.switch, edp.switch)) +
 nested <- (pia|nnt) +
   plot_annotation(tag_levels = 'A')
 nested
+
+png('figure3.png', width=3600, height=2048, res=300)
+nested
+dev.off()
 
 # Test --------------------------------------------------------------
 

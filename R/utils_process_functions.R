@@ -26,7 +26,9 @@ process_one_scenario_tibble <- function(sc_info) {
       hiv.neg = num - i.num,
       do.prop.neg = prepCurr/hiv.neg,
       edp.prop.neg = edp.prepCurr/hiv.neg,
-      total.prop.neg = (prepCurr + edp.prepCurr)/hiv.neg
+      total.prop.neg = (prepCurr + edp.prepCurr)/hiv.neg,
+      edp.incid.user.ratio = incid.edp/edp.prepCurr,
+      do.incid.user.ratio = incid.daily/prepCurr
     )
 
   d_sc_baseline <- d_sc |>
@@ -53,7 +55,7 @@ process_one_scenario_tibble <- function(sc_info) {
           do.covered.discordant, prepElig, edp.prepElig,
           edp.covered.sex, edp.covered.discordant, edp.proportion,
           edp.prepCurr, prepCurr, do.prep, edp.prep, total.users, total.proportion,
-          do.prop.neg, edp.prop.neg, total.prop.neg),
+          do.prop.neg, edp.prop.neg, total.prop.neg, edp.incid.user.ratio, do.incid.user.ratio),
         ~ mean(.x, na.rm = TRUE),
         .names = "{.col}_ly"
       ),
@@ -62,8 +64,22 @@ process_one_scenario_tibble <- function(sc_info) {
         ~ mean(.x, na.rm = TRUE),
         .names = "{.col}_ly"
       ),
+      across(
+        c(incid.daily, incid.edp),
+        ~ sum(.x, na.rm = TRUE),
+        .names = "{.col}_ly"
+      ),
+      across(
+        c(prepCurr, edp.prepCurr),
+        ~ max(.x, na.rm = TRUE),
+        .names = "{.col}_ly"
+      ),
       .groups = "drop" # ungroup the tibble after the summary
     )
+
+  d_sc_ly <- d_sc_ly |>
+    mutate(do.incid.user.ratio = incid.daily_ly/prepCurr_ly*1000,
+           edp.incid.user.ratio = incid.edp_ly/edp.prepCurr_ly*1000)
 
   # cummulative summaries
   d_sc_cml <- d_sc |>

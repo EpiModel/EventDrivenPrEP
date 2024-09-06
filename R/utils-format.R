@@ -22,7 +22,13 @@ var_labels <- c(
   "do.covered.sex_ly"         = "% of Acts Covered Under DO-PrEP",
   "edp.covered.sex_ly"        = "% of Acts Covered Under EDP",
   "do.covered.discordant_ly"  = "% of Discordant Acts Covered Under DO-PrEP",
-  "edp.covered.discordant_ly" = "% of Discordant Acts Covered Under EDP"
+  "edp.covered.discordant_ly" = "% of Discordant Acts Covered Under EDP",
+  "incid.daily_cml"           = "Incident infections among Daily PrEP Users",
+  "incid.edp_cml"             = "Incident infections among Event-Driven PrEP users",
+  "incid.daily_ly"            = "Incident Infections in the Last Year (DO PrEP)",
+  "incid.edp_ly"              = "Incident Infections in the Last Year (EDP)",
+  "do.incid.user.ratio"       = "Ratio of incident HIV among DO PrEP users to DO PrEP users (last year)",
+  "edp.incid.user.ratio"      = "Ratio of incident HIV among EDP users to EDP users (last year)"
 )
 
 format_patterns <- list(
@@ -34,6 +40,10 @@ format_patterns <- list(
     patterns = c("^prev", "pia", "^do.covered", "^edp.covered", ".proportion_ly",
                  ".prep_ly", ".neg_ly", ".perc.diff"),
     fun = scales::label_percent(0.1)
+  ),
+  perc2 = list(
+    patterns = ".ratio",
+    fun = scales::label_number(0.01)
   ),
   # formatter with a catch all pattern. Must be last.
   default = list(
