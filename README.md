@@ -5,7 +5,7 @@ This repository contains the analysis scripts and tables for the following study
 
 > Chandra, C., Maloney, K.M., Le Guillou, A., Hoover, K.W., Jenness, S.M. (2025). Modeling the Potential Impact of Scaling Up Event-Driven PrEP Among Gay, Bisexual, and Other Men who have Sex with Men. Under review.
 
-<img src="https://github.com/EpiModel/Mean-Degree-Analysis/blob/master/Figures/Figure1.png](https://github.com/EpiModel/EventDrivenPrEP/blob/main/figures/Fig1.png">
+<img src="https://github.com/EpiModel/EventDrivenPrEP/blob/main/figures/Fig1.png">
 
 ## Abstract
 
