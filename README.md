@@ -39,7 +39,7 @@ remotes::install_github("EpiModel/ARTnetData")
 
 ## Code Organization
 
-These models are written and executed in the R statistical software language. To run these files, it is necessary to first install our epidemic modeling software, [EpiModel](https://github.com/EpiModel/EpiModel/), and our extension package specifically for modeling HIV transmission dynamics, [EpiModelHIV](https://github.com/EpiModel/EpiModelHIV). The branch of the EpiModelHIV repository associated with this research project is EventDrivenPrEP.
+These models are written and executed in the R statistical software language. To run these files, it is necessary to first install our epidemic modeling software, [EpiModel](https://github.com/EpiModel/EpiModel/), and our extension package specifically for modeling HIV transmission dynamics, [EpiModelHIV](https://github.com/EpiModel/EpiModelHIV). The branch of the EpiModelHIV repository associated with this research project is [EventDrivenPrEP](https://github.com/EpiModel/EpiModelHIV/tree/EventDrivenPrEP).
 
 The installation is accomplished with the renv package in R. First install `renv` (if you do not already have it installed) and run:
 
