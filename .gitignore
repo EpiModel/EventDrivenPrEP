@@ -1,0 +1,15 @@
+library/
+lock/
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+*.rds
+workflows/
+renv/
+data/output
+data/intermediate
+data/.DS_Store
+.DS_Store
+
+.DS_Store
